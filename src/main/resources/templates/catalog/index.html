@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  Hello world!
+    <div th:each="product : ${products}">
+        <span th:text="${product.getName()}"></span>
+    </div>
+</body>
+</html>
