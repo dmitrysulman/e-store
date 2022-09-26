@@ -34,7 +34,7 @@ public class User {
     @Size(min = 2, max = 500, message = "Name should be between 2 and 500 characters")
     private String address;
 
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Order> orders;
 
     public User() {
