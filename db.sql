@@ -10,7 +10,9 @@ create table users (
                        first_name varchar(255) NOT NULL,
                        second_name varchar(255) NOT NULL,
                        email varchar(255) UNIQUE NOT NULL,
-                       address varchar(500)
+                       password varchar(255) NOT NULL,
+                       address varchar(500),
+                       is_admin boolean NOT NULL DEFAULT false
 );
 
 create table orders (
@@ -27,9 +29,9 @@ INSERT INTO products (name, price, amount) VALUES ('iPhone 9', 90000, 150);
 INSERT INTO products (name, price, amount) VALUES ('iPhone 10', 120000, 70);
 INSERT INTO products (name, price, amount) VALUES ('iPhone 11', 150000, 0);
 
-INSERT INTO users (first_name, second_name, email) VALUES ('Sergey', 'Sergeev', 'sergey@mail.ru');
-INSERT INTO users (first_name, second_name, email) VALUES ('Ivan', 'Ivanov', 'ivan@mail.ru');
-INSERT INTO users (first_name, second_name, email) VALUES ('Nataliya', 'Kuznetsova', 'nataliya@mail.ru');
+INSERT INTO users (first_name, second_name, email, password) VALUES ('Sergey', 'Sergeev', 'sergey@mail.ru', '123');
+INSERT INTO users (first_name, second_name, email, password) VALUES ('Ivan', 'Ivanov', 'ivan@mail.ru', '123');
+INSERT INTO users (first_name, second_name, email, password) VALUES ('Nataliya', 'Kuznetsova', 'nataliya@mail.ru', '123');
 
 INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount) VALUES (1, 1, '2022-09-01', 2, 100000);
 INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount) VALUES (2, 1, '2022-09-02', 1, 70000);

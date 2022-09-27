@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign-in</title>
+</head>
+<body>
+    <form name="signin-form" method="post" action="/process-signin">
+        <label for="username">Input Email:</label>
+        <input type="text" id="username" name="username">
+        <br>
+        <label for="password">Input Password:</label>
+        <input type="password" id="password" name="password">
+        <br>
+        <input type="submit" value="Login">
+
+        <div th:if="${param.error}" style="color: red">
+            Wrong Email or Password!
+        </div>
+    </form>
+</body>
+</html>

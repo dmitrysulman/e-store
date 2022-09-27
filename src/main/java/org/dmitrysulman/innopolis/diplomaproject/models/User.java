@@ -29,10 +29,16 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "address")
     @NotEmpty(message = "Name should not be empty")
     @Size(min = 2, max = 500, message = "Name should be between 2 and 500 characters")
     private String address;
+
+    @Column(name = "is_admin")
+    private Boolean isAdmin;
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Order> orders;
@@ -40,12 +46,14 @@ public class User {
     public User() {
     }
 
-    public User(int id, String firstName, String secondName, String email, String address, List<Order> orders) {
+    public User(int id, String firstName, String secondName, String email, String password, String address, Boolean isAdmin, List<Order> orders) {
         this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
         this.email = email;
+        this.password = password;
         this.address = address;
+        this.isAdmin = isAdmin;
         this.orders = orders;
     }
 
@@ -81,12 +89,28 @@ public class User {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getAddress() {
         return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
     }
 
     public List<Order> getOrders() {
