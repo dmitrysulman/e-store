@@ -1,9 +1,12 @@
 package org.dmitrysulman.innopolis.diplomaproject.services;
 
+import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -14,5 +17,15 @@ public class UserService {
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Transactional
+    public void save(User user) {
+        user.setAdmin(false);
+        userRepository.save(user);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

@@ -27,7 +27,7 @@ public class CatalogController {
 
 //        System.out.println(authentication.getPrincipal());
         //System.out.println(((UserDetailsImpl) authentication.getPrincipal()).getUser().getFirstName());
-
+//        messageSource.getMessage("errors.user.email.unique", null, LocaleContextHolder.getLocale())
         return "catalog/index";
     }
 }

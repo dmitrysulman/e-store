@@ -14,27 +14,34 @@ public class User {
     @Column(name = "id")
     private int id;
 
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
+    @NotEmpty(message = "{errors.user.firstname.notempty}")
+    @Size(min = 2, max = 30, message = "{errors.user.firstname.size}")
     @Column(name = "first_name")
     private String firstName;
 
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 30, message = "Second name should be between 2 and 30 characters")
+    @NotEmpty(message = "{errors.user.secondname.notempty}")
+    @Size(min = 2, max = 30, message = "{errors.user.secondname.size}")
     @Column(name = "second_name")
     private String secondName;
 
-    @NotEmpty(message = "Email should not be empty")
-    @Email(message = "Email should be valid")
+    @NotEmpty(message = "{errors.user.email.notempty}")
+    @Email(message = "{errors.user.email.email}")
     @Column(name = "email")
     private String email;
 
+    @NotEmpty(message = "{errors.user.password.notempty}")
+    @Size(min = 2, max = 50, message = "{errors.user.password.size}")
     @Column(name = "password")
     private String password;
 
+    @Transient
+    @NotEmpty(message = "{errors.user.password.notempty}")
+    @Size(min = 2, max = 50, message = "{errors.user.password.size}")
+    private String repeatPassword;
+
+    @NotEmpty(message = "{errors.user.address.notempty}")
+    @Size(min = 2, max = 500, message = "{errors.user.address.size}")
     @Column(name = "address")
-    @NotEmpty(message = "Name should not be empty")
-    @Size(min = 2, max = 500, message = "Name should be between 2 and 500 characters")
     private String address;
 
     @Column(name = "is_admin")
@@ -46,11 +53,12 @@ public class User {
     public User() {
     }
 
-    public User(int id, String firstName, String secondName, String email, String password, String address, Boolean isAdmin, List<Order> orders) {
+    public User(int id, String firstName, String secondName, String email, String password, String repeatPassword, String address, Boolean isAdmin, List<Order> orders) {
         this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
         this.email = email;
+        this.repeatPassword = repeatPassword;
         this.password = password;
         this.address = address;
         this.isAdmin = isAdmin;
@@ -95,6 +103,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRepeatPassword() {
+        return repeatPassword;
+    }
+
+    public void setRepeatPassword(String repeatPassword) {
+        this.repeatPassword = repeatPassword;
     }
 
     public String getAddress() {

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Sign-in</title>
+    <title th:text="#{signin.page.title}"></title>
 </head>
 <body>
     <form name="signin-form" method="post" action="/process-signin">
@@ -14,9 +14,7 @@
         <br>
         <input type="submit" value="Login">
 
-        <div th:if="${param.error}" style="color: red">
-            Wrong Email or Password!
-        </div>
+        <div th:if="${param.error}" th:text="#{signin.page.error}" style="color: red"></div>
     </form>
 </body>
 </html>
