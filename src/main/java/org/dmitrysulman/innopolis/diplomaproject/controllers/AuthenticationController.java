@@ -46,7 +46,6 @@ public class AuthenticationController {
         if (bindingResult.hasErrors()) {
             return "authentication/signup";
         }
-
         userService.save(user);
 
         return "redirect:/";

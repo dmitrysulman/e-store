@@ -1,12 +1,9 @@
 package org.dmitrysulman.innopolis.diplomaproject.models;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
 //TODO add status ENUM
-//TODO add messages
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -15,16 +12,13 @@ public class Order {
     @Column(name = "id")
     private int id;
 
-    @NotEmpty(message = "Order date should not be empty")
     @Temporal(TemporalType.DATE)
     @Column(name = "order_date")
     private Date orderDate;
 
-    @Min(value = 1, message = "Products amount should be greater than 0")
     @Column(name = "products_amount")
     private int productsAmount;
 
-    @Min(value = 1, message = "Order amount should be greater than 0")
     @Column(name = "order_amount")
     private int orderAmount;
 
@@ -34,12 +28,12 @@ public class Order {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
-    private Product user;
+    private User user;
 
     public Order() {
     }
 
-    public Order(int id, Date orderDate, int productsAmount, int orderAmount, Product product, Product user) {
+    public Order(int id, Date orderDate, int productsAmount, int orderAmount, Product product, User user) {
         this.id = id;
         this.orderDate = orderDate;
         this.productsAmount = productsAmount;
@@ -88,11 +82,11 @@ public class Order {
         this.product = product;
     }
 
-    public Product getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Product user) {
+    public void setUser(User user) {
         this.user = user;
     }
 }

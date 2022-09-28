@@ -1,5 +1,7 @@
 package org.dmitrysulman.innopolis.diplomaproject.config;
 
+import org.dmitrysulman.innopolis.diplomaproject.services.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -23,9 +25,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .antMatchers("/signup**", "/signin**", "/", "/product/*")
+                                .antMatchers("/signup**", "/signin**", "/", "/product/*/")
                                 .permitAll()
-                                .antMatchers("/admin", "/product/*/**")
+                                .antMatchers("/admin", "/product/order")
                                 .authenticated()
                 )
                 .formLogin(formLogin ->
