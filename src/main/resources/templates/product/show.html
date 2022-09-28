@@ -11,5 +11,11 @@
         <div th:text="${product.getName()}"></div>
         <div th:text="#{product.product.price} + ': ' + ${product.getPrice()}"></div>
     </div>
+    <form th:method="GET" th:action="@{/product/{id}/order(id=${product.getId()})}" th:object="${order}">
+        <label for="products-amount" th:text="#{product.product.productsamount}"></label>
+        <input type="text" id="products-amount" th:field="*{orderAmount}">
+        <div style="color:red" th:if="${#fields.hasErrors('orderAmount')}" th:errors="*{orderAmount}"></div>
+        <input type="submit" th:value="#{product.product.order}">
+    </form>
 </body>
 </html>
