@@ -6,6 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+//TODO add messages
 @Entity
 @Table(name = "products")
 public class Product {

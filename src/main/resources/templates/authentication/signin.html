@@ -8,10 +8,10 @@
     <form name="signin-form" method="post" action="/process-signin">
         <label for="username">Input Email:</label>
         <input type="text" id="username" name="username">
-        <br>
+        <br />
         <label for="password">Input Password:</label>
         <input type="password" id="password" name="password">
-        <br>
+        <br />
         <input type="submit" value="Login">
 
         <div th:if="${param.error}" th:text="#{signin.page.error}" style="color: red"></div>

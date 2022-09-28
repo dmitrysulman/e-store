@@ -9,27 +9,27 @@
         <label for="first-name">Input First Name:</label>
         <input type="text" id="first-name" th:field="*{firstName}">
         <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
-        <br>
+        <br />
         <label for="second-name">Input Second Name:</label>
         <input type="text" id="second-name" th:field="*{secondName}">
         <div style="color:red" th:if="${#fields.hasErrors('secondName')}" th:errors="*{secondName}"></div>
-        <br>
+        <br />
         <label for="email">Input Email:</label>
         <input type="text" id="email" th:field="*{email}">
         <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-        <br>
+        <br />
         <label for="address">Input Address:</label>
         <input type="text" id="address" th:field="*{address}">
         <div style="color:red" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
-        <br>
+        <br />
         <label for="password">Input Password:</label>
         <input type="password" id="password" th:field="*{password}">
         <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-        <br>
+        <br />
         <label for="repeat-password">Repeat Password:</label>
         <input type="password" id="repeat-password" th:field="*{repeatPassword}">
         <div style="color:red" th:if="${#fields.hasErrors('repeatPassword')}" th:errors="*{repeatPassword}"></div>
-        <br>
+        <br />
         <input type="submit" value="Sign Up">
     </form>
 </body>

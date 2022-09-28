@@ -21,7 +21,7 @@ public class CatalogController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, SecurityContextHolder securityContextHolder) {
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("products", productService.findAll());
 

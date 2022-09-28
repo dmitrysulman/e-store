@@ -31,5 +31,8 @@ public class UserValidator implements Validator {
         if (userWithSameEmail.isPresent() && userWithSameEmail.get().getId() != user.getId()) {
             errors.rejectValue("email", "errors.user.email.unique");
         }
+        if (!user.getPassword().equals(user.getRepeatPassword())) {
+            errors.rejectValue("repeatPassword", "errors.user.password.repeat");
+        }
     }
 }

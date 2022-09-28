@@ -5,6 +5,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 
+//TODO add status ENUM
+//TODO add messages
 @Entity
 @Table(name = "orders")
 public class Order {

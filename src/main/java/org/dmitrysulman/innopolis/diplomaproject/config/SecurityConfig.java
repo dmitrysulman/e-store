@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .antMatchers("/signup**", "/signin**")
+                                .antMatchers("/signup**", "/signin**", "/", "/product/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
