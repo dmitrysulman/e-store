@@ -45,6 +45,7 @@ public class ProductController {
                                 )
                         )
                 );
+        order.setProductsAmount(1);
         order.setProductId(product.getId());
         model.addAttribute("product", product);
 

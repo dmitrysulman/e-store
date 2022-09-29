@@ -2,13 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>My e-store</title>
 </head>
 <body>
-    <div th:each="product : ${products}">
-        <a th:href="@{/product/{id}(id=${product.getId()})}" th:text="${product.getName()}"></a>
-        <div th:text="#{index.product.price} + ': ' + ${product.getPrice()}"></div>
-        <br />
+    <div style="width: 800px; margin: auto;">
+        <div th:replace="/fragments/header :: header"></div>
+        <div th:each="product : ${products}" style="margin-bottom: 20px;">
+            <a th:href="@{/product/{id}(id=${product.getId()})}" th:text="${product.getName()}"></a>
+            <div th:text="#{index.product.price} + ': ' + ${product.getPrice()}"></div>
+        </div>
     </div>
 </body>
 </html>
