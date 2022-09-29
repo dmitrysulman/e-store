@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="${product.getName()}"></title>
@@ -7,19 +9,24 @@
 <body>
     <div style="width: 800px; margin: auto;">
         <div th:replace="/fragments/header :: header"></div>
-        <a href="/" th:text="#{product.breadcrumbs.catalog}"></a> > <span th:text="${product.getName()}"></span>
-        <h1 th:text="${product.getName()}"></h1>
-        <div>
-            <div th:text="${product.getName()}"></div>
-            <div th:text="#{product.product.price} + ': ' + ${product.getPrice()}"></div>
+        <div style="margin-bottom: 20px;">
+            <a href="/" th:text="#{product.breadcrumbs.catalog}"></a> > <span th:text="${product.getName()}"></span>
+            <h1 th:text="${product.getName()}"></h1>
+            <div>
+                <div th:text="${product.getName()}"></div>
+                <div th:text="#{product.product.price} + ': ' + ${product.getPrice()}"></div>
+            </div>
         </div>
-        <form th:method="POST" th:action="@{/product/order}" th:object="${order}">
+        <form sec:authorize="isAuthenticated()" th:method="POST" th:action="@{/product/order}" th:object="${order}">
             <label for="products-amount" th:text="#{product.product.productsamount}"></label>
             <input type="text" id="products-amount" th:field="*{productsAmount}">
             <div style="color:red" th:if="${#fields.hasErrors('productsAmount')}" th:errors="*{productsAmount}"></div>
             <input type="hidden" th:field="*{productId}">
             <input type="submit" th:value="#{product.product.order}">
         </form>
+        <div sec:authorize="!isAuthenticated()">
+            <a href="/signin">Sign In</a> or <a href="/signup">Sign Up</a> to make an order.
+        </div>
     </div>
 </body>
 </html>
