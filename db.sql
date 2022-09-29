@@ -21,7 +21,8 @@ create table orders (
                         user_id int REFERENCES users(id) ON DELETE SET NULL,
                         order_date date NOT NULL,
                         products_amount int NOT NULL CHECK ( products_amount > 0 ),
-                        order_amount int NOT NULL CHECK ( order_amount > 0 )
+                        order_amount int NOT NULL CHECK ( order_amount > 0 ),
+                        order_status varchar(255) NOT NULL
 );
 
 INSERT INTO products (name, price, amount) VALUES ('iPhone 8', 60000, 100);
@@ -29,12 +30,12 @@ INSERT INTO products (name, price, amount) VALUES ('iPhone 9', 90000, 150);
 INSERT INTO products (name, price, amount) VALUES ('iPhone 10', 120000, 70);
 INSERT INTO products (name, price, amount) VALUES ('iPhone 11', 150000, 0);
 
-INSERT INTO users (first_name, second_name, email, password) VALUES ('Sergey', 'Sergeev', 'sergey@mail.ru', '123');
-INSERT INTO users (first_name, second_name, email, password) VALUES ('Ivan', 'Ivanov', 'ivan@mail.ru', '123');
-INSERT INTO users (first_name, second_name, email, password) VALUES ('Nataliya', 'Kuznetsova', 'nataliya@mail.ru', '123');
+INSERT INTO users (first_name, second_name, email, password) VALUES ('Sergey', 'Sergeev', 'sergey@mail.ru', '$2a$10$ezxebKL1WxWW.Sl16kFw3.g0k2zZYog6/C2HJvNSBzRFfsftglbWa');
+INSERT INTO users (first_name, second_name, email, password) VALUES ('Ivan', 'Ivanov', 'ivan@mail.ru', '$2a$10$ezxebKL1WxWW.Sl16kFw3.g0k2zZYog6/C2HJvNSBzRFfsftglbWa');
+INSERT INTO users (first_name, second_name, email, password) VALUES ('Nataliya', 'Kuznetsova', 'nataliya@mail.ru', '$2a$10$ezxebKL1WxWW.Sl16kFw3.g0k2zZYog6/C2HJvNSBzRFfsftglbWa');
 
-INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount) VALUES (1, 1, '2022-09-01', 2, 100000);
-INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount) VALUES (2, 1, '2022-09-02', 1, 70000);
-INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount) VALUES (2, 2, '2022-09-03', 4, 350000);
-INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount) VALUES (3, 3, '2022-09-04', 1, 120000);
-INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount) VALUES (1, 3, '2022-09-05', 3, 200000);
+INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount, order_status) VALUES (1, 1, '2022-09-01', 2, 100000, 'NEW');
+INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount, order_status) VALUES (2, 1, '2022-09-02', 1, 70000, 'NEW');
+INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount, order_status) VALUES (2, 2, '2022-09-03', 4, 350000, 'NEW');
+INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount, order_status) VALUES (3, 3, '2022-09-04', 1, 120000, 'NEW');
+INSERT INTO orders (product_id, user_id, order_date, products_amount, order_amount, order_status) VALUES (1, 3, '2022-09-05', 3, 200000, 'NEW');

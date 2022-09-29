@@ -22,6 +22,10 @@ public class Order {
     @Column(name = "order_amount")
     private int orderAmount;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "order_status")
+    private OrderStatus orderStatus;
+
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "product_id")
     private Product product;
@@ -33,11 +37,12 @@ public class Order {
     public Order() {
     }
 
-    public Order(int id, Date orderDate, int productsAmount, int orderAmount, Product product, User user) {
+    public Order(int id, Date orderDate, int productsAmount, int orderAmount, OrderStatus orderStatus, Product product, User user) {
         this.id = id;
         this.orderDate = orderDate;
         this.productsAmount = productsAmount;
         this.orderAmount = orderAmount;
+        this.orderStatus = orderStatus;
         this.product = product;
         this.user = user;
     }
@@ -88,5 +93,13 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }

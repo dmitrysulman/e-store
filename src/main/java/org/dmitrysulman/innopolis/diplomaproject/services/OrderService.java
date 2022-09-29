@@ -2,6 +2,7 @@ package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Order;
+import org.dmitrysulman.innopolis.diplomaproject.models.OrderStatus;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.OrderRepository;
@@ -49,6 +50,7 @@ public class OrderService {
         order.setProductsAmount(orderDto.getProductsAmount());
         order.setOrderAmount(orderAmount);
         order.setOrderDate(new Date());
+        order.setOrderStatus(OrderStatus.NEW);
         orderRepository.save(order);
     }
 }

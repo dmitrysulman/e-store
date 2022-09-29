@@ -55,7 +55,6 @@ public class AuthenticationController {
         if (authentication != null) {
             return "redirect:/";
         }
-
         if (bindingResult.hasErrors()) {
             return "authentication/signup";
         }
