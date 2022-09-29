@@ -30,7 +30,7 @@ public class User {
     private String email;
 
     @NotEmpty(message = "{errors.user.password.notempty}")
-    @Size(min = 2, max = 50, message = "{errors.user.password.size}")
+    @Size(min = 2, max = 255, message = "{errors.user.password.size}")
     @Column(name = "password")
     private String password;
 

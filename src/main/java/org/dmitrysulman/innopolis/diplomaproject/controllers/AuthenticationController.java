@@ -4,6 +4,7 @@ import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.services.UserService;
 import org.dmitrysulman.innopolis.diplomaproject.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -32,17 +33,29 @@ public class AuthenticationController {
     }
 
     @GetMapping("/signin")
-    public String signInPage() {
+    public String signInPage(Authentication authentication) {
+        if (authentication != null) {
+            return "redirect:/";
+        }
+
         return "authentication/signin";
     }
 
     @GetMapping("/signup")
-    public String signUpPage(@ModelAttribute("user") User user) {
+    public String signUpPage(@ModelAttribute("user") User user, Authentication authentication) {
+        if (authentication != null) {
+            return "redirect:/";
+        }
+
         return "authentication/signup";
     }
 
     @PostMapping("/signup")
-    public String signUp(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    public String signUp(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Authentication authentication) {
+        if (authentication != null) {
+            return "redirect:/";
+        }
+
         if (bindingResult.hasErrors()) {
             return "authentication/signup";
         }
