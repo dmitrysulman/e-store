@@ -12,9 +12,15 @@
             <input type="text" th:value="${query}" id="query" name="query">
             <input type="submit" value="Search">
         </form>
-        <div th:each="product : ${products}" style="margin-bottom: 20px;">
+        <div th:each="product : ${products.getContent()}" style="margin-bottom: 20px;">
             <a th:href="@{/product/{id}(id=${product.getId()})}" th:text="${product.getName()}"></a>
             <div th:text="#{index.product.price} + ': ' + ${product.getPrice()}"></div>
+        </div>
+        <div th:if="${products.getTotalPages()} > 1">
+            <th:block th:each="page: ${#numbers.sequence(0, products.getTotalPages() - 1)}">
+                <span th:if="${page} == ${products.getNumber()}" th:text="${page} + 1"></span>
+                <a th:if="${page} != ${products.getNumber()}" th:text="${page} + 1" th:href="@{/(page=${page}, per_page=${products.getSize()}, sort=${products.getSort().getOrderFor('price')})}"></a>
+            </th:block>
         </div>
     </div>
 </body>

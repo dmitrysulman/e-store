@@ -20,21 +20,27 @@ public class CatalogController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("products", productService.findAll());
+    public String index(@RequestParam(value = "page", required = false) Integer page,
+                        @RequestParam(value = "per_page", required = false) Integer perPage,
+                        @RequestParam(value = "direction", required = false) String direction,
+                        Model model) {
+        model.addAttribute("query", "");
+        model.addAttribute("products", productService.findAll(page, perPage, direction));
         return "catalog/index";
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam(value = "query", required = false) String query, Model model) {
-        if (Objects.nonNull(query)) {
-            if (query.equals("")) {
+    public String search(@RequestParam(value = "query", required = false) String query,
+                         @RequestParam(value = "page", required = false) Integer page,
+                         @RequestParam(value = "per_page", required = false) Integer perPage,
+                         @RequestParam(value = "direction", required = false) String direction,
+                         Model model) {
+        if (query == null || query.equals("")) {
                 return "redirect:/";
-            }
-            model.addAttribute("query", query);
-            model.addAttribute("products", productService.findByNameLike(query));
         }
+        model.addAttribute("query", query);
+        model.addAttribute("products", productService.findByNameContaining(query, page, perPage, direction));
 
-        return "/catalog/search";
+        return "/catalog/index";
     }
 }
