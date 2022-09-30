@@ -60,6 +60,6 @@ public class AdminController {
         }
         productService.save(product);
 
-        return "redirect:admin/products";
+        return "redirect:/admin/products";
     }
 }
