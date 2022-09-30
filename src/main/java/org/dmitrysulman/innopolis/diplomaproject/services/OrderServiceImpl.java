@@ -31,14 +31,17 @@ public class OrderServiceImpl implements OrderService {
         this.userRepository = userRepository;
     }
 
+    @Override
     public List<Order> findAll() {
         return orderRepository.findAll();
     }
 
+    @Override
     public Optional<Order> findById(int id) {
         return orderRepository.findById(id);
     }
 
+    @Override
     @Transactional
     public void save(OrderDto orderDto, int userId) {
         Order order = new Order();

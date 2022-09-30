@@ -1,16 +1,11 @@
 package org.dmitrysulman.innopolis.diplomaproject.dto;
 
-import org.dmitrysulman.innopolis.diplomaproject.models.Order;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 public class UserDto {
-    private int id;
-
     @NotEmpty(message = "{errors.user.firstname.notempty}")
     @Size(min = 2, max = 30, message = "{errors.user.firstname.size}")
     private String firstName;
@@ -31,20 +26,11 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(int id, String firstName, String secondName, String email, String address) {
-        this.id = id;
+    public UserDto(String firstName, String secondName, String email, String address) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.email = email;
         this.address = address;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getFirstName() {

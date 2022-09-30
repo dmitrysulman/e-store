@@ -2,7 +2,6 @@ package org.dmitrysulman.innopolis.diplomaproject.controllers;
 
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
-import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
 import org.dmitrysulman.innopolis.diplomaproject.services.OrderService;
 import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
@@ -70,8 +69,7 @@ public class ProductController {
             return "product/show";
         }
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        User user = userDetails.getUser();
-        orderService.save(orderDto, user.getId());
+        orderService.save(orderDto, userDetails.getUser().getId());
 
         return "redirect:/";
     }

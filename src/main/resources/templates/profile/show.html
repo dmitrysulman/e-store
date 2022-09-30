@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Profile Page</title>
@@ -9,6 +9,7 @@
         <div th:replace="/fragments/header :: header"></div>
         <div style="margin-bottom: 20px;">
             My Details | <a th:href="@{/profile/orders}">My Orders</a>
+            <br />
             <br />
             <div th:text="'Name ' + ${user.getFullName()}"></div>
             <div th:text="'Email ' + ${user.getEmail()}"></div>

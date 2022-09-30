@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Edit profile</title>
@@ -8,7 +8,8 @@
 <div style="width: 800px; margin: auto;">
     <div th:replace="/fragments/header :: header"></div>
     <div style="margin-bottom: 20px;">
-        <form th:method="POST" th:action="@{/profile/edit}" th:object="${user}">
+        <h1>Edit user details</h1>
+        <form th:method="POST" th:action="@{/profile/edit}" th:object="${userDto}">
             <label for="first-name">Input First Name:</label>
             <input type="text" id="first-name" th:field="*{firstName}">
             <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
@@ -25,7 +26,7 @@
             <input type="text" id="address" th:field="*{address}">
             <div style="color:red" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
             <br />
-            <input type="submit" value="Edit">
+            <input type="submit" value="Save">
         </form>
     </div>
 </div>

@@ -36,7 +36,7 @@ public class User {
 
     @Transient
     @NotEmpty(message = "{errors.user.password.notempty}")
-    @Size(min = 2, max = 50, message = "{errors.user.password.size}")
+    @Size(min = 2, max = 255, message = "{errors.user.password.size}")
     private String repeatPassword;
 
     @NotEmpty(message = "{errors.user.address.notempty}")
