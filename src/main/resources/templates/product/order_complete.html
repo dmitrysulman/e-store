@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Complete</title>
+</head>
+<body>
+<div style="width: 800px; margin: auto;">
+    <h1>Order Complete</h1>
+    <div th:replace="/fragments/header :: header"></div>
+    <div style="margin-bottom: 20px;">
+        <div th:text="${order.getId()} + ', ' + ${order.getOrderDate()} + ', ' + ${order.getProduct().getName()} + ', ' + ${order.getProductsAmount()} + ', ' + ${order.getOrderAmount()} + ', ' + ${order.getOrderStatus()}"></div>
+    </div>
+    <span>Go to <a th:href="@{/profile}">profile</a></span>
+</div>
+</body>
+</html>

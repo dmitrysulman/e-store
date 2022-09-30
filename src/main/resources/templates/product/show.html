@@ -17,7 +17,7 @@
                 <div th:text="#{product.product.price} + ': ' + ${product.getPrice()}"></div>
             </div>
         </div>
-        <form sec:authorize="isAuthenticated()" th:method="POST" th:action="@{/product/order}" th:object="${order}">
+        <form sec:authorize="isAuthenticated()" th:method="POST" th:action="@{/product/order}" th:object="${orderDto}">
             <label for="products-amount" th:text="#{product.product.productsamount}"></label>
             <input type="text" id="products-amount" th:field="*{productsAmount}">
             <div style="color:red" th:if="${#fields.hasErrors('productsAmount')}" th:errors="*{productsAmount}"></div>

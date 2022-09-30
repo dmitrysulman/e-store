@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +21,11 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
+    }
+
+    @Override
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 
     @Override
@@ -35,6 +41,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<Product> findByNameContaining(String name, Integer page, Integer perPage, String direction) {
         return productRepository.findByNameContainingIgnoreCase(name, preparePageable(page, perPage, direction));
+    }
+
+    @Override
+    @Transactional
+    public void save(Product product) {
+        productRepository.save(product);
     }
 
     private Pageable preparePageable(Integer page, Integer perPage, String direction) {

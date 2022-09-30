@@ -36,13 +36,13 @@ public class ProductController {
         this.orderValidator = orderValidator;
     }
 
-    @InitBinder("order")
+    @InitBinder("orderDto")
     private void initBinder(WebDataBinder binder) {
         binder.addValidators(orderValidator);
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, @ModelAttribute("order") OrderDto orderDto, Model model) {
+    public String show(@PathVariable("id") int id, @ModelAttribute("orderDto") OrderDto orderDto, Model model) {
         Product product = productService.findById(id)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -61,15 +61,15 @@ public class ProductController {
     }
 
     @PostMapping("/order")
-    public String order(@ModelAttribute("order") @Valid OrderDto orderDto, BindingResult bindingResult, Model model, Authentication authentication) {
+    public String order(@ModelAttribute("orderDto") @Valid OrderDto orderDto, BindingResult bindingResult, Model model, Authentication authentication) {
         if (bindingResult.hasErrors()) {
             Product product = productService.findById(orderDto.getProductId()).orElse(null);
             model.addAttribute("product", product);
             return "product/show";
         }
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        orderService.save(orderDto, userDetails.getUser().getId());
+        model.addAttribute("order", orderService.save(orderDto, userDetails.getUser().getId()));
 
-        return "redirect:/";
+        return "product/order_complete";
     }
 }

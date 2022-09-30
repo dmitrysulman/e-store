@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+</head>
+<body>
+    <div style="width: 800px; margin: auto;">
+        <div th:replace="/fragments/header :: header"></div>
+        <div style="margin-bottom: 20px;">
+            <a th:href="@{/admin}">Users</a> | Products | <a th:href="@{/admin/orders}">Orders</a>
+            <br />
+            <br />
+            <div th:each="product : ${products}" style="margin-bottom: 20px;">
+                <a th:href="@{/admin/product/{id}(id=${product.getId()})}" th:text="${product.getName()}"></a>
+                <div th:text="#{index.product.price} + ': ' + ${product.getPrice()}"></div>
+            </div>
+        </div>
+        <a th:href="@{/admin/add_product}">Add product</a>
+    </div>
+</body>
+</html>

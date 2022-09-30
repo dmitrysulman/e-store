@@ -3,14 +3,17 @@ package org.dmitrysulman.innopolis.diplomaproject.services;
 import org.dmitrysulman.innopolis.diplomaproject.dto.UserDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    public User save(User user);
+    User save(User user);
 
-    public Optional<User> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
-    public User update(UserDto userDto, int userId);
+    User update(UserDto userDto, int userId);
 
-    public User findByIdWithOrders(int id);
+    User findByIdWithOrders(int id);
+
+    List<User> findAll();
 }

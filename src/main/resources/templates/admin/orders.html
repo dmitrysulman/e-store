@@ -8,11 +8,11 @@
     <div style="width: 800px; margin: auto;">
         <div th:replace="/fragments/header :: header"></div>
         <div style="margin-bottom: 20px;">
-            <a th:href="@{/profile}">My Details</a> | My Orders
+            <a th:href="@{/admin}">Users</a> | <a th:href="@{/admin/products}">Products</a> | Orders</a>
             <br />
             <br />
             <div th:each="order : ${orders}" style="margin-bottom: 20px;">
-                <div th:text="${order.getId()} + ', ' + ${order.getOrderDate()} + ', ' + ${order.getProduct().getName()} + ', ' + ${order.getProductsAmount()} + ', ' + ${order.getOrderAmount()} + ', ' + ${order.getOrderStatus()}"></div>
+                <div th:text="${order.getId()} + ', ' + ${order.getOrderDate()} + ', ' + ${order.getUser().getFullName()} + ', ' + ${order.getUser().getEmail()} + ', ' + ${order.getProduct().getName()} + ', ' + ${order.getProductsAmount()} + ', ' + ${order.getOrderAmount()} + ', ' + ${order.getOrderStatus()}"></div>
             </div>
         </div>
     </div>

@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void save(OrderDto orderDto, int userId) {
+    public Order save(OrderDto orderDto, int userId) {
         Order order = new Order();
         User user = userRepository.findById(userId).orElse(null);
         Product product = productRepository.findById(orderDto.getProductId()).orElse(null);
@@ -53,6 +53,6 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderAmount(orderAmount);
         order.setOrderDate(new Date());
         order.setOrderStatus(OrderStatus.NEW);
-        orderRepository.save(order);
+        return orderRepository.save(order);
     }
 }
