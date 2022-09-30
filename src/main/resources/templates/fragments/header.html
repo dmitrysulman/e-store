@@ -8,6 +8,7 @@
 </head>
 <body>
     <div th:fragment="header" style="margin-bottom: 20px;">
+        <a href="/">Home</a>
         <div sec:authorize="isAuthenticated()">
             <span th:style="${#authentication.getPrincipal().getUser().getAdmin()} ? 'color: red' : ''"
                   th:text="'Hello, ' + ${#authentication.getPrincipal().getUser().getFullName()}"></span>

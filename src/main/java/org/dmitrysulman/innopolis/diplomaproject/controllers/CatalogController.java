@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Objects;
 
 @Controller
 public class CatalogController {
@@ -20,5 +23,18 @@ public class CatalogController {
     public String index(Model model) {
         model.addAttribute("products", productService.findAll());
         return "catalog/index";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam(value = "query", required = false) String query, Model model) {
+        if (Objects.nonNull(query)) {
+            if (query.equals("")) {
+                return "redirect:/";
+            }
+            model.addAttribute("text", query);
+            model.addAttribute("products", productService.findByNameLike(query));
+        }
+
+        return "/catalog/search";
     }
 }

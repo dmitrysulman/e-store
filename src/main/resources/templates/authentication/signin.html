@@ -5,17 +5,22 @@
     <title th:text="#{signin.page.title}"></title>
 </head>
 <body>
-    <form name="signin-form" method="post" action="/process-signin">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-        <label for="username">Input Email:</label>
-        <input type="text" id="username" name="username">
-        <br />
-        <label for="password">Input Password:</label>
-        <input type="password" id="password" name="password">
-        <br />
-        <div th:if="${param.error}" th:text="#{signin.page.error}" style="color: red"></div>
-        <input type="submit" value="Login">
-    </form>
-    <span>Don't have an account yet? <a href="/signup">Sign Up</a></span>
+<div style="width: 800px; margin: auto;">
+    <div th:replace="/fragments/header :: header"></div>
+    <div style="margin-bottom: 20px;">
+        <form name="signin-form" method="post" action="/process-signin">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <label for="username">Input Email:</label>
+            <input type="text" id="username" name="username">
+            <br />
+            <label for="password">Input Password:</label>
+            <input type="password" id="password" name="password">
+            <br />
+            <div th:if="${param.error}" th:text="#{signin.page.error}" style="color: red"></div>
+            <input type="submit" value="Login">
+        </form>
+        <span>Don't have an account yet? <a href="/signup">Sign Up</a></span>
+    </div>
+</div>
 </body>
 </html>
