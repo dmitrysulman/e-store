@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class CatalogController {
-
     private final ProductService productService;
 
     @Autowired
@@ -24,6 +23,7 @@ public class CatalogController {
                         Model model) {
         model.addAttribute("query", "");
         model.addAttribute("products", productService.findAll(page, perPage, direction));
+
         return "catalog/index";
     }
 

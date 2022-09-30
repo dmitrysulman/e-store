@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Component
 public class OrderValidator implements Validator {
-
     private final ProductService productService;
 
     @Autowired

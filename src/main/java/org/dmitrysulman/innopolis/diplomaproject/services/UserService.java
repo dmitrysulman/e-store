@@ -11,4 +11,6 @@ public interface UserService {
     public Optional<User> findByEmail(String email);
 
     public User update(UserDto userDto, int userId);
+
+    public User findByIdWithOrders(int id);
 }

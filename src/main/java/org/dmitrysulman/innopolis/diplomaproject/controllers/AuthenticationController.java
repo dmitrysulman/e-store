@@ -17,7 +17,6 @@ import javax.validation.Valid;
 
 @Controller
 public class AuthenticationController {
-
     private final UserService userService;
     private final UserValidator userValidator;
 

@@ -14,7 +14,6 @@ import java.util.Optional;
 
 @Component
 public class UserDtoValidator implements Validator {
-
     private final UserService userService;
 
     @Autowired

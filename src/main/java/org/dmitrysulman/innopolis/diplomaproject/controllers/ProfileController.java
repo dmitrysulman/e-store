@@ -20,7 +20,6 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
-
     private final UserService userService;
     private final UserDtoValidator userDtoValidator;
 
@@ -73,7 +72,7 @@ public class ProfileController {
     @GetMapping("/orders")
     private String orders(Model model, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        model.addAttribute("orders", userDetails.getUser().getOrders());
+        model.addAttribute("orders", userService.findByIdWithOrders(userDetails.getUser().getId()).getOrders());
 
         return "profile/orders";
     }

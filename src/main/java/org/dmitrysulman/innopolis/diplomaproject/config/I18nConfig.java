@@ -16,12 +16,12 @@ import java.util.Locale;
 
 @Configuration
 public class I18nConfig implements WebMvcConfigurer {
-
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setBasename("classpath:messages/messages");
         messageSource.setDefaultEncoding("UTF-8");
+
         return messageSource;
     }
 
@@ -29,6 +29,7 @@ public class I18nConfig implements WebMvcConfigurer {
     public LocaleResolver localeResolver() {
         SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
         sessionLocaleResolver.setDefaultLocale(Locale.US);
+
         return sessionLocaleResolver;
     }
 
@@ -36,6 +37,7 @@ public class I18nConfig implements WebMvcConfigurer {
     public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("lang");
+
         return localeChangeInterceptor;
     }
 
@@ -48,6 +50,7 @@ public class I18nConfig implements WebMvcConfigurer {
     public Validator getValidator() {
         LocalValidatorFactoryBean validatorFactoryBean = new LocalValidatorFactoryBean();
         validatorFactoryBean.setValidationMessageSource(messageSource());
+
         return validatorFactoryBean;
     }
 }

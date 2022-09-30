@@ -3,6 +3,7 @@ package org.dmitrysulman.innopolis.diplomaproject.services;
 import org.dmitrysulman.innopolis.diplomaproject.dto.UserDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.UserRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,6 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setAdmin(false);
+
         return userRepository.save(user);
     }
 
@@ -47,5 +48,13 @@ public class UserServiceImpl implements UserService {
         user.setRepeatPassword(user.getPassword());
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User findByIdWithOrders(int id) {
+        User user = userRepository.findById(id).orElse(null);
+        Hibernate.initialize(user.getOrders());
+
+        return user;
     }
 }
