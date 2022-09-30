@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:if="${products.getTotalPages()} > 1" th:fragment="product_pagination">
+        <th:block th:each="page: ${#numbers.sequence(0, products.getTotalPages() - 1)}">
+            <span th:if="${page} == ${products.getNumber()}" th:text="${page} + 1"></span>
+            <a th:if="${page} != ${products.getNumber()}" th:text="${page} + 1" th:href="@{/(page=${page}, per_page=${products.getSize()}, direction=${products.getSort().getOrderFor('price').getDirection()})}"></a>
+        </th:block>
+    </div>
+</body>
+</html>

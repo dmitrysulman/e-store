@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Page</title>
+</head>
+<body>
+    <div style="width: 800px; margin: auto;">
+        <div th:replace="/fragments/header :: header"></div>
+        <div style="margin-bottom: 20px;">
+            My Details | <a th:href="@{/profile/orders}">My Orders</a>
+            <br />
+            <div th:text="'Name ' + ${user.getFullName()}"></div>
+            <div th:text="'Email ' + ${user.getEmail()}"></div>
+            <div th:if="${user.getAddress()}" th:text="'Address ' + ${user.getAddress()}"></div>
+        </div>
+        <a th:href="@{/profile/edit}">Edit details</a>
+    </div>
+</body>
+</html>

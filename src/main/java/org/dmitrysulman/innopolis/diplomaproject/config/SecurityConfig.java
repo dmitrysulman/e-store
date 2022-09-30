@@ -21,10 +21,12 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
+                                .antMatchers("/admin/**")
+                                .hasRole("ADMIN")
                                 .antMatchers("/signup**", "/signin**", "/", "/product/*/")
                                 .permitAll()
-                                .antMatchers("/admin", "/product/order")
-                                .authenticated()
+                                .antMatchers("/product/order", "/profile/**")
+                                .hasAnyRole("USER", "ADMIN")
                 )
                 .formLogin(formLogin ->
                         formLogin

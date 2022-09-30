@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
             perPage = 10;
         }
         Sort.Direction sortDirection = Sort.Direction.ASC;
-        if (direction != null && direction.equals("desc")) {
+        if (direction != null && direction.equals("DESC")) {
             sortDirection = Sort.Direction.DESC;
         }
         Sort sort = Sort.by(new Sort.Order(sortDirection, "price"));

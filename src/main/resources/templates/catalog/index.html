@@ -12,16 +12,15 @@
             <input type="text" th:value="${query}" id="query" name="query">
             <input type="submit" value="Search">
         </form>
+        <a th:if="${products.getSort().getOrderFor('price').getDirection().isAscending()}" th:text="'sort by price DESC'" th:href="@{/(page=${products.getNumber()}, per_page=${products.getSize()}, direction='DESC')}"></a>
+        <a th:if="${products.getSort().getOrderFor('price').getDirection().isDescending()}" th:text="'sort by price ASC'" th:href="@{/(page=${products.getNumber()}, per_page=${products.getSize()}, direction='ASC')}"></a>
+
+        <div th:replace="/fragments/product_pagination :: product_pagination"></div>
         <div th:each="product : ${products.getContent()}" style="margin-bottom: 20px;">
             <a th:href="@{/product/{id}(id=${product.getId()})}" th:text="${product.getName()}"></a>
             <div th:text="#{index.product.price} + ': ' + ${product.getPrice()}"></div>
         </div>
-        <div th:if="${products.getTotalPages()} > 1">
-            <th:block th:each="page: ${#numbers.sequence(0, products.getTotalPages() - 1)}">
-                <span th:if="${page} == ${products.getNumber()}" th:text="${page} + 1"></span>
-                <a th:if="${page} != ${products.getNumber()}" th:text="${page} + 1" th:href="@{/(page=${page}, per_page=${products.getSize()}, sort=${products.getSort().getOrderFor('price')})}"></a>
-            </th:block>
-        </div>
+        <div th:replace="/fragments/product_pagination :: product_pagination"></div>
     </div>
 </body>
 </html>

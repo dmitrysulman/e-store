@@ -1,7 +1,8 @@
 package org.dmitrysulman.innopolis.diplomaproject.util;
 
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
-import org.dmitrysulman.innopolis.diplomaproject.services.UserService;
+import org.dmitrysulman.innopolis.diplomaproject.services.UserService
+        ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
