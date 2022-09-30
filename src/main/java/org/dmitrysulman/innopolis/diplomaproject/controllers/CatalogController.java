@@ -31,7 +31,7 @@ public class CatalogController {
             if (query.equals("")) {
                 return "redirect:/";
             }
-            model.addAttribute("text", query);
+            model.addAttribute("query", query);
             model.addAttribute("products", productService.findByNameLike(query));
         }
 

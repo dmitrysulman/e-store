@@ -27,7 +27,7 @@ public class AuthenticationController {
         this.userValidator = userValidator;
     }
 
-    @InitBinder
+    @InitBinder("user")
     private void initBinder(WebDataBinder binder) {
         binder.addValidators(userValidator);
     }
