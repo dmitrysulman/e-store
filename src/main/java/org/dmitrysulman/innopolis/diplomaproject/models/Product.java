@@ -4,7 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 //TODO add messages
 @Entity
@@ -28,18 +27,14 @@ public class Product {
     @Column(name = "amount")
     private int amount;
 
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private List<Order> orders;
-
     public Product() {
     }
 
-    public Product(int id, String name, int price, int amount, List<Order> orders) {
+    public Product(int id, String name, int price, int amount) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.amount = amount;
-        this.orders = orders;
     }
 
     public int getId() {
@@ -72,13 +67,5 @@ public class Product {
 
     public void setAmount(int amount) {
         this.amount = amount;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
     }
 }

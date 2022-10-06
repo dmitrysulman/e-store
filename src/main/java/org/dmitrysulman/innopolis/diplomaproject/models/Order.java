@@ -2,6 +2,7 @@ package org.dmitrysulman.innopolis.diplomaproject.models;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 //TODO add status ENUM
 @Entity
@@ -16,19 +17,19 @@ public class Order {
     @Column(name = "order_date")
     private Date orderDate;
 
-    @Column(name = "products_amount")
+    @Transient
     private int productsAmount;
 
-    @Column(name = "order_amount")
+    @Transient
     private int orderAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
     private OrderStatus orderStatus;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            mappedBy = "order")
+    private List<OrderProduct> orderProducts;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
@@ -37,13 +38,13 @@ public class Order {
     public Order() {
     }
 
-    public Order(int id, Date orderDate, int productsAmount, int orderAmount, OrderStatus orderStatus, Product product, User user) {
+    public Order(int id, Date orderDate, int productsAmount, int orderAmount, OrderStatus orderStatus, List<OrderProduct> orderProducts, User user) {
         this.id = id;
         this.orderDate = orderDate;
         this.productsAmount = productsAmount;
         this.orderAmount = orderAmount;
         this.orderStatus = orderStatus;
-        this.product = product;
+        this.orderProducts = orderProducts;
         this.user = user;
     }
 
@@ -79,14 +80,6 @@ public class Order {
         this.orderAmount = orderAmount;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     public User getUser() {
         return user;
     }
@@ -101,5 +94,13 @@ public class Order {
 
     public void setOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public List<OrderProduct> getOrderProducts() {
+        return orderProducts;
+    }
+
+    public void setOrderProducts(List<OrderProduct> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 }
