@@ -13,6 +13,8 @@ public interface ProductService {
 
     Optional<Product> findById(int id);
 
+    Optional<Product> findByIdWithImagesUrls(int id);
+
     Page<Product> findByNameContaining(String name, Integer page, Integer perPage, String direction);
 
     Product save(Product product);

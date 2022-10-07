@@ -43,7 +43,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, @ModelAttribute("orderDto") OrderDto orderDto, Model model) {
-        Product product = productService.findById(id)
+        Product product = productService.findByIdWithImagesUrls(id)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND,
                                 messageSource.getMessage(
@@ -63,7 +63,16 @@ public class ProductController {
     @PostMapping("/order")
     public String order(@ModelAttribute("orderDto") @Valid OrderDto orderDto, BindingResult bindingResult, Model model, Authentication authentication) {
         if (bindingResult.hasErrors()) {
-            Product product = productService.findById(orderDto.getProductId()).orElse(null);
+            Product product = productService.findById(orderDto.getProductId())
+                    .orElseThrow(() ->
+                            new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                    messageSource.getMessage(
+                                            "errors.productcontroller.productnotfound",
+                                            null,
+                                            LocaleContextHolder.getLocale()
+                                    )
+                            )
+                    );
             model.addAttribute("product", product);
             return "product/show";
         }

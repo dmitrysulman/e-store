@@ -1,7 +1,9 @@
 package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
+import org.dmitrysulman.innopolis.diplomaproject.models.ProductImage;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +39,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Optional<Product> findById(int id) {
         return productRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Product> findByIdWithImagesUrls(int id) {
+        Optional<Product> product = productRepository.findById(id);
+        product.ifPresent(prd -> {
+            List<ProductImage> productImages = prd.getProductImages();
+            List<String> imagesUrls = new ArrayList<>();
+            int[] i = {0};
+            productImages.forEach(productImage -> imagesUrls.add("/products_images/" + prd.getId() + "/" + i[0]++));
+            prd.setImagesUrls(imagesUrls);
+        });
+
+        return product;
     }
 
     @Override

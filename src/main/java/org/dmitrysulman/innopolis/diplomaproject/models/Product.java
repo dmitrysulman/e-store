@@ -41,18 +41,23 @@ public class Product {
     private Instant updatedAt;
 
     @OneToMany(mappedBy = "product", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OrderBy("id")
     private List<ProductImage> productImages;
+
+    @Transient
+    private List<String> imagesUrls;
 
     public Product() {
     }
 
-    public Product(int id, String name, int price, int amount, Instant createdAt, Instant updatedAt, List<ProductImage> productImages) {
+    public Product(int id, String name, int price, int amount, Instant createdAt, Instant updatedAt, List<String> imagesUrls, List<ProductImage> productImages) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.amount = amount;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.imagesUrls = imagesUrls;
         this.productImages = productImages;
     }
 
@@ -110,5 +115,13 @@ public class Product {
 
     public void setProductImages(List<ProductImage> productImages) {
         this.productImages = productImages;
+    }
+
+    public List<String> getImagesUrls() {
+        return imagesUrls;
+    }
+
+    public void setImagesUrls(List<String> imagesUrls) {
+        this.imagesUrls = imagesUrls;
     }
 }
