@@ -16,6 +16,7 @@
             <div th:each="product : ${products}" style="margin-bottom: 20px;">
                 <a th:href="@{/admin/product/{id}(id=${product.getId()})}" th:text="${product.getName()}"></a>
                 <div th:text="#{index.product.price} + ': ' + ${product.getPrice()}"></div>
+                <div th:text="#{index.product.amount} + ': ' + ${product.getAmount()}"></div>
             </div>
         </div>
         <a th:href="@{/admin/add_product}">Add product</a>

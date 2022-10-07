@@ -8,7 +8,7 @@
 </head>
 <body>
     <div th:fragment="header" style="margin-bottom: 20px;">
-        <a href="/">Home</a>
+        <a href="/">Home</a><span sec:authorize="hasRole('ROLE_ADMIN')"> | <a href="/admin">Admin Zone</a></span>
         <div sec:authorize="isAuthenticated()">
             <span sec:authorize="hasRole('ROLE_ADMIN')" style="color: red"
                   th:text="'Hello, admin ' + ${#authentication.getPrincipal().getUser().getFullName()}"></span>

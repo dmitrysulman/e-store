@@ -1,9 +1,14 @@
 package org.dmitrysulman.innopolis.diplomaproject.models;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.time.Instant;
+import java.util.List;
 
 //TODO add messages
 @Entity
@@ -27,14 +32,28 @@ public class Product {
     @Column(name = "amount")
     private int amount;
 
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Instant updatedAt;
+
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<ProductImage> productImages;
+
     public Product() {
     }
 
-    public Product(int id, String name, int price, int amount) {
+    public Product(int id, String name, int price, int amount, Instant createdAt, Instant updatedAt, List<ProductImage> productImages) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.amount = amount;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.productImages = productImages;
     }
 
     public int getId() {
@@ -67,5 +86,29 @@ public class Product {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public List<ProductImage> getProductImages() {
+        return productImages;
+    }
+
+    public void setProductImages(List<ProductImage> productImages) {
+        this.productImages = productImages;
     }
 }

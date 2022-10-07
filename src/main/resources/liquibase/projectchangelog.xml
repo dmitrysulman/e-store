@@ -106,4 +106,24 @@
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="orders_products" constraintName="orders_products_product_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="products" validate="true"/>
         <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="orders_products" constraintName="orders_products_order_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="orders" validate="true"/>
     </changeSet>
+    <changeSet author="dmitrysulman" id="2">
+        <sql>
+            alter table products add constraint products_price_check
+                CHECK (price > 0);
+            alter table products add constraint products_amount_check
+                CHECK (amount >= 0);
+            alter table orders_products add constraint orders_products_product_price_check
+                CHECK (product_price > 0);
+            alter table orders_products add constraint orders_products_product_amount_check
+                CHECK (product_amount > 0);
+        </sql>
+        <rollback>
+            <sql>
+                alter table products drop constraint products_price_check;
+                alter table products drop constraint products_amount_check;
+                alter table orders_products drop constraint orders_products_product_price_check;
+                alter table orders_products drop constraint orders_products_product_amount_check;
+            </sql>
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

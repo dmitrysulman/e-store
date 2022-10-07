@@ -1,9 +1,13 @@
 package org.dmitrysulman.innopolis.diplomaproject.models;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.time.Instant;
 import java.util.List;
 
 @Entity
@@ -47,13 +51,21 @@ public class User {
     @Column(name = "is_admin")
     private Boolean isAdmin;
 
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Instant updatedAt;
+
     @OneToMany(mappedBy = "user", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Order> orders;
 
     public User() {
     }
 
-    public User(int id, String firstName, String secondName, String email, String password, String repeatPassword, String address, Boolean isAdmin, List<Order> orders) {
+    public User(int id, String firstName, String secondName, String email, String password, String repeatPassword, String address, Boolean isAdmin, Instant createdAt, Instant updatedAt, List<Order> orders) {
         this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
@@ -62,6 +74,8 @@ public class User {
         this.password = password;
         this.address = address;
         this.isAdmin = isAdmin;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.orders = orders;
     }
 
@@ -127,6 +141,22 @@ public class User {
 
     public void setAdmin(Boolean admin) {
         isAdmin = admin;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public List<Order> getOrders() {

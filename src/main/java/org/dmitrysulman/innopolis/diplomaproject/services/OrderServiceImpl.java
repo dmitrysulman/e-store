@@ -2,7 +2,6 @@ package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.*;
-import org.dmitrysulman.innopolis.diplomaproject.repositiries.OrderProductRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.OrderRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.UserRepository;
@@ -10,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,14 +19,12 @@ import java.util.Optional;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
-    private final OrderProductRepository orderProductRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, ProductRepository productRepository, OrderProductRepository orderProductRepository, UserRepository userRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, ProductRepository productRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
-        this.orderProductRepository = orderProductRepository;
         this.userRepository = userRepository;
     }
 
@@ -58,11 +55,14 @@ public class OrderServiceImpl implements OrderService {
 //        order.setProduct(product);
 //        order.setProductsAmount(orderDto.getProductsAmount());
 //        order.setOrderAmount(orderAmount);
-        order.setOrderDate(new Date());
+        order.setOrderDate(Instant.now());
         order.setOrderStatus(OrderStatus.NEW);
         order.setProductsAmount(orderDto.getProductsAmount());
         order.setOrderAmount(product.getPrice() * orderDto.getProductsAmount());
 //        orderProductRepository.save(orderProduct);
-        return orderRepository.save(order);
+        order = orderRepository.save(order);
+        product.setAmount(product.getAmount() - orderDto.getProductsAmount());
+        productRepository.save(product);
+        return order;
     }
 }

@@ -15,5 +15,5 @@ public interface ProductService {
 
     Page<Product> findByNameContaining(String name, Integer page, Integer perPage, String direction);
 
-    void save(Product product);
+    Product save(Product product);
 }

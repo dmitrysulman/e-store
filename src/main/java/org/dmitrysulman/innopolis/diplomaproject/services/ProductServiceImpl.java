@@ -45,8 +45,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void save(Product product) {
-        productRepository.save(product);
+    public Product save(Product product) {
+        return productRepository.save(product);
     }
 
     private Pageable preparePageable(Integer page, Integer perPage, String direction) {
