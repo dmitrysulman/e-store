@@ -3,7 +3,6 @@ package org.dmitrysulman.innopolis.diplomaproject.controllers;
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
-import org.dmitrysulman.innopolis.diplomaproject.services.ImageService;
 import org.dmitrysulman.innopolis.diplomaproject.services.OrderService;
 import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
 import org.dmitrysulman.innopolis.diplomaproject.util.OrderValidator;
@@ -28,15 +27,13 @@ public class ProductController {
     private final OrderService orderService;
     private final MessageSource messageSource;
     private final OrderValidator orderValidator;
-    private final ImageService imageService;
 
     @Autowired
-    public ProductController(ProductService productService, OrderService orderService, MessageSource messageSource, OrderValidator orderValidator, ImageService imageService) {
+    public ProductController(ProductService productService, OrderService orderService, MessageSource messageSource, OrderValidator orderValidator) {
         this.productService = productService;
         this.orderService = orderService;
         this.messageSource = messageSource;
         this.orderValidator = orderValidator;
-        this.imageService = imageService;
     }
 
     @InitBinder("orderDto")

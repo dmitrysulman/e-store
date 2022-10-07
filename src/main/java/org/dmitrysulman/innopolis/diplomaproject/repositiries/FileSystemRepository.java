@@ -1,5 +1,6 @@
 package org.dmitrysulman.innopolis.diplomaproject.repositiries;
 
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
@@ -19,5 +20,9 @@ public class FileSystemRepository {
         Files.write(newFile, content);
 
         return newFile.toAbsolutePath().toString();
+    }
+
+    public FileSystemResource find(String location) {
+        return new FileSystemResource(Paths.get(location));
     }
 }
