@@ -9,7 +9,7 @@
     <div th:if="${products.getTotalPages()} > 1" th:fragment="product_pagination">
         <th:block th:each="page: ${#numbers.sequence(0, products.getTotalPages() - 1)}">
             <span th:if="${page} == ${products.getNumber()}" th:text="${page} + 1"></span>
-            <a th:if="${page} != ${products.getNumber()}" th:text="${page} + 1" th:href="@{/(page=${page}, per_page=${products.getSize()}, direction=${products.getSort().getOrderFor('price').getDirection()})}"></a>
+            <a th:if="${page} != ${products.getNumber()}" th:text="${page} + 1" th:href="@{${#httpServletRequest.getRequestURI()}(__${query == '' ? '' : 'query=${query}'}__, page=${page}, per_page=${products.getSize()}, direction=${products.getSort().getOrderFor('price').getDirection()})}"></a>
         </th:block>
     </div>
 </body>

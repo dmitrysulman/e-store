@@ -50,7 +50,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public String signUp(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Authentication authentication) {
+    public String signUp(@ModelAttribute("user") @Valid User user,
+                         BindingResult bindingResult,
+                         Authentication authentication) {
         if (authentication != null) {
             return "redirect:/";
         }

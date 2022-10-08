@@ -11,15 +11,22 @@
         <div th:replace="/fragments/header :: header"></div>
         <div style="margin-bottom: 20px;">
             <a th:href="@{/admin}">Users</a> | Products | <a th:href="@{/admin/orders}">Orders</a>
-            <br />
+            <form th:method="GET" th:action="@{/admin/products/search}">
+                <label for="query">Search query:</label>
+                <input type="text" th:value="${query}" id="query" name="query">
+                <input type="submit" value="Search">
+            </form>
             <a th:href="@{/admin/add_product}">Add product</a>
             <br />
             <br />
-            <div th:each="product : ${products}" style="margin-bottom: 20px;">
+            <div th:replace="/fragments/product_sort :: product_sort"></div>
+            <div th:replace="/fragments/product_pagination :: product_pagination"></div>
+            <div th:each="product : ${products.getContent()}" style="margin-bottom: 20px;">
                 <a th:href="@{/admin/product/{id}(id=${product.getId()})}" th:text="${product.getName()}"></a>
                 <div th:text="#{index.product.price} + ': ' + ${product.getPrice()}"></div>
                 <div th:text="#{index.product.amount} + ': ' + ${product.getAmount()}"></div>
             </div>
+            <div th:replace="/fragments/product_pagination :: product_pagination"></div>
         </div>
         <a th:href="@{/admin/add_product}">Add product</a>
     </div>

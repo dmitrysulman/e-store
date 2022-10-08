@@ -59,8 +59,27 @@ public class AdminController {
     }
 
     @GetMapping("/products")
-    public String products(Model model) {
-        model.addAttribute("products", productService.findAll());
+    public String products(@RequestParam(value = "page", required = false) Integer page,
+                        @RequestParam(value = "per_page", required = false) Integer perPage,
+                        @RequestParam(value = "direction", required = false) String direction,
+                        Model model) {
+        model.addAttribute("query", "");
+        model.addAttribute("products", productService.findAll(page, perPage, direction));
+
+        return "admin/products";
+    }
+
+    @GetMapping("/products/search")
+    public String productsSearch(@RequestParam(value = "query", required = false) String query,
+                         @RequestParam(value = "page", required = false) Integer page,
+                         @RequestParam(value = "per_page", required = false) Integer perPage,
+                         @RequestParam(value = "direction", required = false) String direction,
+                         Model model) {
+        if (query == null || query.equals("")) {
+            return "redirect:/";
+        }
+        model.addAttribute("query", query);
+        model.addAttribute("products", productService.findByNameContaining(query, page, perPage, direction));
 
         return "admin/products";
     }

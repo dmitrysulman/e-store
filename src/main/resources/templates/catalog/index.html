@@ -14,9 +14,7 @@
             <input type="text" th:value="${query}" id="query" name="query">
             <input type="submit" value="Search">
         </form>
-        <a th:if="${products.getSort().getOrderFor('price').getDirection().isAscending()}" th:text="'sort by price DESC'" th:href="@{/(page=${products.getNumber()}, per_page=${products.getSize()}, direction='DESC')}"></a>
-        <a th:if="${products.getSort().getOrderFor('price').getDirection().isDescending()}" th:text="'sort by price ASC'" th:href="@{/(page=${products.getNumber()}, per_page=${products.getSize()}, direction='ASC')}"></a>
-
+        <div th:replace="/fragments/product_sort :: product_sort"></div>
         <div th:replace="/fragments/product_pagination :: product_pagination"></div>
         <div th:each="product : ${products.getContent()}" style="margin-bottom: 20px;">
             <a th:href="@{/product/{id}(id=${product.getId()})}" th:text="${product.getName()}"></a>

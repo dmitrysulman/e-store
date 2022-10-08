@@ -17,9 +17,13 @@ public class ProductImage {
     @Column(name = "image_location")
     private String imageLocation;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Column(name = "order")
+    private int order;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -32,10 +36,11 @@ public class ProductImage {
     public ProductImage() {
     }
 
-    public ProductImage(int id, String imageLocation, Product product, Instant createdAt, Instant updatedAt) {
+    public ProductImage(int id, String imageLocation, Product product, int order, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.imageLocation = imageLocation;
         this.product = product;
+        this.order = order;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -78,5 +83,13 @@ public class ProductImage {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

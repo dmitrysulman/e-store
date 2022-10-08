@@ -22,8 +22,7 @@ public class ProductImageController {
 
     @GetMapping(value = "/{productId}/{imageIndex}", produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
-    public Resource getImage(@PathVariable("productId") int productId,
-                                       @PathVariable("imageIndex") int imageIndex) {
+    public Resource getImage(@PathVariable("productId") int productId, @PathVariable("imageIndex") int imageIndex) {
         Resource image = imageService.get(productId, imageIndex);
         if (image == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

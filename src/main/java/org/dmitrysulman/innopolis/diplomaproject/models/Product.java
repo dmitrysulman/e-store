@@ -41,8 +41,8 @@ public class Product {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @OneToMany(mappedBy = "product", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @OrderBy("id")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OrderBy("order")
     private List<ProductImage> productImages;
 
     @Transient

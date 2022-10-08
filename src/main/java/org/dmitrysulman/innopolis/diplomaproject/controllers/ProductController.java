@@ -29,7 +29,10 @@ public class ProductController {
     private final OrderValidator orderValidator;
 
     @Autowired
-    public ProductController(ProductService productService, OrderService orderService, MessageSource messageSource, OrderValidator orderValidator) {
+    public ProductController(ProductService productService,
+                             OrderService orderService,
+                             MessageSource messageSource,
+                             OrderValidator orderValidator) {
         this.productService = productService;
         this.orderService = orderService;
         this.messageSource = messageSource;
@@ -42,7 +45,9 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, @ModelAttribute("orderDto") OrderDto orderDto, Model model) {
+    public String show(@PathVariable("id") int id,
+                       @ModelAttribute("orderDto") OrderDto orderDto,
+                       Model model) {
         Product product = productService.findByIdWithImagesUrls(id)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND,

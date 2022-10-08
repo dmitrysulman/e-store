@@ -54,7 +54,9 @@ public class ProfileController {
     }
 
     @PostMapping("/edit")
-    public String edit(@ModelAttribute("userDto") @Valid UserDto userDto, BindingResult bindingResult, Authentication authentication) {
+    public String edit(@ModelAttribute("userDto") @Valid UserDto userDto,
+                       BindingResult bindingResult,
+                       Authentication authentication) {
         if (bindingResult.hasErrors()) {
             return "profile/edit";
         }

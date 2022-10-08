@@ -31,6 +31,7 @@
       <br />
       <label for="image3">Select an image:</label>
       <input type="file" id="image3" th:field="*{images}" accept="image/png, image/gif, image/jpeg"/>
+      <div style="color:red" th:if="${#fields.hasErrors('images')}" th:errors="*{images}"></div>
       <br />
       <input type="submit" value="Add product">
     </form>
