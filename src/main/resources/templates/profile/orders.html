@@ -14,7 +14,7 @@
             <br />
             <br />
             <div th:each="order : ${orders}" style="margin-bottom: 20px;">
-                <div th:text="${order.getId()} + ', ' + ${order.getOrderDate()} + ', ' + ${order.getProduct().getName()} + ', ' + ${order.getProductsAmount()} + ', ' + ${order.getOrderAmount()} + ', ' + ${order.getOrderStatus()}"></div>
+                <div th:text="${order.getId()} + ', ' + ${order.getOrderDate()} + ', ' + ${order.getProductsAmount()} + ', ' + ${order.getOrderAmount()} + ', ' + ${order.getOrderStatus()}"></div>
             </div>
         </div>
     </div>
