@@ -6,13 +6,17 @@ import org.dmitrysulman.innopolis.diplomaproject.services.ImageService;
 import org.dmitrysulman.innopolis.diplomaproject.services.OrderService;
 import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
 import org.dmitrysulman.innopolis.diplomaproject.services.UserService;
+import org.dmitrysulman.innopolis.diplomaproject.util.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @Controller
@@ -22,13 +26,22 @@ public class AdminController {
     private final OrderService orderService;
     private final ProductService productService;
     private final ImageService imageService;
+    private final ProductValidator productValidator;
 
     @Autowired
-    public AdminController(UserService userService, OrderService orderService, ProductService productService, ImageService imageService) {
+    public AdminController(UserService userService, OrderService orderService, ProductService productService, ImageService imageService, ProductValidator productValidator) {
         this.userService = userService;
         this.orderService = orderService;
         this.productService = productService;
         this.imageService = imageService;
+        this.productValidator = productValidator;
+    }
+
+    @InitBinder("product")
+    public void initBinder (WebDataBinder binder) {
+        StringTrimmerEditor stringTrimmer = new StringTrimmerEditor(true);
+        binder.registerCustomEditor(String.class, stringTrimmer);
+        binder.addValidators(productValidator);
     }
 
     @GetMapping("")
@@ -58,14 +71,15 @@ public class AdminController {
     }
 
     @PostMapping("/add_product")
-    public String addProducts(@ModelAttribute("product") Product product,
-                              BindingResult bindingResult,
-                              @RequestParam("image") MultipartFile image) throws IOException {
+    public String addProducts(@ModelAttribute("product") @Valid Product product, BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) {
             return "admin/add_product";
         }
+        MultipartFile[] images = product.getImages();
         product = productService.save(product);
-        imageService.save(image.getBytes(), product, FilenameUtils.getExtension(image.getOriginalFilename()));
+        for (MultipartFile image : images) {
+            imageService.save(image.getBytes(), product, FilenameUtils.getExtension(image.getOriginalFilename()));
+        }
 
         return "redirect:/admin/products";
     }

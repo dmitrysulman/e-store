@@ -56,6 +56,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Optional<Product> findByName(String name) {
+        return productRepository.findByName(name);
+    }
+
+    @Override
     public Page<Product> findByNameContaining(String name, Integer page, Integer perPage, String direction) {
         return productRepository.findByNameContainingIgnoreCase(name, preparePageable(page, perPage, direction));
     }

@@ -12,6 +12,8 @@
         <div style="margin-bottom: 20px;">
             <a th:href="@{/admin}">Users</a> | Products | <a th:href="@{/admin/orders}">Orders</a>
             <br />
+            <a th:href="@{/admin/add_product}">Add product</a>
+            <br />
             <br />
             <div th:each="product : ${products}" style="margin-bottom: 20px;">
                 <a th:href="@{/admin/product/{id}(id=${product.getId()})}" th:text="${product.getName()}"></a>

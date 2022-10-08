@@ -27,6 +27,9 @@ public class FileSystemImageService implements ImageService {
     @Override
     @Transactional
     public ProductImage save(byte[] content, Product product, String extension) throws IOException {
+        if (content.length == 0) {
+            return null;
+        }
         String location = fileSystemRepository.save(content, product.getName().toLowerCase().replace(' ', '-').concat(".").concat(extension));
         ProductImage productImage = new ProductImage();
         productImage.setImageLocation(location);

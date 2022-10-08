@@ -23,8 +23,14 @@
       <input type="text" id="email" th:field="*{amount}">
       <div style="color:red" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></div>
       <br />
-      <label for="image">Select an image:</label>
-      <input type="file" id=image name="image" accept="image/png, image/gif, image/jpeg"/>
+      <label for="image1">Select an image:</label>
+      <input type="file" id="image1" th:field="*{images}" accept="image/png, image/gif, image/jpeg"/>
+      <br />
+      <label for="image2">Select an image:</label>
+      <input type="file" id="image2" th:field="*{images}" accept="image/png, image/gif, image/jpeg"/>
+      <br />
+      <label for="image3">Select an image:</label>
+      <input type="file" id="image3" th:field="*{images}" accept="image/png, image/gif, image/jpeg"/>
       <br />
       <input type="submit" value="Add product">
     </form>

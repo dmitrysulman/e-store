@@ -2,6 +2,7 @@ package org.dmitrysulman.innopolis.diplomaproject.models;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -47,10 +48,13 @@ public class Product {
     @Transient
     private List<String> imagesUrls;
 
+    @Transient
+    private MultipartFile[] images;
+
     public Product() {
     }
 
-    public Product(int id, String name, int price, int amount, Instant createdAt, Instant updatedAt, List<String> imagesUrls, List<ProductImage> productImages) {
+    public Product(int id, String name, int price, int amount, Instant createdAt, Instant updatedAt, List<String> imagesUrls, List<ProductImage> productImages, MultipartFile[] images) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -59,6 +63,7 @@ public class Product {
         this.updatedAt = updatedAt;
         this.imagesUrls = imagesUrls;
         this.productImages = productImages;
+        this.images = images;
     }
 
     public int getId() {
@@ -123,5 +128,13 @@ public class Product {
 
     public void setImagesUrls(List<String> imagesUrls) {
         this.imagesUrls = imagesUrls;
+    }
+
+    public MultipartFile[] getImages() {
+        return images;
+    }
+
+    public void setImages(MultipartFile[] images) {
+        this.images = images;
     }
 }

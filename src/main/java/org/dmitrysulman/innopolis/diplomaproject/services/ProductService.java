@@ -15,6 +15,8 @@ public interface ProductService {
 
     Optional<Product> findByIdWithImagesUrls(int id);
 
+    Optional<Product> findByName(String name);
+
     Page<Product> findByNameContaining(String name, Integer page, Integer perPage, String direction);
 
     Product save(Product product);
