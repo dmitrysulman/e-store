@@ -1,32 +1,42 @@
 package org.dmitrysulman.innopolis.diplomaproject.models;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-public final class ShoppingCart {
-    private final Map<Product, Integer> shoppingCart;
+public class ShoppingCart {
+    private User user;
+    private List<CartItem> cartItems;
 
     public ShoppingCart() {
-        shoppingCart = new HashMap<>();
     }
 
-    public void addProductToCartOrChangeCount(Product product, Integer count) {
-        shoppingCart.put(product, count);
+    public ShoppingCart(User user, List<CartItem> cartItems) {
+        this.user = user;
+        this.cartItems = cartItems;
     }
 
-    public void removeProductFromCart(Product product) {
-        shoppingCart.remove(product);
+    public User getUser() {
+        return user;
     }
 
-    public Map<Product, Integer> shoppingCart() {
-        return new HashMap<>(shoppingCart);
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 
     public int getTotalProducts() {
-        return shoppingCart.size();
+        return cartItems.size();
     }
 
     public int getTotalItems() {
-        return shoppingCart.values().stream().reduce(0, Integer::sum);
+        return cartItems.stream()
+                .mapToInt(CartItem::getCount)
+                .reduce(0, Integer::sum);
     }
 }

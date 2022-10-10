@@ -90,7 +90,8 @@ public class AdminController {
     }
 
     @PostMapping("/add_product")
-    public String addProducts(@ModelAttribute("product") @Valid Product product, BindingResult bindingResult) throws IOException {
+    public String addProducts(@ModelAttribute("product") @Valid Product product,
+                              BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) {
             return "admin/add_product";
         }
