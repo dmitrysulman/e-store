@@ -2,9 +2,10 @@ package org.dmitrysulman.innopolis.diplomaproject.controllers;
 
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
-import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
+import org.dmitrysulman.innopolis.diplomaproject.models.ShoppingCart;
 import org.dmitrysulman.innopolis.diplomaproject.services.OrderService;
 import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
+import org.dmitrysulman.innopolis.diplomaproject.services.ShoppingCartService;
 import org.dmitrysulman.innopolis.diplomaproject.util.OrderValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -25,16 +27,19 @@ import javax.validation.Valid;
 public class ProductController {
     private final ProductService productService;
     private final OrderService orderService;
+    private final ShoppingCartService shoppingCartService;
     private final MessageSource messageSource;
     private final OrderValidator orderValidator;
 
     @Autowired
     public ProductController(ProductService productService,
                              OrderService orderService,
+                             ShoppingCartService shoppingCartService,
                              MessageSource messageSource,
                              OrderValidator orderValidator) {
         this.productService = productService;
         this.orderService = orderService;
+        this.shoppingCartService = shoppingCartService;
         this.messageSource = messageSource;
         this.orderValidator = orderValidator;
     }
@@ -65,8 +70,34 @@ public class ProductController {
         return "product/show";
     }
 
-    @PostMapping("/order")
-    public String order(@ModelAttribute("orderDto") @Valid OrderDto orderDto, BindingResult bindingResult, Model model, Authentication authentication) {
+//    @PostMapping("/order")
+//    public String order(@ModelAttribute("orderDto") @Valid OrderDto orderDto, BindingResult bindingResult, Model model, Authentication authentication) {
+//        if (bindingResult.hasErrors()) {
+//            Product product = productService.findById(orderDto.getProductId())
+//                    .orElseThrow(() ->
+//                            new ResponseStatusException(HttpStatus.NOT_FOUND,
+//                                    messageSource.getMessage(
+//                                            "errors.productcontroller.productnotfound",
+//                                            null,
+//                                            LocaleContextHolder.getLocale()
+//                                    )
+//                            )
+//                    );
+//            model.addAttribute("product", product);
+//            return "product/show";
+//        }
+//        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+//        model.addAttribute("order", orderService.save(orderDto, userDetails.getUser().getId()));
+//
+//        return "product/order_complete";
+//    }
+
+    @PostMapping("/add_to_cart")
+    public String addToCart(@ModelAttribute("orderDto") @Valid OrderDto orderDto,
+                            BindingResult bindingResult,
+                            Model model,
+                            HttpSession httpSession,
+                            Authentication authentication) {
         if (bindingResult.hasErrors()) {
             Product product = productService.findById(orderDto.getProductId())
                     .orElseThrow(() ->
@@ -81,9 +112,12 @@ public class ProductController {
             model.addAttribute("product", product);
             return "product/show";
         }
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        model.addAttribute("order", orderService.save(orderDto, userDetails.getUser().getId()));
+        shoppingCartService.addProductToCartOrChangeCount((ShoppingCart) httpSession.getAttribute("cart"), orderDto);
 
-        return "product/order_complete";
+        return "redirect:/product/" + orderDto.getProductId();
+//        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+//        model.addAttribute("order", orderService.save(orderDto, userDetails.getUser().getId()));
+
+//        return "product/order_complete";
     }
 }

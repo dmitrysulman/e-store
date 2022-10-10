@@ -22,16 +22,16 @@
                 <img th:src="@{${productImageUrl}}" th:alt="${product.getName()}"/>
             </div>
         </div>
-        <form sec:authorize="isAuthenticated()" th:method="POST" th:action="@{/product/order}" th:object="${orderDto}">
+        <form th:method="POST" th:action="@{/product/add_to_cart}" th:object="${orderDto}">
             <label for="products-amount" th:text="#{product.product.productsamount}"></label>
             <input type="text" id="products-amount" th:field="*{productsAmount}">
             <div style="color:red" th:if="${#fields.hasErrors('productsAmount')}" th:errors="*{productsAmount}"></div>
             <input type="hidden" th:field="*{productId}">
-            <input type="submit" th:value="#{product.product.order}">
+            <input type="submit" th:value="#{product.product.addtocart}">
         </form>
-        <div sec:authorize="!isAuthenticated()">
-            <a href="/signin">Sign In</a> or <a href="/signup">Sign Up</a> to make an order.
-        </div>
+<!--        <div sec:authorize="!isAuthenticated()">-->
+<!--            <a href="/signin">Sign In</a> or <a href="/signup">Sign Up</a> to make an order.-->
+<!--        </div>-->
     </div>
 </body>
 </html>

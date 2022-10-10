@@ -25,6 +25,10 @@
             <br />
             <a href="/signin">Sign In</a> or <a href="/signup">Sign Up</a>
         </div>
+        <div>
+            <span th:text="#{cart.totalproducts} + ': ' + ${session.cart.getTotalItems()}"></span>
+        </div>
+
     </div>
 </body>
 </html>

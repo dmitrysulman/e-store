@@ -25,7 +25,7 @@ public class SecurityConfig {
                                 .hasRole("ADMIN")
 //                                .antMatchers("/signup**", "/signin**", "/", "/product/*/")
 //                                .permitAll()
-                                .antMatchers("/product/order", "/profile/**")
+                                .antMatchers("/cart/order", "/profile/**")
                                 .hasAnyRole("USER", "ADMIN")
                 )
                 .formLogin(formLogin ->
