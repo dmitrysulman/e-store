@@ -17,12 +17,10 @@ import java.util.ArrayList;
 @Transactional(readOnly = true)
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ProductRepository productRepository;
-    private final EntityManager entityManager;
 
     @Autowired
-    public ShoppingCartServiceImpl(ProductRepository productRepository, EntityManager entityManager) {
+    public ShoppingCartServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.entityManager = entityManager;
     }
 
     @Override
@@ -64,6 +62,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void updateCartContent(ShoppingCart shoppingCart) {
-        shoppingCart.getCartItems().forEach(cartItem -> entityManager.refresh(entityManager.merge(cartItem.getProduct())));
+        shoppingCart.getCartItems().forEach(cartItem -> cartItem.setProduct(productRepository.findById(cartItem.getProduct().getId()).get()));
     }
 }

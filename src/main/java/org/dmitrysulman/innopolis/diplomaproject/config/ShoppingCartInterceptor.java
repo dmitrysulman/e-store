@@ -25,7 +25,7 @@ public class ShoppingCartInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Object shoppingCart = request.getSession().getAttribute("cart");
         if (shoppingCart == null) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -36,5 +36,7 @@ public class ShoppingCartInterceptor implements HandlerInterceptor {
                 request.getSession().setAttribute("cart", shoppingCartService.getShoppingCart(user));
             }
         }
+
+        return true;
     }
 }

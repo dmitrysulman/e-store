@@ -39,4 +39,10 @@ public class ShoppingCart {
                 .mapToInt(CartItem::getCount)
                 .reduce(0, Integer::sum);
     }
+
+    public int getTotalPrice() {
+        return cartItems.stream()
+                .mapToInt(CartItem::getTotalPrice)
+                .reduce(0, Integer::sum);
+    }
 }

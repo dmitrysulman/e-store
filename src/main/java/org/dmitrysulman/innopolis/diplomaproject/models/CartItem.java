@@ -37,4 +37,8 @@ public class CartItem {
     public void setShoppingCart(ShoppingCart shoppingCart) {
         this.shoppingCart = shoppingCart;
     }
+
+    public int getTotalPrice() {
+        return product.getPrice() * count;
+    }
 }

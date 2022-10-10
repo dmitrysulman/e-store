@@ -11,8 +11,9 @@
   <div th:replace="/fragments/header :: header"></div>
   <h1>Shopping cart</h1>
   <div th:each="cartItem : ${session.cart.getCartItems()}" style="margin-bottom: 20px;">
-    <div th:text="${cartItem.getProduct().getName()} + ' ' + ${cartItem.getCount()}"></div>
+    <div th:text="${cartItem.getProduct().getName()} + ' ' + ${cartItem.getCount()} + ' ' + ${cartItem.getProduct().getPrice()} + ' ' + ${cartItem.getTotalPrice()}"></div>
   </div>
+  <span th:text="${session.cart.getTotalPrice()}"></span>
 </div>
 </body>
 </html>
