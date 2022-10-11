@@ -1,5 +1,6 @@
 package org.dmitrysulman.innopolis.diplomaproject.config;
 
+import org.dmitrysulman.innopolis.diplomaproject.models.ShoppingCart;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
 import org.dmitrysulman.innopolis.diplomaproject.services.ShoppingCartService;
@@ -25,18 +26,27 @@ public class ShoppingCartInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Object shoppingCart = request.getSession().getAttribute("cart");
-        if (shoppingCart == null) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication instanceof AnonymousAuthenticationToken) {
-                request.getSession().setAttribute("cart", shoppingCartService.getShoppingCart());
+    public void postHandle(HttpServletRequest request,
+                           HttpServletResponse response,
+                           Object handler,
+                           @Nullable ModelAndView modelAndView) throws Exception {
+        ShoppingCart shoppingCart;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            shoppingCart = (ShoppingCart) request.getSession().getAttribute("cart");
+            if (shoppingCart == null) {
+                shoppingCart = new ShoppingCart();
+                request.getSession().setAttribute("cart", shoppingCart);
             } else {
-                User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
-                request.getSession().setAttribute("cart", shoppingCartService.getShoppingCart(user));
+                shoppingCartService.updateCartContent(shoppingCart);
             }
+        } else {
+            User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
+            shoppingCart = shoppingCartService.getShoppingCartByUser(user);
+            request.getSession().setAttribute("cart", shoppingCart);
         }
-
-        return true;
+        if (modelAndView != null) {
+            modelAndView.getModelMap().addAttribute("cart", shoppingCart);
+        }
     }
 }

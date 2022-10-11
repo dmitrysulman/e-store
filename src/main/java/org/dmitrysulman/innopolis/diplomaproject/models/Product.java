@@ -42,7 +42,7 @@ public class Product {
     private Instant updatedAt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @OrderBy("order")
+    @OrderBy("imageOrder")
     private List<ProductImage> productImages;
 
     @Transient

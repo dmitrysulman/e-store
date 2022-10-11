@@ -6,11 +6,11 @@ import org.dmitrysulman.innopolis.diplomaproject.models.ShoppingCart;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 
 public interface ShoppingCartService {
-    ShoppingCart getShoppingCart();
+    void setShoppingCartWithUserAfterLogin(User user, ShoppingCart shoppingCart);
 
-    ShoppingCart getShoppingCart(User user);
+    ShoppingCart getShoppingCartByUser(User user);
 
-    void addProductToCartOrChangeCount(ShoppingCart shoppingCart, OrderDto orderDto);
+    void addProductToCartOrChangeCount(ShoppingCart shoppingCart, OrderDto orderDto, User user);
 
     void removeProductFromCart(ShoppingCart shoppingCart, Product product);
 

@@ -20,9 +20,7 @@ public class CartController {
     }
 
     @GetMapping("")
-    public String cart(HttpSession httpSession) {
-        shoppingCartService.updateCartContent((ShoppingCart) httpSession.getAttribute("cart"));
-
+    public String cart() {
         return "cart/index";
     }
 }

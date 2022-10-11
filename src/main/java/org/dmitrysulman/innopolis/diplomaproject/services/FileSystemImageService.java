@@ -40,7 +40,7 @@ public class FileSystemImageService implements ImageService {
 
     @Override
     public FileSystemResource get(int productId, int index) {
-        List<ProductImage> productImages = productImageRepository.findByProductIdOrderByOrder(productId);
+        List<ProductImage> productImages = productImageRepository.findByProductIdOrderByImageOrder(productId);
         if (productImages.isEmpty() || productImages.size() < index + 1) {
             return null;
         }

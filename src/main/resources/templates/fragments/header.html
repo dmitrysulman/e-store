@@ -26,9 +26,8 @@
             <a href="/signin">Sign In</a> or <a href="/signup">Sign Up</a>
         </div>
         <div>
-            <a th:text="#{cart.totalproducts} + ': ' + ${session.cart.getTotalItems()}" th:href="@{/cart}"></a>
+            <a th:if="${cart.getTotalItems() > 0}" th:text="#{cart.totalproducts} + ': ' + ${cart.getTotalItems()} + ', ' + ${cart.getTotalPrice()}" th:href="@{/cart}"></a>
         </div>
-
     </div>
 </body>
 </html>

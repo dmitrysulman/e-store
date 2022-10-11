@@ -1,5 +1,6 @@
 package org.dmitrysulman.innopolis.diplomaproject.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShoppingCart {
@@ -7,6 +8,7 @@ public class ShoppingCart {
     private List<CartItem> cartItems;
 
     public ShoppingCart() {
+        cartItems = new ArrayList<>();
     }
 
     public ShoppingCart(User user, List<CartItem> cartItems) {

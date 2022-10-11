@@ -22,8 +22,8 @@ public class ProductImage {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column(name = "order")
-    private int order;
+    @Column(name = "imageOrder")
+    private int imageOrder;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -36,11 +36,11 @@ public class ProductImage {
     public ProductImage() {
     }
 
-    public ProductImage(int id, String imageLocation, Product product, int order, Instant createdAt, Instant updatedAt) {
+    public ProductImage(int id, String imageLocation, Product product, int imageOrder, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.imageLocation = imageLocation;
         this.product = product;
-        this.order = order;
+        this.imageOrder = imageOrder;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -85,11 +85,11 @@ public class ProductImage {
         this.updatedAt = updatedAt;
     }
 
-    public int getOrder() {
-        return order;
+    public int getImageOrder() {
+        return imageOrder;
     }
 
-    public void setOrder(int order) {
-        this.order = order;
+    public void setImageOrder(int order) {
+        this.imageOrder = order;
     }
 }

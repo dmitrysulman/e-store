@@ -133,4 +133,7 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="4" author="dmitrysulman">
+        <renameColumn tableName="products_images" oldColumnName="order" newColumnName="image_order"/>
+    </changeSet>
 </databaseChangeLog>

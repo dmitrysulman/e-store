@@ -3,6 +3,8 @@ package org.dmitrysulman.innopolis.diplomaproject.controllers;
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.ShoppingCart;
+import org.dmitrysulman.innopolis.diplomaproject.models.User;
+import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
 import org.dmitrysulman.innopolis.diplomaproject.services.OrderService;
 import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
 import org.dmitrysulman.innopolis.diplomaproject.services.ShoppingCartService;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -112,12 +115,14 @@ public class ProductController {
             model.addAttribute("product", product);
             return "product/show";
         }
-        shoppingCartService.addProductToCartOrChangeCount((ShoppingCart) httpSession.getAttribute("cart"), orderDto);
+        User user = null;
+        //if (!(authentication instanceof AnonymousAuthenticationToken)) {
+        if (authentication != null) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            user = userDetails.getUser();
+        }
+        shoppingCartService.addProductToCartOrChangeCount((ShoppingCart) httpSession.getAttribute("cart"), orderDto, user);
 
         return "redirect:/product/" + orderDto.getProductId();
-//        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-//        model.addAttribute("order", orderService.save(orderDto, userDetails.getUser().getId()));
-
-//        return "product/order_complete";
     }
 }

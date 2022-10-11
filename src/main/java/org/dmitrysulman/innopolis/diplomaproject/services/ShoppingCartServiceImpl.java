@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.util.ArrayList;
-
 @Service
 @Transactional(readOnly = true)
 public class ShoppingCartServiceImpl implements ShoppingCartService {
@@ -24,21 +21,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCart getShoppingCart() {
-        ShoppingCart shoppingCart = new ShoppingCart();
-        shoppingCart.setCartItems(new ArrayList<>());
-        return shoppingCart;
+    public void setShoppingCartWithUserAfterLogin(User user, ShoppingCart shoppingCart) {
+        //TODO go to DB
     }
 
     @Override
-    public ShoppingCart getShoppingCart(User user) {
+    public ShoppingCart getShoppingCartByUser(User user) {
         //TODO go to DB
-        getShoppingCart();
         return null;
     }
 
     @Override
-    public void addProductToCartOrChangeCount(ShoppingCart shoppingCart, OrderDto orderDto) {
+    public void addProductToCartOrChangeCount(ShoppingCart shoppingCart, OrderDto orderDto, User user) {
         shoppingCart
                 .getCartItems()
                 .stream()
