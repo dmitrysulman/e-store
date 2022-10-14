@@ -38,7 +38,7 @@ public class AdminController {
     }
 
     @InitBinder("product")
-    public void initBinder (WebDataBinder binder) {
+    public void initBinder(WebDataBinder binder) {
         StringTrimmerEditor stringTrimmer = new StringTrimmerEditor(true);
         binder.registerCustomEditor(String.class, stringTrimmer);
         binder.addValidators(productValidator);
