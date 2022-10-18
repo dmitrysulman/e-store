@@ -7,6 +7,7 @@ import org.dmitrysulman.innopolis.diplomaproject.services.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
@@ -15,12 +16,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class ShoppingCartAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class ShoppingCartAuthenticationSuccessHandler
+        extends SavedRequestAwareAuthenticationSuccessHandler
+        implements AuthenticationSuccessHandler {
     private final ShoppingCartService shoppingCartService;
 
     @Autowired
     public ShoppingCartAuthenticationSuccessHandler(ShoppingCartService shoppingCartService) {
         this.shoppingCartService = shoppingCartService;
+        setTargetUrlParameter("redirect");
     }
 
     @Override
@@ -30,5 +34,11 @@ public class ShoppingCartAuthenticationSuccessHandler implements AuthenticationS
         ShoppingCart shoppingCart = (ShoppingCart) request.getSession().getAttribute("cart");
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         shoppingCartService.setShoppingCartWithUserAfterLogin(user, shoppingCart);
+//        System.out.println(getTargetUrlParameter());
+//        System.out.println(request.getParameter(getTargetUrlParameter()));
+//        System.out.println(request.getRequestURI());
+//        System.out.println(determineTargetUrl(request, response));
+//        response.sendRedirect("/profile");
+        super.onAuthenticationSuccess(request, response, authentication);
     }
 }

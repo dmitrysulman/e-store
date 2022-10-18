@@ -32,7 +32,9 @@ public class ShoppingCartInterceptor implements HandlerInterceptor {
                            @Nullable ModelAndView modelAndView) throws Exception {
         ShoppingCart shoppingCart;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof AnonymousAuthenticationToken) {
+        //TODO DB!!
+        //if (authentication instanceof AnonymousAuthenticationToken) {
+        if (true) {
             shoppingCart = (ShoppingCart) request.getSession().getAttribute("cart");
             if (shoppingCart == null) {
                 shoppingCart = new ShoppingCart();

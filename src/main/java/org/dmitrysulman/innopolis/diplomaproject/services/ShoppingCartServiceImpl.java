@@ -22,6 +22,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public void setShoppingCartWithUserAfterLogin(User user, ShoppingCart shoppingCart) {
+        System.out.println("WE ARE HERE " + shoppingCart.getTotalItems());
         //TODO go to DB
     }
 
