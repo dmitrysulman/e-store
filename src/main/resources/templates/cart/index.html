@@ -22,7 +22,7 @@
                     <th>Product count</th>
                     <th>Full price</th>
                 </tr>
-                <tr th:each="cartItem : ${cart.getCartItems()}" style="margin-bottom: 20px;">
+                <tr th:each="cartItem : ${cart.getCartItems()}" style="margin-bottom: 20px;" th:id="${cartItem.getProduct().getId()}">
                     <td th:text="${cartItem.getProduct().getName()}"></td>
                     <td th:text="${cartItem.getProduct().getPrice()}"></td>
                     <td th:text="${cartItem.getCount()}"></td>
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div sec:authorize="!isAuthenticated()">
-            <a th:href="@{/signin}">Sign In</a> or <a th:href="@{/signup}">Sign Up</a> to make an order.
+            <a th:href="@{/signin(redirect=cart)}">Sign In</a> or <a th:href="@{/signup(redirect=cart)}">Sign Up</a> to make an order.
         </div>
     </div>
 </body>

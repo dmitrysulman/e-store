@@ -10,7 +10,7 @@
     <div style="width: 800px; margin: auto;">
         <div th:replace="/fragments/header :: header"></div>
         <div style="margin-bottom: 20px;">
-            <form th:method="POST" th:action="@{/signup}" th:object="${user}">
+            <form th:method="POST" th:action="@{/signup(redirect=${#request.getParameter('redirect')})}" th:object="${user}">
                 <label for="first-name">Input First Name:</label>
                 <input type="text" id="first-name" th:field="*{firstName}">
                 <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>

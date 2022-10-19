@@ -34,11 +34,6 @@ public class ShoppingCartAuthenticationSuccessHandler
         ShoppingCart shoppingCart = (ShoppingCart) request.getSession().getAttribute("cart");
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         shoppingCartService.setShoppingCartWithUserAfterLogin(user, shoppingCart);
-//        System.out.println(getTargetUrlParameter());
-//        System.out.println(request.getParameter(getTargetUrlParameter()));
-//        System.out.println(request.getRequestURI());
-//        System.out.println(determineTargetUrl(request, response));
-//        response.sendRedirect("/profile");
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }

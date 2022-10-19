@@ -26,9 +26,6 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-//    @Bean
-//    public
-
     @Bean
     public SecurityFilterChain securityFilterChains(HttpSecurity httpSecurity) throws Exception {
         httpSecurity

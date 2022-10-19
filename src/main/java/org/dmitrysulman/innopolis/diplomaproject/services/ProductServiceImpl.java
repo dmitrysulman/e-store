@@ -2,6 +2,7 @@ package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.ProductImage;
+import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductImageRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,10 +20,12 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final ProductImageRepository productImageRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductImageRepository productImageRepository) {
         this.productRepository = productRepository;
+        this.productImageRepository = productImageRepository;
     }
 
     @Override
@@ -44,10 +47,11 @@ public class ProductServiceImpl implements ProductService {
     public Optional<Product> findByIdWithImagesUrls(int id) {
         Optional<Product> product = productRepository.findById(id);
         product.ifPresent(prd -> {
-            List<ProductImage> productImages = prd.getProductImages();
+            int productImagesCount = (int) productImageRepository.countByProductId(id);
             List<String> imagesUrls = new ArrayList<>();
-            int[] i = {0};
-            productImages.forEach(productImage -> imagesUrls.add("/products_images/" + prd.getId() + "/" + i[0]++));
+            for (int i = 0; i < productImagesCount; i++) {
+                imagesUrls.add("/products_images/" + prd.getId() + "/" + i);
+            }
             prd.setImagesUrls(imagesUrls);
         });
 
