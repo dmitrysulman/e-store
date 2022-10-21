@@ -1,6 +1,6 @@
 package org.dmitrysulman.innopolis.diplomaproject.services;
 
-import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
+import org.dmitrysulman.innopolis.diplomaproject.dto.AddToCartDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.CartItem;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.ShoppingCart;
@@ -33,18 +33,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void addProductToCartOrChangeCount(ShoppingCart shoppingCart, OrderDto orderDto, User user) {
+    public void addProductToCartOrChangeCount(ShoppingCart shoppingCart, AddToCartDto addToCartDto, User user) {
         shoppingCart
                 .getCartItems()
                 .stream()
-                .filter(cartItem -> cartItem.getProduct().getId() == orderDto.getProductId())
+                .filter(cartItem -> cartItem.getProduct().getId() == addToCartDto.getProductId())
                 .findFirst()
-                .ifPresentOrElse(cartItem -> cartItem.setCount(cartItem.getCount() + orderDto.getProductsAmount()),
+                .ifPresentOrElse(cartItem -> cartItem.setCount(cartItem.getCount() + addToCartDto.getProductsAmount()),
                         () -> {
-                            Product product = productRepository.findById(orderDto.getProductId()).orElse(null);
+                            Product product = productRepository.findById(addToCartDto.getProductId()).orElse(null);
                             CartItem cartItem = new CartItem();
                             cartItem.setProduct(product);
-                            cartItem.setCount(orderDto.getProductsAmount());
+                            cartItem.setCount(addToCartDto.getProductsAmount());
                             shoppingCart.getCartItems().add(cartItem);
                         });
         updateCartContent(shoppingCart);

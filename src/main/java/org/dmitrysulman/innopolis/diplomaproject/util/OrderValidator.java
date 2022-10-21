@@ -1,6 +1,6 @@
 package org.dmitrysulman.innopolis.diplomaproject.util;
 
-import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
+import org.dmitrysulman.innopolis.diplomaproject.dto.AddToCartDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +21,15 @@ public class OrderValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return OrderDto.class.isAssignableFrom(clazz);
+        return AddToCartDto.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        OrderDto orderDto = (OrderDto) target;
-        Optional<Product> product = productService.findById(orderDto.getProductId());
+        AddToCartDto addToCartDto = (AddToCartDto) target;
+        Optional<Product> product = productService.findById(addToCartDto.getProductId());
         product.ifPresentOrElse(p -> {
-                    if (orderDto.getProductsAmount() > p.getAmount()) {
+                    if (addToCartDto.getProductsAmount() > p.getAmount()) {
                         errors.rejectValue("productsAmount", "error.order.productsamount.toomanyproducts");
                     }
                 },

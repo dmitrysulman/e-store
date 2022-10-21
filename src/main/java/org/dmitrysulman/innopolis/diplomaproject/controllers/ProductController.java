@@ -1,6 +1,6 @@
 package org.dmitrysulman.innopolis.diplomaproject.controllers;
 
-import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
+import org.dmitrysulman.innopolis.diplomaproject.dto.AddToCartDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.ShoppingCart;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
@@ -46,14 +46,14 @@ public class ProductController {
         this.orderValidator = orderValidator;
     }
 
-    @InitBinder("orderDto")
+    @InitBinder("addToCartDto")
     private void initBinder(WebDataBinder binder) {
         binder.addValidators(orderValidator);
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id,
-                       @ModelAttribute("orderDto") OrderDto orderDto,
+                       @ModelAttribute("addToCartDto") AddToCartDto addToCartDto,
                        Model model) {
         Product product = productService.findByIdWithImagesUrls(id)
                 .orElseThrow(() ->
@@ -65,8 +65,8 @@ public class ProductController {
                                 )
                         )
                 );
-        orderDto.setProductsAmount(1);
-        orderDto.setProductId(product.getId());
+        addToCartDto.setProductsAmount(1);
+        addToCartDto.setProductId(product.getId());
         model.addAttribute("product", product);
 
         return "product/show";
@@ -95,13 +95,13 @@ public class ProductController {
 //    }
 
     @PostMapping("/add_to_cart")
-    public String addToCart(@ModelAttribute("orderDto") @Valid OrderDto orderDto,
+    public String addToCart(@ModelAttribute("addToCartDto") @Valid AddToCartDto addToCartDto,
                             BindingResult bindingResult,
                             Model model,
                             HttpSession httpSession,
                             Authentication authentication) {
         if (bindingResult.hasErrors()) {
-            Product product = productService.findById(orderDto.getProductId())
+            Product product = productService.findById(addToCartDto.getProductId())
                     .orElseThrow(() ->
                             new ResponseStatusException(HttpStatus.NOT_FOUND,
                                     messageSource.getMessage(
@@ -119,8 +119,8 @@ public class ProductController {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             user = userDetails.getUser();
         }
-        shoppingCartService.addProductToCartOrChangeCount((ShoppingCart) httpSession.getAttribute("cart"), orderDto, user);
+        shoppingCartService.addProductToCartOrChangeCount((ShoppingCart) httpSession.getAttribute("cart"), addToCartDto, user);
 
-        return "redirect:/product/" + orderDto.getProductId();
+        return "redirect:/product/" + addToCartDto.getProductId();
     }
 }

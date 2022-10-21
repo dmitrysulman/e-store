@@ -1,6 +1,6 @@
 package org.dmitrysulman.innopolis.diplomaproject.services;
 
-import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
+import org.dmitrysulman.innopolis.diplomaproject.dto.AddToCartDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.ShoppingCart;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
@@ -10,7 +10,7 @@ public interface ShoppingCartService {
 
     ShoppingCart getShoppingCartByUser(User user);
 
-    void addProductToCartOrChangeCount(ShoppingCart shoppingCart, OrderDto orderDto, User user);
+    void addProductToCartOrChangeCount(ShoppingCart shoppingCart, AddToCartDto addToCartDto, User user);
 
     void removeProductFromCart(ShoppingCart shoppingCart, Product product);
 
