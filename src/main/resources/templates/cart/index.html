@@ -12,10 +12,10 @@
     <script>
         let data = {};
         $(document).ready(function () {
-            data.products = [];
+            data.orderProducts = [];
             $( "[data-product-id]" ).each(function( index, element ) {
                 console.log( index + ": " + $( element ).data("productId") + ": " + $( element ).data("productCount") );
-                data.products.push({"productId": $( element ).data("productId"), "productAmount": $( element ).data("productAmount")});
+                data.orderProducts.push({"productId": $( element ).data("productId"), "productAmount": $( element ).data("productAmount")});
             });
             console.log(JSON.stringify(data));
         });

@@ -3,20 +3,20 @@ package org.dmitrysulman.innopolis.diplomaproject.dto;
 import java.util.List;
 
 public class OrderDto {
-    private List<OrderItemDto> products;
+    private List<OrderItemDto> orderProducts;
 
     public OrderDto() {
     }
 
-    public OrderDto(List<OrderItemDto> products) {
-        this.products = products;
+    public OrderDto(List<OrderItemDto> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 
-    public List<OrderItemDto> getProducts() {
-        return products;
+    public List<OrderItemDto> getOrderProducts() {
+        return orderProducts;
     }
 
-    public void setProducts(List<OrderItemDto> products) {
-        this.products = products;
+    public void setOrderProducts(List<OrderItemDto> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 }

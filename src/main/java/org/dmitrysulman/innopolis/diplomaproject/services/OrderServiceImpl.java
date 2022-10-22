@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
         ////order.setProductsAmount(addToCartDto.getProductsAmount());
         ////order.setOrderAmount(product.getPrice() * addToCartDto.getProductsAmount());
 //        orderProductRepository.save(orderProduct);
-        order = orderRepository.save(order);
+        //order = orderRepository.save(order);
         ////product.setAmount(product.getAmount() - addToCartDto.getProductsAmount());
         ////productRepository.save(product);
         return order;
