@@ -23,9 +23,9 @@
             </div>
         </div>
         <form th:method="POST" th:action="@{/product/add_to_cart}" th:object="${addToCartDto}">
-            <label for="products-amount" th:text="#{product.product.productsamount}"></label>
-            <input type="text" id="products-amount" th:field="*{productsAmount}">
-            <div style="color:red" th:if="${#fields.hasErrors('productsAmount')}" th:errors="*{productsAmount}"></div>
+            <label for="product-amount" th:text="#{product.product.productamount}"></label>
+            <input type="text" id="product-amount" th:field="*{productAmount}">
+            <div style="color:red" th:if="${#fields.hasErrors('productAmount')}" th:errors="*{productAmount}"></div>
             <input type="hidden" th:field="*{productId}">
             <input type="submit" th:value="#{product.product.addtocart}">
         </form>

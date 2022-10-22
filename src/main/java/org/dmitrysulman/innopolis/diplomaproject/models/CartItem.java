@@ -2,24 +2,24 @@ package org.dmitrysulman.innopolis.diplomaproject.models;
 
 public class CartItem {
     private Product product;
-    private int count;
+    private int productAmount;
     private ShoppingCart shoppingCart;
 
     public CartItem() {
     }
 
-    public CartItem(Product product, int count, ShoppingCart shoppingCart) {
+    public CartItem(Product product, int productAmount, ShoppingCart shoppingCart) {
         this.product = product;
-        this.count = count;
+        this.productAmount = productAmount;
         this.shoppingCart = shoppingCart;
     }
 
-    public int getCount() {
-        return count;
+    public int getProductAmount() {
+        return productAmount;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setProductAmount(int productAmount) {
+        this.productAmount = productAmount;
     }
 
     public Product getProduct() {
@@ -39,6 +39,6 @@ public class CartItem {
     }
 
     public int getTotalPrice() {
-        return product.getPrice() * count;
+        return product.getPrice() * productAmount;
     }
 }

@@ -39,12 +39,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .stream()
                 .filter(cartItem -> cartItem.getProduct().getId() == addToCartDto.getProductId())
                 .findFirst()
-                .ifPresentOrElse(cartItem -> cartItem.setCount(cartItem.getCount() + addToCartDto.getProductsAmount()),
+                .ifPresentOrElse(cartItem -> cartItem.setProductAmount(cartItem.getProductAmount() + addToCartDto.getProductAmount()),
                         () -> {
                             Product product = productRepository.findById(addToCartDto.getProductId()).orElse(null);
                             CartItem cartItem = new CartItem();
                             cartItem.setProduct(product);
-                            cartItem.setCount(addToCartDto.getProductsAmount());
+                            cartItem.setProductAmount(addToCartDto.getProductAmount());
                             shoppingCart.getCartItems().add(cartItem);
                         });
         updateCartContent(shoppingCart);

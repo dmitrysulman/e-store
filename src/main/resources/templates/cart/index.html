@@ -15,7 +15,7 @@
             data.products = [];
             $( "[data-product-id]" ).each(function( index, element ) {
                 console.log( index + ": " + $( element ).data("productId") + ": " + $( element ).data("productCount") );
-                data.products.push({"productId": $( element ).data("productId"), "productsAmount": $( element ).data("productCount")});
+                data.products.push({"productId": $( element ).data("productId"), "productAmount": $( element ).data("productAmount")});
             });
             console.log(JSON.stringify(data));
         });
@@ -53,10 +53,10 @@
                     <th>Product count</th>
                     <th>Full price</th>
                 </tr>
-                <tr th:each="cartItem : ${cart.getCartItems()}" style="margin-bottom: 20px;" th:data-product-id="${cartItem.getProduct().getId()}" th:data-product-count="${cartItem.getCount()}">
+                <tr th:each="cartItem : ${cart.getCartItems()}" style="margin-bottom: 20px;" th:data-product-id="${cartItem.getProduct().getId()}" th:data-product-amount="${cartItem.getProductAmount()}">
                     <td th:text="${cartItem.getProduct().getName()}"></td>
                     <td th:text="${cartItem.getProduct().getPrice()}"></td>
-                    <td th:text="${cartItem.getCount()}"></td>
+                    <td th:text="${cartItem.getProductAmount()}"></td>
                     <td th:text="${cartItem.getTotalPrice()}"></td>
                 </tr>
             </table>

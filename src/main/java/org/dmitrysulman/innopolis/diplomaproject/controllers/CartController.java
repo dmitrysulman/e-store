@@ -2,9 +2,11 @@ package org.dmitrysulman.innopolis.diplomaproject.controllers;
 
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderItemDto;
+import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
 import org.dmitrysulman.innopolis.diplomaproject.services.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +27,14 @@ public class CartController {
 
     @PostMapping("/order")
     @ResponseBody
-    public ResponseEntity<Void> order(@RequestBody OrderDto orderDto) {
+    public ResponseEntity<Void> order(@RequestBody OrderDto orderDto,
+                                      Authentication authentication) {
         for (OrderItemDto orderItemDto : orderDto.getProducts()) {
-            System.out.println(orderItemDto.getProductId() + ": " + orderItemDto.getProductsAmount());
+            System.out.println(orderItemDto.getProductId() + ": " + orderItemDto.getProductAmount());
         }
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+//        model.addAttribute("order", orderService.save(orderDto, userDetails.getUser().getId()));
         return ResponseEntity.noContent().build();
     }
 }

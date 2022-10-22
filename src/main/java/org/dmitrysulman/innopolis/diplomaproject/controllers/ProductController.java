@@ -65,7 +65,7 @@ public class ProductController {
                                 )
                         )
                 );
-        addToCartDto.setProductsAmount(1);
+        addToCartDto.setProductAmount(1);
         addToCartDto.setProductId(product.getId());
         model.addAttribute("product", product);
 

@@ -29,11 +29,11 @@ public class OrderValidator implements Validator {
         AddToCartDto addToCartDto = (AddToCartDto) target;
         Optional<Product> product = productService.findById(addToCartDto.getProductId());
         product.ifPresentOrElse(p -> {
-                    if (addToCartDto.getProductsAmount() > p.getAmount()) {
-                        errors.rejectValue("productsAmount", "error.order.productsamount.toomanyproducts");
+                    if (addToCartDto.getProductAmount() > p.getAmount()) {
+                        errors.rejectValue("productAmount", "error.order.toomanyproducts");
                     }
                 },
-                () -> errors.rejectValue("productsAmount", "error.order.productsamount.productnotfound")
+                () -> errors.rejectValue("productAmount", "error.order.productnotfound")
         );
     }
 }

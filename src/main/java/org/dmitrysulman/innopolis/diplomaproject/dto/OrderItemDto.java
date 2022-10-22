@@ -5,21 +5,21 @@ import javax.validation.constraints.Min;
 //TODO add messages
 public class OrderItemDto {
     @Min(value = 1, message = "Order amount should be greater than 0")
-    private Integer productsAmount;
+    private Integer productAmount;
 
     private Integer productId;
 
-    public OrderItemDto(Integer productsAmount, Integer productId) {
-        this.productsAmount = productsAmount;
+    public OrderItemDto(Integer productAmount, Integer productId) {
+        this.productAmount = productAmount;
         this.productId = productId;
     }
 
-    public Integer getProductsAmount() {
-        return productsAmount;
+    public Integer getProductAmount() {
+        return productAmount;
     }
 
-    public void setProductsAmount(Integer productsAmount) {
-        this.productsAmount = productsAmount;
+    public void setProductAmount(Integer productAmount) {
+        this.productAmount = productAmount;
     }
 
     public Integer getProductId() {

@@ -1,6 +1,7 @@
 package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.dto.AddToCartDto;
+import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.*;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.OrderRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductRepository;
@@ -40,29 +41,29 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order save(AddToCartDto addToCartDto, int userId) {
+    public Order save(OrderDto orderDto, int userId) {
         Order order = new Order();
         User user = userRepository.findById(userId).orElse(null);
-        Product product = productRepository.findById(addToCartDto.getProductId()).orElse(null);
+        ////Product product = productRepository.findById(addToCartDto.getProductId()).orElse(null);
 //        int orderAmount = product.getPrice() * orderDto.getProductsAmount();
-        OrderProduct orderProduct = new OrderProduct(order, product, product.getPrice(), addToCartDto.getProductsAmount());
+        ////OrderProduct orderProduct = new OrderProduct(order, product, product.getPrice(), addToCartDto.getProductsAmount());
 //        orderProduct.setProduct(product);
 //        orderProduct.setProductAmount(orderDto.getProductsAmount());
 //        orderProduct.setProductPrice(product.getPrice());
 //        orderProduct.setOrder(order);
         order.setUser(user);
-        order.setOrderProducts(Collections.singletonList(orderProduct));
+        ////order.setOrderProducts(Collections.singletonList(orderProduct));
 //        order.setProduct(product);
 //        order.setProductsAmount(orderDto.getProductsAmount());
 //        order.setOrderAmount(orderAmount);
         order.setOrderDate(Instant.now());
         order.setOrderStatus(OrderStatus.NEW);
-        order.setProductsAmount(addToCartDto.getProductsAmount());
-        order.setOrderAmount(product.getPrice() * addToCartDto.getProductsAmount());
+        ////order.setProductsAmount(addToCartDto.getProductsAmount());
+        ////order.setOrderAmount(product.getPrice() * addToCartDto.getProductsAmount());
 //        orderProductRepository.save(orderProduct);
         order = orderRepository.save(order);
-        product.setAmount(product.getAmount() - addToCartDto.getProductsAmount());
-        productRepository.save(product);
+        ////product.setAmount(product.getAmount() - addToCartDto.getProductsAmount());
+        ////productRepository.save(product);
         return order;
     }
 }

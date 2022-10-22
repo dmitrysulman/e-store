@@ -38,7 +38,7 @@ public class ShoppingCart {
 
     public int getTotalItems() {
         return cartItems.stream()
-                .mapToInt(CartItem::getCount)
+                .mapToInt(CartItem::getProductAmount)
                 .reduce(0, Integer::sum);
     }
 
