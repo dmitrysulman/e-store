@@ -52,13 +52,11 @@ public class OrderServiceImpl implements OrderService {
             Product product = productRepository.findById(orderItemDto.getProductId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
             OrderProduct orderProduct = new OrderProduct(order, product, product.getPrice(), orderItemDto.getProductAmount());
             orderProducts.add(orderProduct);
+            product.setAmount(product.getAmount() - orderItemDto.getProductAmount());
         }
         order.setOrderProducts(orderProducts);
         order.setOrderDate(Instant.now());
         order.setOrderStatus(OrderStatus.NEW);
-        order = orderRepository.save(order);
-        ////product.setAmount(product.getAmount() - addToCartDto.getProductsAmount());
-        ////productRepository.save(product);
-        return order;
+        return orderRepository.save(order);
     }
 }

@@ -40,10 +40,6 @@ public class CartController {
     @ResponseBody
     public ResponseEntity<Void> order(@RequestBody @Valid OrderDto orderDto,
                                       Authentication authentication) {
-        for (OrderItemDto orderItemDto : orderDto.getOrderProducts()) {
-            System.out.println(orderItemDto.getProductId() + ": " + orderItemDto.getProductAmount());
-        }
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         orderService.save(orderDto, userDetails.getUser().getId());
 //        model.addAttribute("order", orderService.save(orderDto, userDetails.getUser().getId()));
