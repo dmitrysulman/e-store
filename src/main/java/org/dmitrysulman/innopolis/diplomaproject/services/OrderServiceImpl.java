@@ -1,17 +1,19 @@
 package org.dmitrysulman.innopolis.diplomaproject.services;
 
-import org.dmitrysulman.innopolis.diplomaproject.dto.AddToCartDto;
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
+import org.dmitrysulman.innopolis.diplomaproject.dto.OrderItemDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.*;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.OrderRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,24 +46,17 @@ public class OrderServiceImpl implements OrderService {
     public Order save(OrderDto orderDto, int userId) {
         Order order = new Order();
         User user = userRepository.findById(userId).orElse(null);
-        ////Product product = productRepository.findById(addToCartDto.getProductId()).orElse(null);
-//        int orderAmount = product.getPrice() * orderDto.getProductsAmount();
-        ////OrderProduct orderProduct = new OrderProduct(order, product, product.getPrice(), addToCartDto.getProductsAmount());
-//        orderProduct.setProduct(product);
-//        orderProduct.setProductAmount(orderDto.getProductsAmount());
-//        orderProduct.setProductPrice(product.getPrice());
-//        orderProduct.setOrder(order);
         order.setUser(user);
-        ////order.setOrderProducts(Collections.singletonList(orderProduct));
-//        order.setProduct(product);
-//        order.setProductsAmount(orderDto.getProductsAmount());
-//        order.setOrderAmount(orderAmount);
+        List<OrderProduct> orderProducts = new ArrayList<>();
+        for (OrderItemDto orderItemDto : orderDto.getOrderProducts()) {
+            Product product = productRepository.findById(orderItemDto.getProductId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+            OrderProduct orderProduct = new OrderProduct(order, product, product.getPrice(), orderItemDto.getProductAmount());
+            orderProducts.add(orderProduct);
+        }
+        order.setOrderProducts(orderProducts);
         order.setOrderDate(Instant.now());
         order.setOrderStatus(OrderStatus.NEW);
-        ////order.setProductsAmount(addToCartDto.getProductsAmount());
-        ////order.setOrderAmount(product.getPrice() * addToCartDto.getProductsAmount());
-//        orderProductRepository.save(orderProduct);
-        //order = orderRepository.save(order);
+        order = orderRepository.save(order);
         ////product.setAmount(product.getAmount() - addToCartDto.getProductsAmount());
         ////productRepository.save(product);
         return order;
