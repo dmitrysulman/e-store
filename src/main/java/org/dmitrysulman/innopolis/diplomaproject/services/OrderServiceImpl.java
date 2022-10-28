@@ -47,6 +47,8 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         User user = userRepository.findById(userId).orElse(null);
         order.setUser(user);
+        order.setOrderDate(Instant.now());
+        order.setOrderStatus(OrderStatus.NEW);
         List<OrderProduct> orderProducts = new ArrayList<>();
         for (OrderItemDto orderItemDto : orderDto.getOrderProducts()) {
             Product product = productRepository.findById(orderItemDto.getProductId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
@@ -55,8 +57,6 @@ public class OrderServiceImpl implements OrderService {
             product.setAmount(product.getAmount() - orderItemDto.getProductAmount());
         }
         order.setOrderProducts(orderProducts);
-        order.setOrderDate(Instant.now());
-        order.setOrderStatus(OrderStatus.NEW);
         return orderRepository.save(order);
     }
 }

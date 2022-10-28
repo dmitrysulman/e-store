@@ -1,8 +1,10 @@
 package org.dmitrysulman.innopolis.diplomaproject.dto;
 
+import javax.validation.Valid;
 import java.util.List;
 
 public class OrderDto {
+    @Valid
     private List<OrderItemDto> orderProducts;
 
     public OrderDto() {

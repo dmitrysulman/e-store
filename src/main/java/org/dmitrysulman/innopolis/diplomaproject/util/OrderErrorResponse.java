@@ -1,31 +1,29 @@
 package org.dmitrysulman.innopolis.diplomaproject.util;
 
-import org.springframework.validation.FieldError;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ErrorResponse {
+public class OrderErrorResponse {
     private String message;
     private Instant timestamp;
     private int status;
-    private List<ValidationError> validationErrors;
+    private List<ProductError> productErrors;
 
-    public ErrorResponse() {
+    public OrderErrorResponse() {
     }
 
-    public ErrorResponse(String message, Instant timestamp, int status) {
+    public OrderErrorResponse(String message, Instant timestamp, int status) {
         this.message = message;
         this.timestamp = timestamp;
         this.status = status;
     }
 
-    public void addValidationError(FieldError fieldError) {
-        if (validationErrors == null) {
-            validationErrors = new ArrayList<>();
+    public void addProductError(int productId, String message) {
+        if (productErrors == null) {
+            productErrors = new ArrayList<>();
         }
-        validationErrors.add(new ValidationError(fieldError.getField(), fieldError.getDefaultMessage()));
+        productErrors.add(new ProductError(productId, message));
     }
 
     public String getMessage() {
@@ -52,32 +50,24 @@ public class ErrorResponse {
         this.status = status;
     }
 
-    public List<ValidationError> getValidationErrors() {
-        return validationErrors;
+    public List<ProductError> getProductErrors() {
+        return productErrors;
     }
 
-    public void setValidationErrors(List<ValidationError> validationErrors) {
-        this.validationErrors = validationErrors;
+    public void setProductErrors(List<ProductError> productErrors) {
+        this.productErrors = productErrors;
     }
 
-    private static class ValidationError {
-        private String field;
+    private static class ProductError {
+        private int productId;
         private String message;
 
-        public ValidationError() {
+        ProductError() {
         }
 
-        public ValidationError(String field, String message) {
-            this.field = field;
+        ProductError(int productId, String message) {
+            this.productId = productId;
             this.message = message;
-        }
-
-        public String getField() {
-            return field;
-        }
-
-        public void setField(String field) {
-            this.field = field;
         }
 
         public String getMessage() {
@@ -86,6 +76,14 @@ public class ErrorResponse {
 
         public void setMessage(String message) {
             this.message = message;
+        }
+
+        public int getProductId() {
+            return productId;
+        }
+
+        public void setProductId(int productId) {
+            this.productId = productId;
         }
     }
 }
