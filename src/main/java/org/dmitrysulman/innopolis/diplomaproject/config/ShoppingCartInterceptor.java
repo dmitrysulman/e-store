@@ -44,7 +44,7 @@ public class ShoppingCartInterceptor implements HandlerInterceptor {
             }
         } else {
             User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
-            shoppingCart = shoppingCartService.getShoppingCartByUser(user);
+            shoppingCart = shoppingCartService.getShoppingCartByUser(user.getId());
             request.getSession().setAttribute("cart", shoppingCart);
         }
         if (modelAndView != null) {

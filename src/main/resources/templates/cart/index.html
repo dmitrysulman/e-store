@@ -14,14 +14,12 @@
         $(document).ready(function () {
             data.orderProducts = [];
             $( "[data-product-id]" ).each(function( index, element ) {
-                console.log( index + ": " + $( element ).data("productId") + ": " + $( element ).data("productCount") );
                 data.orderProducts.push({"productId": $( element ).data("productId"), "productAmount": $( element ).data("productAmount")});
             });
-            console.log(JSON.stringify(data));
         });
         
         function makeOrder() {
-            $("#order-button").prop('disabled', true);
+            $("#order-button").prop("disabled", true);
             const csrfToken = $("meta[name='_csrf']").attr("content");
             const csrfHeader = $("meta[name='_csrf_header']").attr("content");
             let headers = {};
@@ -34,11 +32,12 @@
                 dataType: "json",
                 data: JSON.stringify(data),
                 success: function (data) {
-                    $("#order-button").prop('disabled', false);
+                    $("#order-button").prop("disabled", false);
                     alert("Ok! Order number: " + data.id);
+                    location.href = "/";
                 },
                 error: function () {
-                    $("#order-button").prop('disabled', false);
+                    $("#order-button").prop("disabled", false);
                     alert("Not ok");
                 }
             });

@@ -4,20 +4,21 @@ import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderSuccessDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Order;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
+import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
 import org.dmitrysulman.innopolis.diplomaproject.services.OrderService;
+import org.dmitrysulman.innopolis.diplomaproject.services.ShoppingCartService;
 import org.dmitrysulman.innopolis.diplomaproject.util.OrderErrorResponse;
 import org.dmitrysulman.innopolis.diplomaproject.util.OrderDtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -27,11 +28,13 @@ import java.time.Instant;
 @RequestMapping("/cart")
 public class CartController {
     private final OrderService orderService;
+    private final ShoppingCartService shoppingCartService;
     private final OrderDtoValidator orderDtoValidator;
 
     @Autowired
-    public CartController(OrderService orderService, OrderDtoValidator orderDtoValidator) {
+    public CartController(OrderService orderService, ShoppingCartService shoppingCartService, OrderDtoValidator orderDtoValidator) {
         this.orderService = orderService;
+        this.shoppingCartService = shoppingCartService;
         this.orderDtoValidator = orderDtoValidator;
     }
 
@@ -48,15 +51,18 @@ public class CartController {
     @PostMapping("/order")
     @ResponseBody
     public ResponseEntity<OrderSuccessDto> order(@RequestBody @Valid OrderDto orderDto,
+                                                 HttpServletRequest request,
                                                  Authentication authentication) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        Order order = orderService.save(orderDto, userDetails.getUser().getId());
+        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
+        Order order = orderService.save(orderDto, user.getId());
         OrderSuccessDto orderSuccessDto = new OrderSuccessDto(order.getId());
+        shoppingCartService.clearCart(user.getId());
+        request.getSession().setAttribute("cart", null);
         return ResponseEntity.ok(orderSuccessDto);
     }
 
     @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<OrderErrorResponse> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
+    public ResponseEntity<OrderErrorResponse> handleConstraintViolation(ConstraintViolationException ex) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         OrderErrorResponse orderErrorResponse = new OrderErrorResponse(status.getReasonPhrase(), Instant.now(), status.value());
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
@@ -65,6 +71,6 @@ public class CartController {
             }
         }
 
-        return new ResponseEntity<>(orderErrorResponse, new HttpHeaders(), status);
+        return new ResponseEntity<>(orderErrorResponse, status);
     }
 }

@@ -4,19 +4,14 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderErrorResponse {
-    private String message;
-    private Instant timestamp;
-    private int status;
+public class OrderErrorResponse extends ErrorResponse {
     private List<ProductError> productErrors;
 
     public OrderErrorResponse() {
     }
 
     public OrderErrorResponse(String message, Instant timestamp, int status) {
-        this.message = message;
-        this.timestamp = timestamp;
-        this.status = status;
+        super(message, timestamp, status);
     }
 
     public void addProductError(int productId, String message) {
@@ -24,30 +19,6 @@ public class OrderErrorResponse {
             productErrors = new ArrayList<>();
         }
         productErrors.add(new ProductError(productId, message));
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Instant getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 
     public List<ProductError> getProductErrors() {

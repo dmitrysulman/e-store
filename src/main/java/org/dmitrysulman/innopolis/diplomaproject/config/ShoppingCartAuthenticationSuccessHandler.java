@@ -33,7 +33,7 @@ public class ShoppingCartAuthenticationSuccessHandler
                                         Authentication authentication) throws IOException, ServletException {
         ShoppingCart shoppingCart = (ShoppingCart) request.getSession().getAttribute("cart");
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
-        shoppingCartService.setShoppingCartWithUserAfterLogin(user, shoppingCart);
+        shoppingCartService.setShoppingCartWithUserAfterLogin(shoppingCart, user.getId());
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }
