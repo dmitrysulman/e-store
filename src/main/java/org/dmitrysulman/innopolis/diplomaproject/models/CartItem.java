@@ -3,15 +3,15 @@ package org.dmitrysulman.innopolis.diplomaproject.models;
 public class CartItem {
     private Product product;
     private int productAmount;
-    private ShoppingCart shoppingCart;
+    private Cart cart;
 
     public CartItem() {
     }
 
-    public CartItem(Product product, int productAmount, ShoppingCart shoppingCart) {
+    public CartItem(Product product, int productAmount, Cart cart) {
         this.product = product;
         this.productAmount = productAmount;
-        this.shoppingCart = shoppingCart;
+        this.cart = cart;
     }
 
     public int getProductAmount() {
@@ -30,12 +30,12 @@ public class CartItem {
         this.product = product;
     }
 
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
+    public Cart getCart() {
+        return cart;
     }
 
-    public void setShoppingCart(ShoppingCart shoppingCart) {
-        this.shoppingCart = shoppingCart;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     public int getTotalPrice() {

@@ -53,13 +53,6 @@
                 <img th:src="@{${productImageUrl}}" th:alt="${product.getName()}"/>
             </div>
         </div>
-<!--        <form th:method="POST" th:action="@{/product/add_to_cart}" th:object="${addToCartDto}">-->
-<!--            <label for="product-amount" th:text="#{product.product.productamount}"></label>-->
-<!--            <input type="text" id="product-amount" th:field="*{productAmount}">-->
-<!--            <div style="color:red" th:if="${#fields.hasErrors('productAmount')}" th:errors="*{productAmount}"></div>-->
-<!--            <input type="hidden" th:field="*{productId}">-->
-<!--            <input type="submit" th:value="#{product.product.addtocart}">-->
-<!--        </form>-->
         <button type="button" class="btn btn-primary" id="add-to-cart-button" th:data-product-id="${product.getId()}" onclick="addToCart()">Add to cart</button>
     </div>
 </body>

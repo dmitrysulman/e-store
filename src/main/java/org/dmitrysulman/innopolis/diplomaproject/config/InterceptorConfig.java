@@ -7,14 +7,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Component
 public class InterceptorConfig implements WebMvcConfigurer {
-    private final ShoppingCartInterceptor shoppingCartInterceptor;
+    private final CartInterceptor cartInterceptor;
 
     @Autowired
-    public InterceptorConfig(ShoppingCartInterceptor shoppingCartInterceptor) {
-        this.shoppingCartInterceptor = shoppingCartInterceptor;
+    public InterceptorConfig(CartInterceptor cartInterceptor) {
+        this.cartInterceptor = cartInterceptor;
     }
 
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(shoppingCartInterceptor);
+        registry.addInterceptor(cartInterceptor);
     }
 }

@@ -3,15 +3,15 @@ package org.dmitrysulman.innopolis.diplomaproject.models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShoppingCart {
+public class Cart {
     private User user;
     private List<CartItem> cartItems;
 
-    public ShoppingCart() {
+    public Cart() {
         cartItems = new ArrayList<>();
     }
 
-    public ShoppingCart(User user, List<CartItem> cartItems) {
+    public Cart(User user, List<CartItem> cartItems) {
         this.user = user;
         this.cartItems = cartItems;
     }

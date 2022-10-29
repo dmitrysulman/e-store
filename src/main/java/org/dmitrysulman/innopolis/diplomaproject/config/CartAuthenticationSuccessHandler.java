@@ -1,9 +1,9 @@
 package org.dmitrysulman.innopolis.diplomaproject.config;
 
-import org.dmitrysulman.innopolis.diplomaproject.models.ShoppingCart;
+import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
-import org.dmitrysulman.innopolis.diplomaproject.services.ShoppingCartService;
+import org.dmitrysulman.innopolis.diplomaproject.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -16,14 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class ShoppingCartAuthenticationSuccessHandler
+public class CartAuthenticationSuccessHandler
         extends SavedRequestAwareAuthenticationSuccessHandler
         implements AuthenticationSuccessHandler {
-    private final ShoppingCartService shoppingCartService;
+    private final CartService cartService;
 
     @Autowired
-    public ShoppingCartAuthenticationSuccessHandler(ShoppingCartService shoppingCartService) {
-        this.shoppingCartService = shoppingCartService;
+    public CartAuthenticationSuccessHandler(CartService cartService) {
+        this.cartService = cartService;
         setTargetUrlParameter("redirect");
     }
 
@@ -31,9 +31,9 @@ public class ShoppingCartAuthenticationSuccessHandler
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        ShoppingCart shoppingCart = (ShoppingCart) request.getSession().getAttribute("cart");
+        Cart cart = (Cart) request.getSession().getAttribute("cart");
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
-        shoppingCartService.setShoppingCartWithUserAfterLogin(shoppingCart, user.getId());
+        cartService.setCartWithUserAfterLogin(cart, user.getId());
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }

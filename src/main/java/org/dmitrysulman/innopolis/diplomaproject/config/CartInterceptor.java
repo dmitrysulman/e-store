@@ -1,12 +1,11 @@
 package org.dmitrysulman.innopolis.diplomaproject.config;
 
-import org.dmitrysulman.innopolis.diplomaproject.models.ShoppingCart;
+import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
-import org.dmitrysulman.innopolis.diplomaproject.services.ShoppingCartService;
+import org.dmitrysulman.innopolis.diplomaproject.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,12 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Component
-public class ShoppingCartInterceptor implements HandlerInterceptor {
-    private final ShoppingCartService shoppingCartService;
+public class CartInterceptor implements HandlerInterceptor {
+    private final CartService cartService;
 
     @Autowired
-    public ShoppingCartInterceptor(ShoppingCartService shoppingCartService) {
-        this.shoppingCartService = shoppingCartService;
+    public CartInterceptor(CartService cartService) {
+        this.cartService = cartService;
     }
 
     @Override
@@ -30,25 +29,25 @@ public class ShoppingCartInterceptor implements HandlerInterceptor {
                            HttpServletResponse response,
                            Object handler,
                            @Nullable ModelAndView modelAndView) throws Exception {
-        ShoppingCart shoppingCart;
+        Cart cart;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //TODO DB!!
         //if (authentication instanceof AnonymousAuthenticationToken) {
         if (true) {
-            shoppingCart = (ShoppingCart) request.getSession().getAttribute("cart");
-            if (shoppingCart == null) {
-                shoppingCart = new ShoppingCart();
-                request.getSession().setAttribute("cart", shoppingCart);
+            cart = (Cart) request.getSession().getAttribute("cart");
+            if (cart == null) {
+                cart = new Cart();
+                request.getSession().setAttribute("cart", cart);
             } else {
-                shoppingCartService.updateCartContent(shoppingCart);
+                cartService.updateCartContent(cart);
             }
         } else {
             User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
-            shoppingCart = shoppingCartService.getShoppingCartByUser(user.getId());
-            request.getSession().setAttribute("cart", shoppingCart);
+            cart = cartService.getCartByUser(user.getId());
+            request.getSession().setAttribute("cart", cart);
         }
         if (modelAndView != null) {
-            modelAndView.getModelMap().addAttribute("cart", shoppingCart);
+            modelAndView.getModelMap().addAttribute("cart", cart);
         }
     }
 }

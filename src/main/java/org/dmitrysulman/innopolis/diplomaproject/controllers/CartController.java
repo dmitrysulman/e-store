@@ -7,7 +7,7 @@ import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
 import org.dmitrysulman.innopolis.diplomaproject.services.OrderService;
-import org.dmitrysulman.innopolis.diplomaproject.services.ShoppingCartService;
+import org.dmitrysulman.innopolis.diplomaproject.services.CartService;
 import org.dmitrysulman.innopolis.diplomaproject.util.OrderErrorResponse;
 import org.dmitrysulman.innopolis.diplomaproject.util.OrderDtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +28,13 @@ import java.time.Instant;
 @RequestMapping("/cart")
 public class CartController {
     private final OrderService orderService;
-    private final ShoppingCartService shoppingCartService;
+    private final CartService cartService;
     private final OrderDtoValidator orderDtoValidator;
 
     @Autowired
-    public CartController(OrderService orderService, ShoppingCartService shoppingCartService, OrderDtoValidator orderDtoValidator) {
+    public CartController(OrderService orderService, CartService cartService, OrderDtoValidator orderDtoValidator) {
         this.orderService = orderService;
-        this.shoppingCartService = shoppingCartService;
+        this.cartService = cartService;
         this.orderDtoValidator = orderDtoValidator;
     }
 
@@ -56,8 +56,9 @@ public class CartController {
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         Order order = orderService.save(orderDto, user.getId());
         OrderSuccessDto orderSuccessDto = new OrderSuccessDto(order.getId());
-        shoppingCartService.clearCart(user.getId());
+        cartService.clearCart(user.getId());
         request.getSession().setAttribute("cart", null);
+
         return ResponseEntity.ok(orderSuccessDto);
     }
 

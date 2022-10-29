@@ -2,7 +2,7 @@ package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.models.CartItem;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
-import org.dmitrysulman.innopolis.diplomaproject.models.ShoppingCart;
+import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductRepository;
 import org.dmitrysulman.innopolis.diplomaproject.util.ElementNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,23 +11,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-public class ShoppingCartServiceImpl implements ShoppingCartService {
+public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
 
     @Autowired
-    public ShoppingCartServiceImpl(ProductRepository productRepository) {
+    public CartServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
     @Override
     @Transactional
-    public void setShoppingCartWithUserAfterLogin(ShoppingCart shoppingCart, int userId) {
+    public void setCartWithUserAfterLogin(Cart cart, int userId) {
         //TODO go to DB
-        System.out.println("WE ARE HERE " + shoppingCart.getTotalItems());
+        System.out.println("WE ARE HERE " + cart.getTotalItems());
     }
 
     @Override
-    public ShoppingCart getShoppingCartByUser(int userId) {
+    public Cart getCartByUser(int userId) {
         //TODO go to DB
         return null;
     }
@@ -39,10 +39,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void addProductToCart(ShoppingCart shoppingCart, int productId) throws ElementNotFoundException {
+    public void addProductToCart(Cart cart, int productId) throws ElementNotFoundException {
         //TODO message
         try {
-            shoppingCart
+            cart
                     .getCartItems()
                     .stream()
                     .filter(cartItem -> cartItem.getProduct().getId() == productId)
@@ -55,12 +55,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                                 CartItem cartItem = new CartItem();
                                 cartItem.setProduct(product);
                                 cartItem.setProductAmount(1);
-                                shoppingCart.getCartItems().add(cartItem);
+                                cart.getCartItems().add(cartItem);
                             });
         } catch (IllegalArgumentException e) {
             throw new ElementNotFoundException(e.getMessage());
         }
-        updateCartContent(shoppingCart);
+        updateCartContent(cart);
     }
 
     @Override
@@ -70,14 +70,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void removeProductFromCart(ShoppingCart shoppingCart, int productId, boolean completely) throws ElementNotFoundException {
+    public void removeProductFromCart(Cart cart, int productId, boolean completely) throws ElementNotFoundException {
         //TODO
 //        shoppingCart.removeProductFromCart(product.getId());
     }
 
     @Override
-    public void updateCartContent(ShoppingCart shoppingCart) {
-        shoppingCart.getCartItems().forEach(cartItem -> cartItem.setProduct(productRepository.findById(cartItem.getProduct().getId()).get()));
+    public void updateCartContent(Cart cart) {
+        cart.getCartItems().forEach(cartItem -> cartItem.setProduct(productRepository.findById(cartItem.getProduct().getId()).get()));
     }
 
     @Override

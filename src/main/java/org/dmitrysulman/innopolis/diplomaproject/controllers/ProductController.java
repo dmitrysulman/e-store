@@ -2,11 +2,11 @@ package org.dmitrysulman.innopolis.diplomaproject.controllers;
 
 import org.dmitrysulman.innopolis.diplomaproject.dto.AddToCartDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
-import org.dmitrysulman.innopolis.diplomaproject.models.ShoppingCart;
+import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
 import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
-import org.dmitrysulman.innopolis.diplomaproject.services.ShoppingCartService;
+import org.dmitrysulman.innopolis.diplomaproject.services.CartService;
 import org.dmitrysulman.innopolis.diplomaproject.util.ElementNotFoundException;
 import org.dmitrysulman.innopolis.diplomaproject.util.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,21 +27,22 @@ import java.time.Instant;
 @RequestMapping("/product")
 public class ProductController {
     private final ProductService productService;
-    private final ShoppingCartService shoppingCartService;
+    private final CartService cartService;
     private final MessageSource messageSource;
 
     @Autowired
     public ProductController(ProductService productService,
-                             ShoppingCartService shoppingCartService,
+                             CartService cartService,
                              MessageSource messageSource) {
         this.productService = productService;
-        this.shoppingCartService = shoppingCartService;
+        this.cartService = cartService;
         this.messageSource = messageSource;
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id,
-                       Model model) {
+                       Model model,
+                       HttpSession httpSession) {
         Product product = productService.findByIdWithImagesUrls(id)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -60,7 +61,6 @@ public class ProductController {
     @PostMapping("/add_to_cart")
     @ResponseBody
     public ResponseEntity<HttpStatus> addToCart(@RequestBody AddToCartDto addToCartDto,
-                                                     Model model,
                                                      HttpSession httpSession,
                                                      Authentication authentication) throws ElementNotFoundException {
         int productId = addToCartDto.getProductId();
@@ -68,10 +68,11 @@ public class ProductController {
         if (authentication != null) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             user = userDetails.getUser();
-            shoppingCartService.addProductToCart(user.getId(), productId);
+            cartService.addProductToCart(user.getId(), productId);
         } else {
-            shoppingCartService.addProductToCart((ShoppingCart) httpSession.getAttribute("cart"), productId);
+            cartService.addProductToCart((Cart) httpSession.getAttribute("cart"), productId);
         }
+
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
