@@ -8,6 +8,7 @@ import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
 import org.dmitrysulman.innopolis.diplomaproject.services.OrderService;
 import org.dmitrysulman.innopolis.diplomaproject.services.CartService;
+import org.dmitrysulman.innopolis.diplomaproject.util.ElementNotFoundException;
 import org.dmitrysulman.innopolis.diplomaproject.util.OrderErrorResponse;
 import org.dmitrysulman.innopolis.diplomaproject.util.OrderDtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +54,7 @@ public class CartController {
     @ResponseBody
     public ResponseEntity<OrderSuccessDto> order(@RequestBody @Valid OrderDto orderDto,
                                                  HttpServletRequest request,
-                                                 Authentication authentication) {
+                                                 Authentication authentication) throws ElementNotFoundException {
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         Order order = orderService.save(orderDto, user.getId());
         OrderSuccessDto orderSuccessDto = new OrderSuccessDto(order.getId());
@@ -68,7 +70,12 @@ public class CartController {
         OrderErrorResponse orderErrorResponse = new OrderErrorResponse(status.getReasonPhrase(), Instant.now(), status.value());
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             if (violation.getLeafBean() instanceof Product) {
-                orderErrorResponse.addProductError(((Product) violation.getLeafBean()).getId(), violation.getMessage());
+                orderErrorResponse.addProductError(((Product) violation.getRootBean()).getId(), violation.getMessage());
+            } else {
+                orderErrorResponse.addValidationError(new FieldError(violation.getRootBeanClass().getSimpleName(),
+                        violation.getPropertyPath().toString(),
+                        violation.getMessage())
+                );
             }
         }
 

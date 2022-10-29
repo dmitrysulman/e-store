@@ -8,7 +8,6 @@ import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
 import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
 import org.dmitrysulman.innopolis.diplomaproject.services.CartService;
 import org.dmitrysulman.innopolis.diplomaproject.util.ElementNotFoundException;
-import org.dmitrysulman.innopolis.diplomaproject.util.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpSession;
-import java.time.Instant;
 
 @Controller
 @RequestMapping("/product")
@@ -53,6 +51,13 @@ public class ProductController {
                                 )
                         )
                 );
+        Cart cart = (Cart) httpSession.getAttribute("cart");
+        if (cart != null) {
+            cart.getCartItems().stream()
+                    .filter(cartItem -> cartItem.getProduct().getId() == id)
+                    .findFirst()
+                    .ifPresent(cartItem -> model.addAttribute("amountInCart", cartItem.getProductAmount()));
+        }
         model.addAttribute("product", product);
 
         return "product/show";
@@ -61,26 +66,17 @@ public class ProductController {
     @PostMapping("/add_to_cart")
     @ResponseBody
     public ResponseEntity<HttpStatus> addToCart(@RequestBody AddToCartDto addToCartDto,
-                                                     HttpSession httpSession,
-                                                     Authentication authentication) throws ElementNotFoundException {
+                                                HttpSession httpSession,
+                                                Authentication authentication) throws ElementNotFoundException {
         int productId = addToCartDto.getProductId();
-        User user = null;
         if (authentication != null) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            user = userDetails.getUser();
+            User user = userDetails.getUser();
             cartService.addProductToCart(user.getId(), productId);
         } else {
             cartService.addProductToCart((Cart) httpSession.getAttribute("cart"), productId);
         }
 
         return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    @ExceptionHandler({ElementNotFoundException.class})
-    public ResponseEntity<ErrorResponse> handleElementNotFound(ElementNotFoundException ex) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), Instant.now(), status.value());
-
-        return new ResponseEntity<>(errorResponse, status);
     }
 }
