@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
 
-//TODO add status ENUM
 @Entity
 @Table(name = "orders")
 public class Order {

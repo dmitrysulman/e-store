@@ -12,7 +12,7 @@ public interface CartService {
 
     void addProductToCart(int userId, int productId) throws ElementNotFoundException;
 
-    void removeProductFromCart(Cart cart, int productId, boolean completely) throws ElementNotFoundException;
+    void removeProductFromCart(Cart cart, int productId, boolean completely);
 
     void removeProductFromCart(int userId, int productId, boolean completely) throws ElementNotFoundException;
 

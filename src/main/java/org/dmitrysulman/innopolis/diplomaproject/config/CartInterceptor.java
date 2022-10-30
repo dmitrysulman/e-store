@@ -31,7 +31,7 @@ public class CartInterceptor implements HandlerInterceptor {
                            @Nullable ModelAndView modelAndView) throws Exception {
         Cart cart;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //TODO DB!!
+        //TODO DB!!!
         //if (authentication instanceof AnonymousAuthenticationToken) {
         if (true) {
             cart = (Cart) request.getSession().getAttribute("cart");

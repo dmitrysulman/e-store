@@ -57,27 +57,39 @@ public class CartServiceImpl implements CartService {
                                 cartItem.setProductAmount(1);
                                 cart.getCartItems().add(cartItem);
                             });
+            updateCartContent(cart);
         } catch (IllegalArgumentException e) {
             throw new ElementNotFoundException(e.getMessage());
         }
-        updateCartContent(cart);
     }
 
     @Override
     @Transactional
     public void removeProductFromCart(int userId, int productId, boolean completely) throws ElementNotFoundException {
-
+        //TODO
     }
 
     @Override
-    public void removeProductFromCart(Cart cart, int productId, boolean completely) throws ElementNotFoundException {
-        //TODO
-//        shoppingCart.removeProductFromCart(product.getId());
+    public void removeProductFromCart(Cart cart, int productId, boolean completely) {
+        cart
+                .getCartItems()
+                .stream()
+                .filter(cartItem -> cartItem.getProduct().getId() == productId)
+                .findFirst()
+                .ifPresent(cartItem -> {
+                    if (completely || cartItem.getProductAmount() == 1) {
+                        cart.getCartItems().removeIf(item -> item.getProduct().getId() == productId);
+                        cartItem.setCart(null);
+                    } else {
+                        cartItem.setProductAmount(cartItem.getProductAmount() - 1);
+                    }
+                });
+        updateCartContent(cart);
     }
 
     @Override
     public void updateCartContent(Cart cart) {
-        cart.getCartItems().forEach(cartItem -> cartItem.setProduct(productRepository.findById(cartItem.getProduct().getId()).get()));
+        cart.getCartItems().forEach(cartItem -> cartItem.setProduct(productRepository.findById(cartItem.getProduct().getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"))));
     }
 
     @Override
