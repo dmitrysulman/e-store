@@ -21,19 +21,19 @@
             headers[csrfHeader] = csrfToken;
             $.ajax({
                 type: "POST",
-                url: "/product/add_to_cart",
+                url: "/cart/add_to_cart",
                 headers: headers,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 data: JSON.stringify(data),
                 success: function () {
                     $("#add-to-cart-button").prop("disabled", false);
-                    alert("Ok!");
+                    //alert("Ok!");
                     location.reload();
                 },
                 error: function () {
                     $("#add-to-cart-button").prop("disabled", false);
-                    alert("Not ok");
+                    //alert("Not ok");
                 }
             });
         }

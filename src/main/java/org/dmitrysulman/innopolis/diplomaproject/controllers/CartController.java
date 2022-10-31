@@ -1,7 +1,10 @@
 package org.dmitrysulman.innopolis.diplomaproject.controllers;
 
+import org.dmitrysulman.innopolis.diplomaproject.dto.AddToCartDto;
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderSuccessDto;
+import org.dmitrysulman.innopolis.diplomaproject.dto.RemoveFormCartDto;
+import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.models.Order;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
@@ -48,6 +52,41 @@ public class CartController {
     @GetMapping("")
     public String cart() {
         return "cart/index";
+    }
+
+    @PostMapping("/add_to_cart")
+    @ResponseBody
+    public ResponseEntity<HttpStatus> addToCart(@RequestBody AddToCartDto addToCartDto,
+                                                HttpSession httpSession,
+                                                Authentication authentication) throws ElementNotFoundException {
+        int productId = addToCartDto.getProductId();
+        if (authentication != null) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            User user = userDetails.getUser();
+            cartService.addProductToCart(user.getId(), productId);
+        } else {
+            cartService.addProductToCart((Cart) httpSession.getAttribute("cart"), productId);
+        }
+
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PostMapping("/remove_from_cart")
+    @ResponseBody
+    public ResponseEntity<HttpStatus> removeFromCart(@RequestBody RemoveFormCartDto removeFormCartDto,
+                                                HttpSession httpSession,
+                                                Authentication authentication) throws ElementNotFoundException {
+        int productId = removeFormCartDto.getProductId();
+        boolean completely = removeFormCartDto.isCompletely();
+        if (authentication != null) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            User user = userDetails.getUser();
+            cartService.removeProductFromCart(user.getId(), productId, completely);
+        } else {
+            cartService.removeProductFromCart((Cart) httpSession.getAttribute("cart"), productId, completely);
+        }
+
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PostMapping("/order")
