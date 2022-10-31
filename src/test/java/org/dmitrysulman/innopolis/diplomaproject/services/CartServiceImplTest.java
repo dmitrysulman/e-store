@@ -53,6 +53,15 @@ class CartServiceImplTest {
         assertTrue(cart.getCartItems().isEmpty());
     }
 
+    @Test
+    void removeProductFromCartThatNotInCartShouldDoNothing() {
+        int productId = 1;
+        int notValidProductId = 2;
+        int productAmount = 10;
+        Cart cart = prepareCartWithOneProduct(productId, productAmount);
+        assertDoesNotThrow(() -> cartService.removeProductFromCart(cart, notValidProductId, true));
+    }
+
     private Cart prepareCartWithOneProduct(int productId, int productAmount) {
         Cart cart = new Cart();
         Product product = new Product();

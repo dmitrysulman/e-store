@@ -3,7 +3,7 @@ package org.dmitrysulman.innopolis.diplomaproject.controllers;
 import org.dmitrysulman.innopolis.diplomaproject.dto.AddToCartDto;
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderDto;
 import org.dmitrysulman.innopolis.diplomaproject.dto.OrderSuccessDto;
-import org.dmitrysulman.innopolis.diplomaproject.dto.RemoveFormCartDto;
+import org.dmitrysulman.innopolis.diplomaproject.dto.RemoveFromCartDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.models.Order;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
@@ -73,11 +73,11 @@ public class CartController {
 
     @PostMapping("/remove_from_cart")
     @ResponseBody
-    public ResponseEntity<HttpStatus> removeFromCart(@RequestBody RemoveFormCartDto removeFormCartDto,
+    public ResponseEntity<HttpStatus> removeFromCart(@RequestBody RemoveFromCartDto removeFromCartDto,
                                                 HttpSession httpSession,
                                                 Authentication authentication) throws ElementNotFoundException {
-        int productId = removeFormCartDto.getProductId();
-        boolean completely = removeFormCartDto.isCompletely();
+        int productId = removeFromCartDto.getProductId();
+        boolean completely = removeFromCartDto.isCompletely();
         if (authentication != null) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             User user = userDetails.getUser();

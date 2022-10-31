@@ -12,19 +12,43 @@
     <title>Shopping cart</title>
     <script>
         let data = {};
+        let csrfToken;
+        let csrfHeader;
+        let headers = {};
         $(document).ready(function () {
+            let csrfToken = $("meta[name='_csrf']").attr("content");
+            let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+            headers[csrfHeader] = csrfToken;
             data.orderProducts = [];
             $( "[data-product-id]" ).each(function( index, element ) {
                 data.orderProducts.push({"productId": $( element ).data("productId"), "productAmount": $( element ).data("productAmount")});
+            });
+
+            $( "[data-remove-product-id]" ).click(function() {
+                $( this ).prop("disabled", true);
+                let dataRemove = {};
+                dataRemove.productId = $( this ).data("removeProductId");
+                dataRemove.completely = true;
+                $.ajax({
+                    type: "POST",
+                    url: "/cart/remove_from_cart",
+                    headers: headers,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(dataRemove),
+                    success: function (data) {
+                        $( this ).prop("disabled", false);
+                        location.reload();
+                    },
+                    error: function () {
+                        $( this ).prop("disabled", false);
+                    }
+                });
             });
         });
         
         function makeOrder() {
             $("#order-button").prop("disabled", true);
-            const csrfToken = $("meta[name='_csrf']").attr("content");
-            const csrfHeader = $("meta[name='_csrf_header']").attr("content");
-            let headers = {};
-            headers[csrfHeader] = csrfToken;
             $.ajax({
                 type: "POST",
                 url: "/cart/order",
@@ -63,7 +87,7 @@
                     <td th:text="${cartItem.getProduct().getPrice()}"></td>
                     <td th:text="${cartItem.getProductAmount()}"></td>
                     <td th:text="${cartItem.getTotalPrice()}"></td>
-                    <td><button type="button" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></button></td>
+                    <td><button type="button" class="btn btn-outline-danger btn-sm" th:data-remove-product-id="${cartItem.getProduct().getId()}"><i class="bi bi-trash"></i></button></td>
                 </tr>
             </table>
             <span th:text="#{cart.page.totalamount} + ': ' + ${session.cart.getTotalPrice()}"></span>

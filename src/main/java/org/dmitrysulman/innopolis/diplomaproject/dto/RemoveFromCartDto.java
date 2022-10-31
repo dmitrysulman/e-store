@@ -1,13 +1,13 @@
 package org.dmitrysulman.innopolis.diplomaproject.dto;
 
-public class RemoveFormCartDto {
+public class RemoveFromCartDto {
     private int productId;
     private boolean completely;
 
-    public RemoveFormCartDto() {
+    public RemoveFromCartDto() {
     }
 
-    public RemoveFormCartDto(int productId, boolean completely) {
+    public RemoveFromCartDto(int productId, boolean completely) {
         this.productId = productId;
         this.completely = completely;
     }
