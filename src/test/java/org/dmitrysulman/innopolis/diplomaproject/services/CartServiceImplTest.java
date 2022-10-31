@@ -11,7 +11,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,25 +27,39 @@ class CartServiceImplTest {
 
     @Test
     void removeProductFromCartShouldDecreaseProductAmountByOne() {
-        Cart cart = new Cart();
-        Product product = new Product();
-        product.setId(1);
-        CartItem cartItem = new CartItem(product, 10, cart);
-        cart.setCartItems(Collections.singletonList(cartItem));
-        Mockito.when(productRepository.findById(1)).thenReturn(Optional.of(product));
-        cartService.removeProductFromCart(cart, 1, false);
-        assertEquals(9, cartItem.getProductAmount());
+        int productId = 1;
+        int productAmount = 10;
+        Cart cart = prepareCartWithOneProduct(productId, productAmount);
+        cartService.removeProductFromCart(cart, productId, false);
+        CartItem cartItem = cart.getCartItems().get(0);
+        assertEquals(productAmount - 1, cartItem.getProductAmount());
     }
 
     @Test
     void removeProductFromCartWithAmount1ShouldCompletelyRemoveProduct() {
+        int productId = 1;
+        int productAmount = 1;
+        Cart cart = prepareCartWithOneProduct(productId, productAmount);
+        cartService.removeProductFromCart(cart, productId, false);
+        assertTrue(cart.getCartItems().isEmpty());
+    }
+
+    @Test
+    void removeProductFromCartWithCompletelyTrueShouldCompletelyRemoveProduct() {
+        int productId = 1;
+        int productAmount = 10;
+        Cart cart = prepareCartWithOneProduct(productId, productAmount);
+        cartService.removeProductFromCart(cart, productId, true);
+        assertTrue(cart.getCartItems().isEmpty());
+    }
+
+    private Cart prepareCartWithOneProduct(int productId, int productAmount) {
         Cart cart = new Cart();
         Product product = new Product();
-        product.setId(1);
-        CartItem cartItem = new CartItem(product, 1, cart);
-        cart.setCartItems(Collections.singletonList(cartItem));
-        Mockito.when(productRepository.findById(1)).thenReturn(Optional.of(product));
-        cartService.removeProductFromCart(cart, 1, false);
-        assertTrue(cart.getCartItems().isEmpty());
+        product.setId(productId);
+        CartItem cartItem = new CartItem(product, productAmount, cart);
+        cart.setCartItems(new ArrayList<>(List.of(cartItem)));
+        Mockito.lenient().when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        return cart;
     }
 }
