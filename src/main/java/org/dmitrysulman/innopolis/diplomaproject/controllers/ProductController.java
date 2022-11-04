@@ -3,7 +3,6 @@ package org.dmitrysulman.innopolis.diplomaproject.controllers;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
-import org.dmitrysulman.innopolis.diplomaproject.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;

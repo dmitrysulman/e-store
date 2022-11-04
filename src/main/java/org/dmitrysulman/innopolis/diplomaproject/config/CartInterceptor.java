@@ -6,6 +6,7 @@ import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
 import org.dmitrysulman.innopolis.diplomaproject.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -31,9 +32,7 @@ public class CartInterceptor implements HandlerInterceptor {
                            @Nullable ModelAndView modelAndView) throws Exception {
         Cart cart;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //TODO DB!!!
-        //if (authentication instanceof AnonymousAuthenticationToken) {
-        if (true) {
+        if (authentication instanceof AnonymousAuthenticationToken) {
             cart = (Cart) request.getSession().getAttribute("cart");
             if (cart == null) {
                 cart = new Cart();

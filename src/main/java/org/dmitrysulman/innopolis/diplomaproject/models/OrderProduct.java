@@ -1,7 +1,8 @@
 package org.dmitrysulman.innopolis.diplomaproject.models;
 
 import javax.persistence.*;
-
+import javax.validation.constraints.Min;
+//TODO messages
 @Entity
 @Table(name = "orders_products")
 public class OrderProduct {
@@ -18,9 +19,11 @@ public class OrderProduct {
     @MapsId("productId")
     private Product product;
 
+    @Min(value = 1, message = "Price should be greater than 0")
     @Column(name = "product_price")
     private int productPrice;
 
+    @Min(value = 1, message = "Amount should be greater than 0")
     @Column(name = "product_amount")
     private int productAmount;
 

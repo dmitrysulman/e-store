@@ -1,14 +1,32 @@
 package org.dmitrysulman.innopolis.diplomaproject.models;
 
+import javax.persistence.*;
+import javax.validation.constraints.Min;
+
+//TODO messages
+@Entity
+@Table(name = "carts_items")
 public class CartItem {
+    @EmbeddedId
+    private CartItemId id;
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @MapsId("productId")
     private Product product;
-    private int productAmount;
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @MapsId("cartId")
     private Cart cart;
+
+    @Min(value = 1, message = "Amount should be greater than 0")
+    @Column(name = "product_amount")
+    private int productAmount;
 
     public CartItem() {
     }
 
     public CartItem(Product product, int productAmount, Cart cart) {
+        this.id = new CartItemId(cart.getId(), product.getId());
         this.product = product;
         this.productAmount = productAmount;
         this.cart = cart;
@@ -40,5 +58,13 @@ public class CartItem {
 
     public int getTotalPrice() {
         return product.getPrice() * productAmount;
+    }
+
+    public CartItemId getId() {
+        return id;
+    }
+
+    public void setId(CartItemId id) {
+        this.id = id;
     }
 }

@@ -51,6 +51,9 @@ public class User {
     @Column(name = "is_admin")
     private Boolean isAdmin;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Cart cart;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private Instant createdAt;
@@ -67,7 +70,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String firstName, String secondName, String email, String password, String repeatPassword, String address, Boolean isAdmin, Instant createdAt, Instant updatedAt, List<Order> orders) {
+    public User(int id, String firstName, String secondName, String email, String password, String repeatPassword, String address, Boolean isAdmin, Cart cart, Instant createdAt, Instant updatedAt, List<Order> orders) {
         this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
@@ -76,6 +79,7 @@ public class User {
         this.password = password;
         this.address = address;
         this.isAdmin = isAdmin;
+        this.cart = cart;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.orders = orders;
@@ -171,5 +175,13 @@ public class User {
 
     public String getFullName() {
         return firstName + ' ' + secondName;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }
