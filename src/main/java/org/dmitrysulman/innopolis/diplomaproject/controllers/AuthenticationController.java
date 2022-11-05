@@ -62,7 +62,8 @@ public class AuthenticationController {
     public String signUp(@ModelAttribute("user") @Valid User user,
                          BindingResult bindingResult,
                          HttpServletRequest request,
-                         Authentication authentication) throws ServletException {
+                         HttpServletResponse response,
+                         Authentication authentication) throws ServletException, IOException {
         if (authentication != null) {
             return "redirect:/";
         }
@@ -72,6 +73,7 @@ public class AuthenticationController {
         String password = user.getPassword();
         userService.save(user);
         request.login(user.getEmail(),password);
-        return "redirect:/" + request.getParameter("redirect");
+        authenticationSuccessHandler.onAuthenticationSuccess(request, response, SecurityContextHolder.getContext().getAuthentication());
+        return null;
     }
 }

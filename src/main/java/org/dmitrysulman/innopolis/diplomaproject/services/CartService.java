@@ -4,7 +4,7 @@ import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.util.ElementNotFoundException;
 
 public interface CartService {
-    void setCartWithUserAfterLogin(Cart cart, int userId);
+    void mergeCartAfterLogin(Cart cart, int userId);
 
     Cart getCartByUser(int userId);
 

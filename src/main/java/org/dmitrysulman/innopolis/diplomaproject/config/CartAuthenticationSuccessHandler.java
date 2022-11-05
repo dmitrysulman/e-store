@@ -33,7 +33,7 @@ public class CartAuthenticationSuccessHandler
                                         Authentication authentication) throws IOException, ServletException {
         Cart cart = (Cart) request.getSession().getAttribute("cart");
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
-        cartService.setCartWithUserAfterLogin(cart, user.getId());
+        cartService.mergeCartAfterLogin(cart, user.getId());
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }

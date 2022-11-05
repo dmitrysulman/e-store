@@ -141,7 +141,9 @@
             <column autoIncrement="true" name="id" type="INTEGER">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="carts_pkey"/>
             </column>
-            <column name="user_id" type="INTEGER"/>
+            <column name="user_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
 
             <column name="created_at" type="datetime" defaultValueComputed="now()">
                 <constraints nullable="false"/>

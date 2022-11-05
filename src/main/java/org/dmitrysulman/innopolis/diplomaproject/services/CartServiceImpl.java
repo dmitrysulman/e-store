@@ -13,8 +13,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,47 +21,45 @@ public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
     private final UserRepository userRepository;
-
-    @Lazy
-    @Autowired
-    private CartService cartService;
+    private final CartService cartService;
 
     @Autowired
-    public CartServiceImpl(ProductRepository productRepository, CartRepository cartRepository, UserRepository userRepository) {
+    public CartServiceImpl(ProductRepository productRepository,
+                           CartRepository cartRepository,
+                           UserRepository userRepository,
+                           @Lazy CartService cartService) {
         this.productRepository = productRepository;
         this.cartRepository = cartRepository;
         this.userRepository = userRepository;
+        this.cartService = cartService;
     }
 
     @Override
     @Transactional
-    public void setCartWithUserAfterLogin(Cart cart, int userId) {
-        Optional<Cart> cartFromDb = cartRepository.findByUserId(userId);
-        cartFromDb.ifPresentOrElse(crtFromDb -> cart.getCartItems().forEach(cartItemSession -> {
-            boolean nonPresentInDb = crtFromDb.getCartItems().stream()
-                    .filter(c -> c.getProduct().getId() == cartItemSession.getProduct().getId())
-                    .findFirst()
-                    .isEmpty();
-            if (nonPresentInDb) {
-                Product product = productRepository.findById(cartItemSession.getProduct().getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
-                CartItem newCartItem = new CartItem(product, cartItemSession.getProductAmount(), crtFromDb);
-                crtFromDb.getCartItems().add(newCartItem);
-                cartRepository.save(crtFromDb);
+    public void mergeCartAfterLogin(Cart cart, int userId) {
+        Optional<Cart> cartFromDbOptional = cartRepository.findByUserId(userId);
+        if (cartFromDbOptional.isPresent()) {
+            Cart cartFromDb = cartFromDbOptional.get();
+            for (CartItem cartItemSession : cart.getCartItems()) {
+                boolean productNotPresentInDb = cartFromDb.getCartItems().stream()
+                        .filter(c -> c.getProduct().getId() == cartItemSession.getProduct().getId())
+                        .findFirst()
+                        .isEmpty();
+                if (productNotPresentInDb) {
+                    cartFromDb.getCartItems().add(cartItemSession);
+                    cartItemSession.setCart(cartFromDb);
+                    cartRepository.save(cartFromDb);
+                }
             }
-        }),
-                () -> {
-                    Cart newCart = new Cart();
-                    User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
-                    List<CartItem> cartItems = new ArrayList<>();
-                    cart.getCartItems().forEach(cartItem -> {
-                        Product product = productRepository.findById(cartItem.getProduct().getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
-                        CartItem newCartItem = new CartItem(product, cartItem.getProductAmount(), newCart);
-                        cartItems.add(newCartItem);
-                    });
-                    newCart.setUser(user);
-                    newCart.setCartItems(cartItems);
-                    cartRepository.save(newCart);
-                });
+        } else {
+            User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+            for (CartItem cartItem : cart.getCartItems()) {
+                Product product = productRepository.findById(cartItem.getProduct().getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+                cartItem.setProduct(product);
+            }
+            cart.setUser(user);
+            cartRepository.save(cart);
+        }
     }
 
     @Override
@@ -89,9 +85,7 @@ public class CartServiceImpl implements CartService {
                                 Product product = productRepository
                                         .findById(productId)
                                         .orElseThrow(() -> new IllegalArgumentException("Product not found"));
-                                CartItem cartItem = new CartItem();
-                                cartItem.setProduct(product);
-                                cartItem.setProductAmount(1);
+                                CartItem cartItem = new CartItem(product, 1, cart);
                                 cart.getCartItems().add(cartItem);
                             });
             cartService.updateCartContent(cart);
@@ -124,7 +118,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void updateCartContent(Cart cart) {
-        cart.getCartItems().forEach(cartItem -> cartItem.setProduct(productRepository.findById(cartItem.getProduct().getId()).orElseThrow(() -> new IllegalArgumentException("Product not found"))));
+        cart.getCartItems().forEach(
+                cartItem -> cartItem.setProduct(
+                        productRepository.findById(cartItem.getProduct().getId())
+                                .orElseThrow(() -> new IllegalArgumentException("Product not found"))
+                )
+        );
     }
 
     @Override
