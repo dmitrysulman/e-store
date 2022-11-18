@@ -10,12 +10,11 @@ public class CartItem {
     @EmbeddedId
     private CartItemId id;
 
-//    @ManyToOne(cascade = CascadeType.MERGE)
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne
     @MapsId("productId")
     private Product product;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("cartId")
     private Cart cart;
 

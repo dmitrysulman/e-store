@@ -1,9 +1,10 @@
 package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.dto.UserDto;
+import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
+import org.dmitrysulman.innopolis.diplomaproject.repositiries.CartRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.UserRepository;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,13 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final CartRepository cartRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, CartRepository cartRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.cartRepository = cartRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -29,8 +32,12 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setAdmin(false);
+        user = userRepository.save(user);
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cartRepository.save(cart);
 
-        return userRepository.save(user);
+        return user;
     }
 
     @Override
@@ -49,14 +56,6 @@ public class UserServiceImpl implements UserService {
         user.setRepeatPassword(user.getPassword());
 
         return userRepository.save(user);
-    }
-
-    @Override
-    public User findByIdWithOrders(int id) {
-        User user = userRepository.findById(id).orElse(null);
-        Hibernate.initialize(user.getOrders());
-
-        return user;
     }
 
     @Override

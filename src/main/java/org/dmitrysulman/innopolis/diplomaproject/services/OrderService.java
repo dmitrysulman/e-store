@@ -13,4 +13,6 @@ public interface OrderService {
     Optional<Order> findById(int id);
 
     Order save(OrderDto orderDto, int userId) throws ElementNotFoundException;
+
+    List<Order> findByUserId(int userId);
 }

@@ -5,3 +5,9 @@ spring.datasource.password=
 
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.properties.hibernate.show_sql=false
+spring.jpa.open-in-view=false
+
+spring.servlet.multipart.max-file-size=2048KB
+spring.servlet.multipart.max-request-size=8192KB
+
+spring.liquibase.enabled=false

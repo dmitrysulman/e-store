@@ -54,18 +54,6 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id, String name, int price, int amount, Instant createdAt, Instant updatedAt, List<String> imagesUrls, List<ProductImage> productImages, MultipartFile[] images) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.amount = amount;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.imagesUrls = imagesUrls;
-        this.productImages = productImages;
-        this.images = images;
-    }
-
     public int getId() {
         return id;
     }

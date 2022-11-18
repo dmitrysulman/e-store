@@ -3,6 +3,7 @@ package org.dmitrysulman.innopolis.diplomaproject.controllers;
 import org.dmitrysulman.innopolis.diplomaproject.dto.UserDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
+import org.dmitrysulman.innopolis.diplomaproject.services.OrderService;
 import org.dmitrysulman.innopolis.diplomaproject.services.UserService;
 import org.dmitrysulman.innopolis.diplomaproject.util.UserDtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,13 @@ import javax.validation.Valid;
 @RequestMapping("/profile")
 public class ProfileController {
     private final UserService userService;
+    private final OrderService orderService;
     private final UserDtoValidator userDtoValidator;
 
     @Autowired
-    public ProfileController(UserService userService, UserDtoValidator userDtoValidator) {
+    public ProfileController(UserService userService, OrderService orderService, UserDtoValidator userDtoValidator) {
         this.userService = userService;
+        this.orderService = orderService;
         this.userDtoValidator = userDtoValidator;
     }
 
@@ -74,7 +77,7 @@ public class ProfileController {
     @GetMapping("/orders")
     private String orders(Model model, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        model.addAttribute("orders", userService.findByIdWithOrders(userDetails.getUser().getId()).getOrders());
+        model.addAttribute("orders", orderService.findByUserId(userDetails.getUser().getId()));
 
         return "profile/orders";
     }

@@ -9,13 +9,11 @@ public class OrderProduct {
     @EmbeddedId
     private OrderProductId id;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("orderId")
     private Order order;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("productId")
     private Product product;
 
@@ -76,5 +74,9 @@ public class OrderProduct {
 
     public void setProductAmount(int productAmount) {
         this.productAmount = productAmount;
+    }
+
+    public int getTotalPrice() {
+        return product.getPrice() * productAmount;
     }
 }

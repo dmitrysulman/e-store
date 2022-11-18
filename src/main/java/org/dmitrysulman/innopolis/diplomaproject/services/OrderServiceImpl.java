@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
     public Order save(OrderDto orderDto, int userId) throws ElementNotFoundException {
         try {
             Order order = new Order();
-            User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+            User user = userRepository.getReferenceById(userId);
             order.setUser(user);
             order.setOrderDate(Instant.now());
             order.setOrderStatus(OrderStatus.NEW);
@@ -61,5 +61,10 @@ public class OrderServiceImpl implements OrderService {
         } catch (IllegalArgumentException e) {
             throw new ElementNotFoundException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<Order> findByUserId(int userId) {
+        return orderRepository.findByUserIdWithProducts(userId);
     }
 }

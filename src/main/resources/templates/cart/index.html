@@ -90,7 +90,7 @@
                     <td><button type="button" class="btn btn-outline-danger btn-sm" th:data-remove-product-id="${cartItem.getProduct().getId()}"><i class="bi bi-trash"></i></button></td>
                 </tr>
             </table>
-            <span th:text="#{cart.page.totalamount} + ': ' + ${session.cart.getTotalPrice()}"></span>
+            <span th:text="#{cart.page.totalamount} + ': ' + ${cart.getTotalPrice()}"></span>
             <div sec:authorize="isAuthenticated()">
                 <button type="button" class="btn btn-primary" id="order-button" onclick="makeOrder()">Order</button>
             </div>

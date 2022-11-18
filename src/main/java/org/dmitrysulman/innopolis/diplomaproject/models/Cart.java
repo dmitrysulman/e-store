@@ -12,15 +12,14 @@ import java.util.List;
 @Table(name = "carts")
 public class Cart {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
 
-    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "user_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "id")
     private User user;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CartItem> cartItems;
 
     @CreationTimestamp
@@ -33,14 +32,6 @@ public class Cart {
 
     public Cart() {
         cartItems = new ArrayList<>();
-    }
-
-    public Cart(int id, User user, List<CartItem> cartItems, Instant createdAt, Instant updatedAt) {
-        this.id = id;
-        this.user = user;
-        this.cartItems = cartItems;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public User getUser() {

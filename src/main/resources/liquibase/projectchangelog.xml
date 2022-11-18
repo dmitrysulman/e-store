@@ -138,13 +138,9 @@
     </changeSet>
     <changeSet id="5" author="dmitrysulman">
         <createTable tableName="carts">
-            <column autoIncrement="true" name="id" type="INTEGER">
+            <column name="id" type="INTEGER">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="carts_pkey"/>
             </column>
-            <column name="user_id" type="INTEGER">
-                <constraints nullable="false"/>
-            </column>
-
             <column name="created_at" type="datetime" defaultValueComputed="now()">
                 <constraints nullable="false"/>
             </column>
@@ -166,7 +162,7 @@
         </createTable>
 
         <addPrimaryKey columnNames="cart_id, product_id" constraintName="carts_items_pkey" tableName="carts_items" validate="true"/>
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="carts" constraintName="carts_user_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="carts" constraintName="carts_user_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" validate="true"/>
         <addForeignKeyConstraint baseColumnNames="cart_id" baseTableName="carts_items" constraintName="carts_items_cart_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="carts" validate="true"/>
         <addForeignKeyConstraint baseColumnNames="product_id" baseTableName="carts_items" constraintName="carts_items_product_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="products" validate="true"/>
     </changeSet>

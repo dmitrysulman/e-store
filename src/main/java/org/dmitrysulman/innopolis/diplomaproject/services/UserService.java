@@ -13,7 +13,5 @@ public interface UserService {
 
     User update(UserDto userDto, int userId);
 
-    User findByIdWithOrders(int id);
-
     List<User> findAll();
 }

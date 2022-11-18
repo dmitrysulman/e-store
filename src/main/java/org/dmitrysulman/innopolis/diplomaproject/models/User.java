@@ -51,9 +51,6 @@ public class User {
     @Column(name = "is_admin")
     private Boolean isAdmin;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Cart cart;
-
     @CreationTimestamp
     @Column(name = "created_at")
     private Instant createdAt;
@@ -62,27 +59,11 @@ public class User {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @OneToMany(mappedBy = "user",
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "user")
     @OrderBy("orderDate")
     private List<Order> orders;
 
     public User() {
-    }
-
-    public User(int id, String firstName, String secondName, String email, String password, String repeatPassword, String address, Boolean isAdmin, Cart cart, Instant createdAt, Instant updatedAt, List<Order> orders) {
-        this.id = id;
-        this.firstName = firstName;
-        this.secondName = secondName;
-        this.email = email;
-        this.repeatPassword = repeatPassword;
-        this.password = password;
-        this.address = address;
-        this.isAdmin = isAdmin;
-        this.cart = cart;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.orders = orders;
     }
 
     public int getId() {
@@ -175,13 +156,5 @@ public class User {
 
     public String getFullName() {
         return firstName + ' ' + secondName;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
     }
 }

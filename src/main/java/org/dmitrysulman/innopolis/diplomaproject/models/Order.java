@@ -31,28 +31,11 @@ public class Order {
     @OrderBy("productAmount DESC")
     private List<OrderProduct> orderProducts;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Transient
-    private int productsAmount;
-
-    @Transient
-    private int orderAmount;
-
     public Order() {
-    }
-
-    public Order(int id, Instant orderDate, Instant updatedAt, int productsAmount, int orderAmount, OrderStatus orderStatus, List<OrderProduct> orderProducts, User user) {
-        this.id = id;
-        this.orderDate = orderDate;
-        this.updatedAt = updatedAt;
-        this.productsAmount = productsAmount;
-        this.orderAmount = orderAmount;
-        this.orderStatus = orderStatus;
-        this.orderProducts = orderProducts;
-        this.user = user;
     }
 
     public int getId() {
@@ -71,20 +54,20 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public int getProductsAmount() {
-        return productsAmount;
+    public int getTotalProducts() {
+        return orderProducts.size();
     }
 
-    public void setProductsAmount(int productsAmount) {
-        this.productsAmount = productsAmount;
+    public int getProductsAmount() {
+        return orderProducts.stream()
+                .mapToInt(OrderProduct::getProductAmount)
+                .reduce(0, Integer::sum);
     }
 
     public int getOrderAmount() {
-        return orderAmount;
-    }
-
-    public void setOrderAmount(int orderAmount) {
-        this.orderAmount = orderAmount;
+        return orderProducts.stream()
+                .mapToInt(OrderProduct::getTotalPrice)
+                .reduce(0, Integer::sum);
     }
 
     public User getUser() {
