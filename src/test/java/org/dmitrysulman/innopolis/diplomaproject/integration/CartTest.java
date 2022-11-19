@@ -5,9 +5,7 @@ import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.services.CartService;
 import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
 import org.dmitrysulman.innopolis.diplomaproject.services.UserService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +28,7 @@ import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfig
 
 @SpringBootTest
 @ActiveProfiles("cart-test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CartTest {
 
     private MockMvc mvc;
@@ -54,21 +53,25 @@ public class CartTest {
     private static final List<Product> testProducts = new ArrayList<>();
     private static User user;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    void beforeAll() {
         user = createTestUser();
 
         for (int i = 0; i < 3; i++) {
-           testProducts.add(createTestProduct("Product" + i, i * 2000 + 1000, i));
+            testProducts.add(createTestProduct("Product" + i, i * 2000 + 1000, i));
         }
+    }
 
+    @BeforeEach
+    void setUp() {
         mvc = webAppContextSetup(context)
                 .apply(springSecurity())
                 .apply(sharedHttpSession())
                 .build();
+        cartService.clearCart(user.getId());
     }
 
-    private User createTestUser() {
+    User createTestUser() {
         User user = new User();
         user.setEmail("test");
         user.setEmail(testUserEmail);
@@ -81,7 +84,7 @@ public class CartTest {
         return userService.save(user);
     }
 
-    private Product createTestProduct(String name, int price, int amount) {
+    Product createTestProduct(String name, int price, int amount) {
         Product product = new Product();
         product.setName(name);
         product.setPrice(price);
@@ -90,7 +93,7 @@ public class CartTest {
     }
 
     @Test
-    void should_merge_the_cart_in_session_with_empty_cart_in_db_after_login() throws Exception {
+    void should_merge_cart_in_session_with_empty_cart_in_db_after_login() throws Exception {
         mvc
                 .perform(get("/"))
                 .andExpect(status().isOk());
@@ -107,20 +110,83 @@ public class CartTest {
                 )
                 .andExpect(status().is3xxRedirection());
 
+        assertEquals(1, cartService.getCartByUser(user.getId()).getTotalItems());
+        assertEquals(1, cartService.getCartByUser(user.getId()).getTotalProducts());
         assertEquals(testProducts.get(0).getId(), cartService.getCartByUser(user.getId()).getCartItems().get(0).getProduct().getId());
         assertEquals(1, cartService.getCartByUser(user.getId()).getCartItems().get(0).getProductAmount());
     }
 
     @Test
-    @Disabled
-    void should_merge_the_cart_in_session_with_cart_containing_products_in_db_after_login() throws Exception {
+    void should_add_product_to_cart_in_db_for_logged_in_user() throws Exception {
+        int productIndex = 0;
+        mvc
+                .perform(get("/"))
+                .andExpect(status().isOk());
+        mvc
+                .perform(formLogin("/process-signin")
+                        .user(testUserEmail)
+                        .password(testUserPassword)
+                )
+                .andExpect(status().is3xxRedirection());
+        mvc
+                .perform(post("/cart/add_to_cart")
+                        .with(csrf())
+                        .content("{\"productId\": " + testProducts.get(productIndex).getId() + "}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        assertEquals(1, cartService.getCartByUser(user.getId()).getTotalItems());
+        assertEquals(1, cartService.getCartByUser(user.getId()).getTotalProducts());
+        assertEquals(testProducts.get(productIndex).getId(), cartService.getCartByUser(user.getId()).getCartItems().get(productIndex).getProduct().getId());
+        assertEquals(1, cartService.getCartByUser(user.getId()).getCartItems().get(productIndex).getProductAmount());
+
+        mvc
+                .perform(post("/cart/add_to_cart")
+                        .with(csrf())
+                        .content("{\"productId\": " + testProducts.get(productIndex).getId() + "}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        assertEquals(2, cartService.getCartByUser(user.getId()).getTotalItems());
+        assertEquals(1, cartService.getCartByUser(user.getId()).getTotalProducts());
+        assertEquals(testProducts.get(productIndex).getId(), cartService.getCartByUser(user.getId()).getCartItems().get(productIndex).getProduct().getId());
+        assertEquals(2, cartService.getCartByUser(user.getId()).getCartItems().get(productIndex).getProductAmount());
+
+        productIndex = 1;
+        mvc
+                .perform(post("/cart/add_to_cart")
+                        .with(csrf())
+                        .content("{\"productId\": " + testProducts.get(productIndex).getId() + "}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        assertEquals(3, cartService.getCartByUser(user.getId()).getTotalItems());
+        assertEquals(2, cartService.getCartByUser(user.getId()).getTotalProducts());
+        assertEquals(testProducts.get(productIndex).getId(), cartService.getCartByUser(user.getId()).getCartItems().get(productIndex).getProduct().getId());
+        assertEquals(1, cartService.getCartByUser(user.getId()).getCartItems().get(productIndex).getProductAmount());
+
+        mvc
+                .perform(post("/cart/add_to_cart")
+                        .with(csrf())
+                        .content("{\"productId\": " + testProducts.get(productIndex).getId() + "}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        assertEquals(4, cartService.getCartByUser(user.getId()).getTotalItems());
+        assertEquals(2, cartService.getCartByUser(user.getId()).getTotalProducts());
+        assertEquals(testProducts.get(productIndex).getId(), cartService.getCartByUser(user.getId()).getCartItems().get(productIndex).getProduct().getId());
+        assertEquals(2, cartService.getCartByUser(user.getId()).getCartItems().get(productIndex).getProductAmount());
+    }
+
+    @Test
+    void should_merge_cart_in_session_with_cart_containing_products_in_db_after_login() throws Exception {
+        cartService.addProductToCart(user.getId(), testProducts.get(0).getId());
+
+        int productIndex = 1;
         mvc
                 .perform(get("/"))
                 .andExpect(status().isOk());
         mvc
                 .perform(post("/cart/add_to_cart")
                         .with(csrf())
-                        .content("{\"productId\": " + testProducts.get(0).getId() + "}")
+                        .content("{\"productId\": " + testProducts.get(productIndex).getId() + "}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         mvc
@@ -130,7 +196,9 @@ public class CartTest {
                 )
                 .andExpect(status().is3xxRedirection());
 
-        assertEquals(testProducts.get(0).getId(), cartService.getCartByUser(user.getId()).getCartItems().get(0).getProduct().getId());
-        assertEquals(1, cartService.getCartByUser(user.getId()).getCartItems().get(0).getProductAmount());
+        assertEquals(2, cartService.getCartByUser(user.getId()).getTotalItems());
+        assertEquals(2, cartService.getCartByUser(user.getId()).getTotalProducts());
+        assertEquals(testProducts.get(productIndex).getId(), cartService.getCartByUser(user.getId()).getCartItems().get(productIndex).getProduct().getId());
+        assertEquals(1, cartService.getCartByUser(user.getId()).getCartItems().get(productIndex).getProductAmount());
     }
 }

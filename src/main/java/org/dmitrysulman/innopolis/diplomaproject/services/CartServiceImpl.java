@@ -64,7 +64,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void addProductToCart(Cart cart, int productId) throws ElementNotFoundException {
-        //TODO message
         addProductToCartInternal(cart, productId, false);
         cartService.updateCartContent(cart);
     }
@@ -91,23 +90,33 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void removeProductFromCart(int userId, int productId, boolean completely) throws ElementNotFoundException {
-        //TODO
+        Cart cart = cartRepository.findById(userId).orElseThrow(IllegalStateException::new);
+        removeProductFromCartInternal(cart, productId, completely);
+        cartRepository.save(cart);
+    }
+
+    @Override
+    public void clearCart(Cart cart) {
+        clearCartInternal(cart);
     }
 
     @Override
     public void removeProductFromCart(Cart cart, int productId, boolean completely) {
+        removeProductFromCartInternal(cart, productId, completely);
+        cartService.updateCartContent(cart);
+    }
+
+    private void removeProductFromCartInternal(Cart cart, int productId, boolean completely) {
         cart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct().getId() == productId)
                 .findFirst()
                 .ifPresent(cartItem -> {
                     if (completely || cartItem.getProductAmount() == 1) {
                         cart.getCartItems().removeIf(item -> item.getProduct().getId() == productId);
-                        cartItem.setCart(null);
                     } else {
                         cartItem.setProductAmount(cartItem.getProductAmount() - 1);
                     }
                 });
-        cartService.updateCartContent(cart);
     }
 
     @Override
@@ -119,18 +128,17 @@ public class CartServiceImpl implements CartService {
             Optional<Product> product = productRepository.findById(cartItem.getProduct().getId());
             product.ifPresentOrElse(cartItem::setProduct, iterator::remove);
         }
-
-//        cart.getCartItems().forEach(
-//                cartItem -> cartItem.setProduct(
-//                        productRepository.findById(cartItem.getProduct().getId())
-//                                .orElseThrow(() -> new IllegalArgumentException("Product not found"))
-//                )
-//        );
     }
 
     @Override
     @Transactional
     public void clearCart(int userId) {
-        //TODO
+        Cart cart = cartRepository.findById(userId).orElseThrow(IllegalStateException::new);
+        clearCartInternal(cart);
+        cartRepository.save(cart);
+    }
+
+    private void clearCartInternal(Cart cart) {
+        cart.getCartItems().clear();
     }
 }

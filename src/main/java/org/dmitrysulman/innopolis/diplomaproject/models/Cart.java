@@ -19,7 +19,10 @@ public class Cart {
     @JoinColumn(name = "id")
     private User user;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cart",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true)
     private List<CartItem> cartItems;
 
     @CreationTimestamp

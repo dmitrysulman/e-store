@@ -23,7 +23,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -92,13 +91,11 @@ public class CartController {
     @PostMapping("/order")
     @ResponseBody
     public ResponseEntity<OrderSuccessDto> order(@RequestBody @Valid OrderDto orderDto,
-                                                 HttpServletRequest request,
                                                  Authentication authentication) throws ElementNotFoundException {
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         Order order = orderService.save(orderDto, user.getId());
         OrderSuccessDto orderSuccessDto = new OrderSuccessDto(order.getId());
         cartService.clearCart(user.getId());
-//        request.getSession().setAttribute("cart", null);
 
         return ResponseEntity.ok(orderSuccessDto);
     }

@@ -16,7 +16,9 @@ public interface CartService {
 
     void removeProductFromCart(int userId, int productId, boolean completely) throws ElementNotFoundException;
 
-    void updateCartContent(Cart cart);
+    void clearCart(Cart cart);
 
     void clearCart(int userId);
+
+    void updateCartContent(Cart cart);
 }
