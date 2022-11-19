@@ -6,6 +6,7 @@ import org.dmitrysulman.innopolis.diplomaproject.services.CartService;
 import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
 import org.dmitrysulman.innopolis.diplomaproject.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +112,7 @@ public class CartTest {
     }
 
     @Test
+    @Disabled
     void should_merge_the_cart_in_session_with_cart_containing_products_in_db_after_login() throws Exception {
         mvc
                 .perform(get("/"))

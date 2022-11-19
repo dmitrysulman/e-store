@@ -56,7 +56,7 @@ public class CartController {
 
     @PostMapping("/add_to_cart")
     @ResponseBody
-    public ResponseEntity<HttpStatus> addToCart(@RequestBody AddToCartDto addToCartDto,
+    public ResponseEntity<HttpStatus> addToCart(@RequestBody @Valid AddToCartDto addToCartDto,
                                                 HttpSession httpSession,
                                                 Authentication authentication) throws ElementNotFoundException {
         int productId = addToCartDto.getProductId();
@@ -73,7 +73,7 @@ public class CartController {
 
     @PostMapping("/remove_from_cart")
     @ResponseBody
-    public ResponseEntity<HttpStatus> removeFromCart(@RequestBody RemoveFromCartDto removeFromCartDto,
+    public ResponseEntity<HttpStatus> removeFromCart(@RequestBody @Valid RemoveFromCartDto removeFromCartDto,
                                                 HttpSession httpSession,
                                                 Authentication authentication) throws ElementNotFoundException {
         int productId = removeFromCartDto.getProductId();
@@ -98,7 +98,7 @@ public class CartController {
         Order order = orderService.save(orderDto, user.getId());
         OrderSuccessDto orderSuccessDto = new OrderSuccessDto(order.getId());
         cartService.clearCart(user.getId());
-        request.getSession().setAttribute("cart", null);
+//        request.getSession().setAttribute("cart", null);
 
         return ResponseEntity.ok(orderSuccessDto);
     }

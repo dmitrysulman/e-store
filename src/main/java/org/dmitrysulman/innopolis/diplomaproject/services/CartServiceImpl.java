@@ -11,8 +11,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
+import java.util.Optional;
+
 @Service
-@Transactional(readOnly = true)
 public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
@@ -47,6 +49,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Cart getCartByUser(int userId) {
         return cartRepository.findById(userId).orElseThrow(IllegalStateException::new);
     }
@@ -54,28 +57,35 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void addProductToCart(int userId, int productId) throws ElementNotFoundException {
-        //TODO
+        Cart cart = cartRepository.findById(userId).orElseThrow(IllegalStateException::new);
+        addProductToCartInternal(cart, productId, true);
+        cartRepository.save(cart);
     }
 
     @Override
     public void addProductToCart(Cart cart, int productId) throws ElementNotFoundException {
         //TODO message
-        try {
-            cart.getCartItems().stream()
-                    .filter(cartItem -> cartItem.getProduct().getId() == productId)
-                    .findFirst()
-                    .ifPresentOrElse(cartItem -> cartItem.setProductAmount(cartItem.getProductAmount() + 1),
-                            () -> {
-                                Product product = productRepository
-                                        .findById(productId)
-                                        .orElseThrow(() -> new IllegalArgumentException("Product not found"));
-                                CartItem cartItem = new CartItem(product, 1, cart);
-                                cart.getCartItems().add(cartItem);
-                            });
-            cartService.updateCartContent(cart);
-        } catch (IllegalArgumentException e) {
-            throw new ElementNotFoundException(e.getMessage());
+        addProductToCartInternal(cart, productId, false);
+        cartService.updateCartContent(cart);
+    }
+
+    private void addProductToCartInternal(Cart cart, int productId, boolean fromDb) throws ElementNotFoundException {
+        cart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getProduct().getId() == productId)
+                .findFirst()
+                .ifPresentOrElse(cartItem -> cartItem.setProductAmount(cartItem.getProductAmount() + 1),
+                        () -> cart.getCartItems().add(new CartItem(getProductById(productId, fromDb), 1, cart)));
+    }
+
+    private Product getProductById(int productId, boolean fromDb) {
+        Product product;
+        if (fromDb) {
+            product = productRepository.getReferenceById(productId);
+        } else {
+            product = new Product();
+            product.setId(productId);
         }
+        return product;
     }
 
     @Override
@@ -101,13 +111,21 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void updateCartContent(Cart cart) {
-        cart.getCartItems().forEach(
-                cartItem -> cartItem.setProduct(
-                        productRepository.findById(cartItem.getProduct().getId())
-                                .orElseThrow(() -> new IllegalArgumentException("Product not found"))
-                )
-        );
+        Iterator<CartItem> iterator = cart.getCartItems().iterator();
+        while (iterator.hasNext()) {
+            CartItem cartItem = iterator.next();
+            Optional<Product> product = productRepository.findById(cartItem.getProduct().getId());
+            product.ifPresentOrElse(cartItem::setProduct, iterator::remove);
+        }
+
+//        cart.getCartItems().forEach(
+//                cartItem -> cartItem.setProduct(
+//                        productRepository.findById(cartItem.getProduct().getId())
+//                                .orElseThrow(() -> new IllegalArgumentException("Product not found"))
+//                )
+//        );
     }
 
     @Override

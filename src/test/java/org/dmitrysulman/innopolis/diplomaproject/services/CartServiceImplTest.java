@@ -24,6 +24,7 @@ class CartServiceImplTest {
     @Mock
     private ProductRepository productRepository;
 
+    //for self-wiring in cartServiceImpl
     @Mock
     private CartService cartService;
 
@@ -165,5 +166,6 @@ class CartServiceImplTest {
 
     private void mockRepository(int productId, Product product) {
         lenient().when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        lenient().when(productRepository.existsById(productId)).thenReturn(true);
     }
 }
