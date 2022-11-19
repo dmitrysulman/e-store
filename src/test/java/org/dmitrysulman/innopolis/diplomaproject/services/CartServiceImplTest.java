@@ -19,10 +19,13 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CartServiceImplTest {
     @InjectMocks
-    private CartServiceImpl cartService;
+    private CartServiceImpl cartServiceImpl;
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private CartService cartService;
 
     @Test
     void remove_product_from_cart_should_decrease_product_amount_by_one() {
@@ -31,7 +34,7 @@ class CartServiceImplTest {
         int productAmount = 10;
         products.put(productId, productAmount);
         Cart cart = prepareCart(products);
-        cartService.removeProductFromCart(cart, productId, false);
+        cartServiceImpl.removeProductFromCart(cart, productId, false);
         CartItem cartItem = cart.getCartItems().get(0);
         assertEquals(productAmount - 1, cartItem.getProductAmount());
     }
@@ -43,7 +46,7 @@ class CartServiceImplTest {
         int productAmount = 1;
         products.put(productId, productAmount);
         Cart cart = prepareCart(products);
-        cartService.removeProductFromCart(cart, productId, false);
+        cartServiceImpl.removeProductFromCart(cart, productId, false);
         assertTrue(cart.getCartItems().isEmpty());
     }
 
@@ -54,7 +57,7 @@ class CartServiceImplTest {
         int productAmount = 10;
         products.put(productId, productAmount);
         Cart cart = prepareCart(products);
-        cartService.removeProductFromCart(cart, productId, true);
+        cartServiceImpl.removeProductFromCart(cart, productId, true);
         assertTrue(cart.getCartItems().isEmpty());
     }
 
@@ -66,7 +69,7 @@ class CartServiceImplTest {
         products.put(productId, productAmount);
         Cart cart = prepareCart(products);
         int notValidProductId = 2;
-        assertDoesNotThrow(() -> cartService.removeProductFromCart(cart, notValidProductId, true));
+        assertDoesNotThrow(() -> cartServiceImpl.removeProductFromCart(cart, notValidProductId, true));
     }
 
     @Test
@@ -77,7 +80,7 @@ class CartServiceImplTest {
         product.setId(productId);
         mockRepository(productId, product);
         try {
-            cartService.addProductToCart(cart, productId);
+            cartServiceImpl.addProductToCart(cart, productId);
         } catch (ElementNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -95,7 +98,7 @@ class CartServiceImplTest {
         products.put(productId, productAmount);
         Cart cart = prepareCart(products);
         try {
-            cartService.addProductToCart(cart, productId);
+            cartServiceImpl.addProductToCart(cart, productId);
         } catch (ElementNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -116,7 +119,7 @@ class CartServiceImplTest {
         thisProduct.setId(thisProductId);
         mockRepository(thisProductId, thisProduct);
         try {
-            cartService.addProductToCart(cart, thisProductId);
+            cartServiceImpl.addProductToCart(cart, thisProductId);
         } catch (ElementNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -136,7 +139,7 @@ class CartServiceImplTest {
         products.put(thisProductId, thisProductAmount);
         Cart cart = prepareCart(products);
         try {
-            cartService.addProductToCart(cart, thisProductId);
+            cartServiceImpl.addProductToCart(cart, thisProductId);
         } catch (ElementNotFoundException e) {
             throw new RuntimeException(e);
         }
