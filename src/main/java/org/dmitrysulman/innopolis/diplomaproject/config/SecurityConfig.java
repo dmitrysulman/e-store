@@ -37,8 +37,6 @@ public class SecurityConfig {
                         authorizeRequests
                                 .antMatchers("/admin/**")
                                 .hasRole("ADMIN")
-//                                .antMatchers("/signup**", "/signin**", "/", "/product/*/")
-//                                .permitAll()
                                 .antMatchers("/cart/order", "/profile/**")
                                 .hasAnyRole("USER", "ADMIN")
                 )

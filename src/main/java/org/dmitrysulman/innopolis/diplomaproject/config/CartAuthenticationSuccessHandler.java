@@ -34,6 +34,7 @@ public class CartAuthenticationSuccessHandler
         Cart cart = (Cart) request.getSession().getAttribute("cart");
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         cartService.mergeCartAfterLogin(cart, user.getId());
+        request.getSession().removeAttribute("cart");
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }

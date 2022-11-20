@@ -26,27 +26,34 @@ public class CartInterceptor implements HandlerInterceptor {
     }
 
     @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken &&
+                request.getSession().getAttribute("cart") == null) {
+            request.getSession().setAttribute("cart", new Cart());
+        }
+
+        return HandlerInterceptor.super.preHandle(request, response, handler);
+    }
+
+    @Override
     public void postHandle(HttpServletRequest request,
                            HttpServletResponse response,
                            Object handler,
                            @Nullable ModelAndView modelAndView) throws Exception {
-        Cart cart;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            cart = (Cart) request.getSession().getAttribute("cart");
-            if (cart == null) {
-                cart = new Cart();
-                request.getSession().setAttribute("cart", cart);
-            } else {
+        if (request.getMethod().equals("GET")) {
+            Cart cart;
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication instanceof AnonymousAuthenticationToken) {
+                cart = (Cart) request.getSession().getAttribute("cart");
                 cartService.updateCartContent(cart);
+            } else {
+                User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
+                cart = cartService.getCartByUser(user.getId());
             }
-        } else {
-            User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
-            cart = cartService.getCartByUser(user.getId());
-            request.getSession().setAttribute("cart", cart);
-        }
-        if (modelAndView != null) {
-            modelAndView.getModelMap().addAttribute("cart", cart);
+            if (modelAndView != null) {
+                modelAndView.getModelMap().addAttribute("cart", cart);
+            }
         }
     }
 }
