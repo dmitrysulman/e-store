@@ -41,7 +41,7 @@
 </head>
 <body>
     <div style="width: 800px; margin: auto;">
-        <div th:replace="/fragments/header :: header"></div>
+        <div th:replace="fragments/header :: header"></div>
         <div style="margin-bottom: 20px;">
             <a href="/" th:text="#{product.breadcrumbs.catalog}"></a> > <span th:text="${product.getName()}"></span>
             <h1 th:text="${product.getName()}"></h1>

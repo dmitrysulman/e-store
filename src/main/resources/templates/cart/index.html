@@ -71,7 +71,7 @@
 </head>
 <body>
     <div style="width: 800px; margin: auto;">
-        <div th:replace="/fragments/header :: header"></div>
+        <div th:replace="fragments/header :: header"></div>
         <h1>Shopping cart</h1>
         <div th:if="${cart.getTotalItems() > 0}">
             <table class="table">

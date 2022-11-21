@@ -8,7 +8,7 @@
 </head>
 <body>
 <div style="width: 800px; margin: auto;">
-  <div th:replace="/fragments/header :: header"></div>
+  <div th:replace="fragments/header :: header"></div>
   <div style="margin-bottom: 20px;">
     <form th:method="POST" th:action="@{/admin/add_product}" th:object="${product}" th:enctype="'multipart/form-data'">
       <label for="name">Input Name:</label>

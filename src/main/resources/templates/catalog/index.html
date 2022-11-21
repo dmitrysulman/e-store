@@ -8,19 +8,19 @@
 </head>
 <body>
     <div style="width: 800px; margin: auto;">
-        <div th:replace="/fragments/header :: header"></div>
+        <div th:replace="fragments/header :: header"></div>
         <form th:method="GET" th:action="@{/search}">
             <label for="query">Search query:</label>
             <input type="text" th:value="${query}" id="query" name="query">
             <input type="submit" value="Search">
         </form>
-        <div th:replace="/fragments/product_sort :: product_sort"></div>
-        <div th:replace="/fragments/product_pagination :: product_pagination"></div>
+        <div th:replace="fragments/product_sort :: product_sort"></div>
+        <div th:replace="fragments/product_pagination :: product_pagination"></div>
         <div th:each="product : ${products.getContent()}" style="margin-bottom: 20px;">
             <a th:href="@{/product/{id}(id=${product.getId()})}" th:text="${product.getName()}"></a>
             <div th:text="#{index.product.price} + ': ' + ${product.getPrice()}"></div>
         </div>
-        <div th:replace="/fragments/product_pagination :: product_pagination"></div>
+        <div th:replace="fragments/product_pagination :: product_pagination"></div>
     </div>
 </body>
 </html>
