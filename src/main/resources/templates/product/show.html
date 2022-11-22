@@ -28,12 +28,10 @@
                 data: JSON.stringify(data),
                 success: function () {
                     $("#add-to-cart-button").prop("disabled", false);
-                    //alert("Ok!");
                     location.reload();
                 },
                 error: function () {
                     $("#add-to-cart-button").prop("disabled", false);
-                    //alert("Not ok");
                 }
             });
         }

@@ -1,5 +1,6 @@
 package org.dmitrysulman.innopolis.diplomaproject.controllers;
 
+import org.dmitrysulman.innopolis.diplomaproject.models.CartItem;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/product")
@@ -48,19 +50,15 @@ public class ProductController {
                                 )
                         )
                 );
-        Cart cart;
+        Optional<CartItem> cartItem;
         if (authentication != null) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             User user = userDetails.getUser();
-            cart = cartService.getCartByUser(user.getId());
+            cartItem = cartService.findCartItemByCartIdAndProductId(user.getId(), id);
         } else {
-            cart = (Cart) httpSession.getAttribute("cart");
+            cartItem = cartService.findCartItemByCartIdAndProductId((Cart) httpSession.getAttribute("cart"), id);
         }
-
-        cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getProduct().getId() == id)
-                .findFirst()
-                .ifPresent(cartItem -> model.addAttribute("amountInCart", cartItem.getProductAmount()));
+        cartItem.ifPresent(item -> model.addAttribute("amountInCart", item.getProductAmount()));
         model.addAttribute("product", product);
 
         return "product/show";

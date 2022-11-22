@@ -3,9 +3,9 @@ package org.dmitrysulman.innopolis.diplomaproject.services;
 import org.dmitrysulman.innopolis.diplomaproject.models.CartItem;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
+import org.dmitrysulman.innopolis.diplomaproject.repositiries.CartItemRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.CartRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductRepository;
-import org.dmitrysulman.innopolis.diplomaproject.util.ElementNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -18,31 +18,31 @@ import java.util.Optional;
 public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
     private final CartService cartService;
 
     @Autowired
     public CartServiceImpl(ProductRepository productRepository,
                            CartRepository cartRepository,
+                           CartItemRepository cartItemRepository,
                            @Lazy CartService cartService) {
         this.productRepository = productRepository;
         this.cartRepository = cartRepository;
+        this.cartItemRepository = cartItemRepository;
         this.cartService = cartService;
     }
 
     @Override
     @Transactional
-    public void mergeCartAfterLogin(Cart cart, int userId) {
-        if (!cart.getCartItems().isEmpty()) {
-            Cart cartFromDb = cartRepository.findById(userId).orElseThrow(IllegalStateException::new);
-            for (CartItem cartItemSession : cart.getCartItems()) {
-                boolean productNotPresentInDb = cartFromDb.getCartItems().stream()
-                        .filter(c -> c.getProduct().getId() == cartItemSession.getProduct().getId())
-                        .findFirst()
-                        .isEmpty();
-                if (productNotPresentInDb) {
-                    cartFromDb.getCartItems().add(cartItemSession);
-                    cartItemSession.setCart(cartFromDb);
-                    cartRepository.save(cartFromDb);
+    public void mergeCartAfterLogin(Cart cartSession, int userId) {
+        if (!cartSession.getCartItems().isEmpty()) {
+            Cart cartDb = cartRepository.findById(userId).orElseThrow(IllegalStateException::new);
+            for (CartItem cartItemSession : cartSession.getCartItems()) {
+                Optional<CartItem> cartItemDb = findCartItemByCartIdAndProductId(cartDb,
+                        cartItemSession.getProduct().getId());
+                if (cartItemDb.isEmpty()) {
+                    cartItemSession.setCart(cartDb);
+                    cartItemRepository.save(cartItemSession);
                 }
             }
         }
@@ -51,72 +51,56 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional(readOnly = true)
     public Cart getCartByUser(int userId) {
-        return cartRepository.findById(userId).orElseThrow(IllegalStateException::new);
+        return cartRepository.findByUserIdWithProducts(userId).orElseThrow(IllegalStateException::new);
     }
 
     @Override
     @Transactional
-    public void addProductToCart(int userId, int productId) throws ElementNotFoundException {
-        Cart cart = cartRepository.findById(userId).orElseThrow(IllegalStateException::new);
-        addProductToCartInternal(cart, productId, true);
-        cartRepository.save(cart);
+    public void addProductToCart(int userId, int productId) {
+        Optional<CartItem> cartItem = findCartItemByCartIdAndProductId(userId, productId);
+        cartItem.ifPresentOrElse(item -> item.setProductAmount(item.getProductAmount() + 1),
+                () -> {
+                    CartItem item = new CartItem(productRepository.getReferenceById(productId), 1, cartRepository.getReferenceById(userId));
+                    cartItemRepository.save(item);
+                });
     }
 
     @Override
-    public void addProductToCart(Cart cart, int productId) throws ElementNotFoundException {
-        addProductToCartInternal(cart, productId, false);
+    public void addProductToCart(Cart cart, int productId) {
+        Optional<CartItem> cartItem = findCartItemByCartIdAndProductId(cart, productId);
+        cartItem.ifPresentOrElse(item -> item.setProductAmount(item.getProductAmount() + 1),
+                () -> {
+                    Product product = new Product();
+                    product.setId(productId);
+                    cart.getCartItems().add(new CartItem(product, 1, cart));
+                });
         cartService.updateCartContent(cart);
     }
 
-    private void addProductToCartInternal(Cart cart, int productId, boolean fromDb) throws ElementNotFoundException {
-        cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getProduct().getId() == productId)
-                .findFirst()
-                .ifPresentOrElse(cartItem -> cartItem.setProductAmount(cartItem.getProductAmount() + 1),
-                        () -> cart.getCartItems().add(new CartItem(getProductById(productId, fromDb), 1, cart)));
-    }
-
-    private Product getProductById(int productId, boolean fromDb) {
-        Product product;
-        if (fromDb) {
-            product = productRepository.getReferenceById(productId);
-        } else {
-            product = new Product();
-            product.setId(productId);
-        }
-        return product;
-    }
-
     @Override
     @Transactional
-    public void removeProductFromCart(int userId, int productId, boolean completely) throws ElementNotFoundException {
-        Cart cart = cartRepository.findById(userId).orElseThrow(IllegalStateException::new);
-        removeProductFromCartInternal(cart, productId, completely);
-        cartRepository.save(cart);
-    }
-
-    @Override
-    public void clearCart(Cart cart) {
-        clearCartInternal(cart);
+    public void removeProductFromCart(int userId, int productId, boolean completely) {
+        Optional<CartItem> cartItem = findCartItemByCartIdAndProductId(userId, productId);
+        cartItem.ifPresent(item -> {
+            if (completely || item.getProductAmount() == 1) {
+                cartItemRepository.delete(item);
+            } else {
+                item.setProductAmount(item.getProductAmount() - 1);
+            }
+        });
     }
 
     @Override
     public void removeProductFromCart(Cart cart, int productId, boolean completely) {
-        removeProductFromCartInternal(cart, productId, completely);
+        Optional<CartItem> cartItem = findCartItemByCartIdAndProductId(cart, productId);
+        cartItem.ifPresent(item -> {
+            if (completely || item.getProductAmount() == 1) {
+                cart.getCartItems().removeIf(it -> it.getProduct().getId() == productId);
+            } else {
+                item.setProductAmount(item.getProductAmount() - 1);
+            }
+        });
         cartService.updateCartContent(cart);
-    }
-
-    private void removeProductFromCartInternal(Cart cart, int productId, boolean completely) {
-        cart.getCartItems().stream()
-                .filter(cartItem -> cartItem.getProduct().getId() == productId)
-                .findFirst()
-                .ifPresent(cartItem -> {
-                    if (completely || cartItem.getProductAmount() == 1) {
-                        cart.getCartItems().removeIf(item -> item.getProduct().getId() == productId);
-                    } else {
-                        cartItem.setProductAmount(cartItem.getProductAmount() - 1);
-                    }
-                });
     }
 
     @Override
@@ -131,6 +115,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public void clearCart(Cart cart) {
+        clearCartInternal(cart);
+    }
+
+    @Override
     @Transactional
     public void clearCart(int userId) {
         Cart cart = cartRepository.findById(userId).orElseThrow(IllegalStateException::new);
@@ -140,5 +129,18 @@ public class CartServiceImpl implements CartService {
 
     private void clearCartInternal(Cart cart) {
         cart.getCartItems().clear();
+    }
+
+    @Override
+    public Optional<CartItem> findCartItemByCartIdAndProductId(Cart cart, int productId) {
+        return cart.getCartItems().stream()
+                .filter(cartItem -> cartItem.getProduct().getId() == productId)
+                .findFirst();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<CartItem> findCartItemByCartIdAndProductId(int userId, int productId) {
+        return cartItemRepository.findByCartIdAndProductId(userId, productId);
     }
 }

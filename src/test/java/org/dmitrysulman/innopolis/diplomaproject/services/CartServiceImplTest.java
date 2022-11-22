@@ -4,7 +4,6 @@ import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.models.CartItem;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductRepository;
-import org.dmitrysulman.innopolis.diplomaproject.util.ElementNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -80,11 +79,7 @@ class CartServiceImplTest {
         Product product = new Product();
         product.setId(productId);
         mockRepository(productId, product);
-        try {
-            cartServiceImpl.addProductToCart(cart, productId);
-        } catch (ElementNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        cartServiceImpl.addProductToCart(cart, productId);
         assertEquals(1, cart.getCartItems().size());
         assertEquals(1, cart.getTotalItems());
         assertEquals(1, cart.getCartItems().get(0).getProductAmount());
@@ -98,11 +93,7 @@ class CartServiceImplTest {
         int productAmount = 1;
         products.put(productId, productAmount);
         Cart cart = prepareCart(products);
-        try {
-            cartServiceImpl.addProductToCart(cart, productId);
-        } catch (ElementNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        cartServiceImpl.addProductToCart(cart, productId);
         assertEquals(1, cart.getCartItems().size());
         assertEquals(productAmount + 1, cart.getTotalItems());
         assertEquals(productId, cart.getCartItems().get(0).getProduct().getId());
@@ -119,11 +110,7 @@ class CartServiceImplTest {
         Product thisProduct = new Product();
         thisProduct.setId(thisProductId);
         mockRepository(thisProductId, thisProduct);
-        try {
-            cartServiceImpl.addProductToCart(cart, thisProductId);
-        } catch (ElementNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        cartServiceImpl.addProductToCart(cart, thisProductId);
         assertEquals(2, cart.getCartItems().size());
         assertEquals(otherProductAmount + 1, cart.getTotalItems());
         assertTrue(cart.getCartItems().stream().anyMatch(cartItem -> cartItem.getProduct().getId() == thisProductId));
@@ -139,11 +126,7 @@ class CartServiceImplTest {
         products.put(otherProductId, otherProductAmount);
         products.put(thisProductId, thisProductAmount);
         Cart cart = prepareCart(products);
-        try {
-            cartServiceImpl.addProductToCart(cart, thisProductId);
-        } catch (ElementNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        cartServiceImpl.addProductToCart(cart, thisProductId);
         assertEquals(2, cart.getCartItems().size());
         assertEquals(thisProductAmount + otherProductAmount + 1, cart.getTotalItems());
         assertTrue(cart.getCartItems().stream().anyMatch(cartItem -> cartItem.getProduct().getId() == thisProductId));

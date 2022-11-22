@@ -57,7 +57,7 @@ public class CartController {
     @ResponseBody
     public ResponseEntity<HttpStatus> addToCart(@RequestBody @Valid AddToCartDto addToCartDto,
                                                 HttpSession httpSession,
-                                                Authentication authentication) throws ElementNotFoundException {
+                                                Authentication authentication) {
         int productId = addToCartDto.getProductId();
         if (authentication != null) {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -74,7 +74,7 @@ public class CartController {
     @ResponseBody
     public ResponseEntity<HttpStatus> removeFromCart(@RequestBody @Valid RemoveFromCartDto removeFromCartDto,
                                                 HttpSession httpSession,
-                                                Authentication authentication) throws ElementNotFoundException {
+                                                Authentication authentication) {
         int productId = removeFromCartDto.getProductId();
         boolean completely = removeFromCartDto.isCompletely();
         if (authentication != null) {

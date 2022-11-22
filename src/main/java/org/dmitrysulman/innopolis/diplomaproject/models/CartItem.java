@@ -10,7 +10,7 @@ public class CartItem {
     @EmbeddedId
     private CartItemId id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("productId")
     private Product product;
 
