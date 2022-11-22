@@ -116,19 +116,13 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void clearCart(Cart cart) {
-        clearCartInternal(cart);
+        cart.getCartItems().clear();
     }
 
     @Override
     @Transactional
     public void clearCart(int userId) {
-        Cart cart = cartRepository.findById(userId).orElseThrow(IllegalStateException::new);
-        clearCartInternal(cart);
-        cartRepository.save(cart);
-    }
-
-    private void clearCartInternal(Cart cart) {
-        cart.getCartItems().clear();
+        cartItemRepository.deleteByCartId(userId);
     }
 
     @Override
