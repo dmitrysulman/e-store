@@ -41,7 +41,7 @@ public class CartInterceptor implements HandlerInterceptor {
                            HttpServletResponse response,
                            Object handler,
                            @Nullable ModelAndView modelAndView) throws Exception {
-        if (request.getMethod().equals("GET")) {
+        if (request.getHeader("Content-Type") == null || !request.getHeader("Content-Type").contains("application/json")) {
             Cart cart;
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication instanceof AnonymousAuthenticationToken) {

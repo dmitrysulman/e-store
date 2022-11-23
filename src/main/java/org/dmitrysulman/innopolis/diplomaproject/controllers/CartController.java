@@ -73,8 +73,8 @@ public class CartController {
     @PostMapping("/remove_from_cart")
     @ResponseBody
     public ResponseEntity<HttpStatus> removeFromCart(@RequestBody @Valid RemoveFromCartDto removeFromCartDto,
-                                                HttpSession httpSession,
-                                                Authentication authentication) {
+                                                     HttpSession httpSession,
+                                                     Authentication authentication) {
         int productId = removeFromCartDto.getProductId();
         boolean completely = removeFromCartDto.isCompletely();
         if (authentication != null) {
@@ -83,6 +83,21 @@ public class CartController {
             cartService.removeProductFromCart(user.getId(), productId, completely);
         } else {
             cartService.removeProductFromCart((Cart) httpSession.getAttribute("cart"), productId, completely);
+        }
+
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PostMapping("/clear_cart")
+    @ResponseBody
+    public ResponseEntity<HttpStatus> clearCart(HttpSession httpSession,
+                                                Authentication authentication) {
+        if (authentication != null) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            User user = userDetails.getUser();
+            cartService.clearCart(user.getId());
+        } else {
+            cartService.clearCart((Cart) httpSession.getAttribute("cart"));
         }
 
         return ResponseEntity.ok(HttpStatus.OK);
