@@ -1,5 +1,6 @@
 package org.dmitrysulman.innopolis.diplomaproject.repositiries;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,8 @@ import java.time.Instant;
 
 @Repository
 public class FileSystemRepository {
-    private final String PRODUCTS_IMAGES_DIR = "products_images";
+    @Value("${application.products_images_dir}")
+    private String PRODUCTS_IMAGES_DIR;
 
     public String save(byte[] content, String imageName) throws IOException {
         Path newFile = Paths.get(PRODUCTS_IMAGES_DIR, Instant.now().toEpochMilli() + "-" + imageName);

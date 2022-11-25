@@ -24,7 +24,7 @@ public class ProductImageController {
     @ResponseBody
     public Resource getImage(@PathVariable("productId") int productId, @PathVariable("imageIndex") int imageIndex) {
         Resource image = imageService.get(productId, imageIndex);
-        if (image == null) {
+        if (image == null || !image.exists()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
