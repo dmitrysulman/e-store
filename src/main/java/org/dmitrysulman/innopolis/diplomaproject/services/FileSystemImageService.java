@@ -2,8 +2,8 @@ package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.ProductImage;
-import org.dmitrysulman.innopolis.diplomaproject.repositiries.FileSystemRepository;
-import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductImageRepository;
+import org.dmitrysulman.innopolis.diplomaproject.repositories.FileSystemRepository;
+import org.dmitrysulman.innopolis.diplomaproject.repositories.ProductImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;

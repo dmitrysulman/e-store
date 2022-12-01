@@ -3,7 +3,7 @@ package org.dmitrysulman.innopolis.diplomaproject.services;
 import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
 import org.dmitrysulman.innopolis.diplomaproject.models.CartItem;
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
-import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductRepository;
+import org.dmitrysulman.innopolis.diplomaproject.repositories.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

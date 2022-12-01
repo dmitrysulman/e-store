@@ -1,4 +1,4 @@
-package org.dmitrysulman.innopolis.diplomaproject.repositiries;
+package org.dmitrysulman.innopolis.diplomaproject.repositories;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;

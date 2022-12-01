@@ -1,7 +1,7 @@
 package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
-import org.dmitrysulman.innopolis.diplomaproject.repositiries.UserRepository;
+import org.dmitrysulman.innopolis.diplomaproject.repositories.UserRepository;
 import org.dmitrysulman.innopolis.diplomaproject.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

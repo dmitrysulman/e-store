@@ -1,4 +1,4 @@
-package org.dmitrysulman.innopolis.diplomaproject.repositiries;
+package org.dmitrysulman.innopolis.diplomaproject.repositories;
 
 import org.dmitrysulman.innopolis.diplomaproject.models.CartItem;
 import org.dmitrysulman.innopolis.diplomaproject.models.CartItemId;

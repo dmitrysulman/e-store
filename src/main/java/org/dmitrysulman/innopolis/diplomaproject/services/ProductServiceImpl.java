@@ -1,9 +1,8 @@
 package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
-import org.dmitrysulman.innopolis.diplomaproject.models.ProductImage;
-import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductImageRepository;
-import org.dmitrysulman.innopolis.diplomaproject.repositiries.ProductRepository;
+import org.dmitrysulman.innopolis.diplomaproject.repositories.ProductImageRepository;
+import org.dmitrysulman.innopolis.diplomaproject.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
