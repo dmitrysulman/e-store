@@ -1,6 +1,8 @@
 package org.dmitrysulman.innopolis.diplomaproject.controllers;
 
 import org.dmitrysulman.innopolis.diplomaproject.services.ImageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class ProductImageController {
     private final ImageService imageService;
 
-    public ProductImageController(ImageService imageService) {
+    @Autowired
+    public ProductImageController(@Qualifier("awsS3ImageServiceImpl") ImageService imageService) {
         this.imageService = imageService;
     }
 

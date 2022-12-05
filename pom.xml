@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<liquibase.propertyFile>src\main\resources\liquibase\liquibase.properties</liquibase.propertyFile>
+		<spring-cloud-aws-version>2.2.6.RELEASE</spring-cloud-aws-version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -77,6 +78,20 @@
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-aws-autoconfigure -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-aws-autoconfigure</artifactId>
+			<version>${spring-cloud-aws-version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-aws -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-aws</artifactId>
+			<version>${spring-cloud-aws-version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

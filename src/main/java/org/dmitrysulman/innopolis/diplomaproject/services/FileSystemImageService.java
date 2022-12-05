@@ -5,7 +5,7 @@ import org.dmitrysulman.innopolis.diplomaproject.models.ProductImage;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.FileSystemRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.ProductImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +27,6 @@ public class FileSystemImageService implements ImageService {
     @Override
     @Transactional
     public ProductImage save(byte[] content, Product product, String extension) throws IOException {
-        if (content.length == 0) {
-            return null;
-        }
         String location = fileSystemRepository.save(content, product.getName().toLowerCase().replace(' ', '-').concat(".").concat(extension));
         ProductImage productImage = new ProductImage();
         productImage.setImageLocation(location);
@@ -39,7 +36,7 @@ public class FileSystemImageService implements ImageService {
     }
 
     @Override
-    public FileSystemResource get(int productId, int index) {
+    public Resource get(int productId, int index) {
         List<ProductImage> productImages = productImageRepository.findByProductIdOrderByImageOrder(productId);
         if (productImages.isEmpty() || productImages.size() < index + 1) {
             return null;

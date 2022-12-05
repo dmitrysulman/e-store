@@ -8,6 +8,7 @@ import org.dmitrysulman.innopolis.diplomaproject.services.ProductService;
 import org.dmitrysulman.innopolis.diplomaproject.services.UserService;
 import org.dmitrysulman.innopolis.diplomaproject.util.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +30,7 @@ public class AdminController {
     private final ProductValidator productValidator;
 
     @Autowired
-    public AdminController(UserService userService, OrderService orderService, ProductService productService, ImageService imageService, ProductValidator productValidator) {
+    public AdminController(UserService userService, OrderService orderService, ProductService productService, @Qualifier("awsS3ImageServiceImpl") ImageService imageService, ProductValidator productValidator) {
         this.userService = userService;
         this.orderService = orderService;
         this.productService = productService;
@@ -60,9 +61,9 @@ public class AdminController {
 
     @GetMapping("/products")
     public String products(@RequestParam(value = "page", required = false) Integer page,
-                        @RequestParam(value = "per_page", required = false) Integer perPage,
-                        @RequestParam(value = "direction", required = false) String direction,
-                        Model model) {
+                           @RequestParam(value = "per_page", required = false) Integer perPage,
+                           @RequestParam(value = "direction", required = false) String direction,
+                           Model model) {
         model.addAttribute("query", "");
         model.addAttribute("products", productService.findAll(page, perPage, direction));
 
@@ -71,10 +72,10 @@ public class AdminController {
 
     @GetMapping("/products/search")
     public String productsSearch(@RequestParam(value = "query", required = false) String query,
-                         @RequestParam(value = "page", required = false) Integer page,
-                         @RequestParam(value = "per_page", required = false) Integer perPage,
-                         @RequestParam(value = "direction", required = false) String direction,
-                         Model model) {
+                                 @RequestParam(value = "page", required = false) Integer page,
+                                 @RequestParam(value = "per_page", required = false) Integer perPage,
+                                 @RequestParam(value = "direction", required = false) String direction,
+                                 Model model) {
         if (query == null || query.equals("")) {
             return "redirect:/";
         }
@@ -98,7 +99,9 @@ public class AdminController {
         MultipartFile[] images = product.getImages();
         product = productService.save(product);
         for (MultipartFile image : images) {
-            imageService.save(image.getBytes(), product, FilenameUtils.getExtension(image.getOriginalFilename()));
+            if (image.getBytes().length != 0) {
+                imageService.save(image.getBytes(), product, FilenameUtils.getExtension(image.getOriginalFilename()));
+            }
         }
 
         return "redirect:/admin/products";
