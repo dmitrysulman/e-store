@@ -12,7 +12,11 @@ import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer> {
-    @Query("SELECT DISTINCT(c) FROM Cart c LEFT JOIN FETCH c.cartItems ci LEFT JOIN FETCH ci.product p WHERE c.user.id = :userId ORDER BY p.name")
+    @Query("SELECT DISTINCT c FROM Cart c " +
+            "LEFT JOIN FETCH c.cartItems ci " +
+            "LEFT JOIN FETCH ci.product p " +
+            "WHERE c.user.id = :userId " +
+            "ORDER BY p.name")
     @QueryHints(@QueryHint(name = "hibernate.query.passDistinctThrough", value = "false"))
     Optional<Cart> findByUserIdWithProducts(@Param("userId") int userId);
 }

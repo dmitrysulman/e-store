@@ -4,12 +4,10 @@ import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.ProductImage;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.ProductImageRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.ProductRepository;
+import org.dmitrysulman.innopolis.diplomaproject.util.PageableHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +23,13 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductImageRepository productImageRepository;
+    private final PageableHelper pageableHelper;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ProductImageRepository productImageRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductImageRepository productImageRepository, PageableHelper pageableHelper) {
         this.productRepository = productRepository;
         this.productImageRepository = productImageRepository;
+        this.pageableHelper = pageableHelper;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> findAll(Integer page, Integer perPage, String direction) {
-        return productRepository.findAll(preparePageable(page, perPage, direction));
+        return productRepository.findAll(pageableHelper.preparePageable(page, perPage, direction, "price"));
     }
 
     @Override
@@ -73,7 +73,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> findByNameContaining(String name, Integer page, Integer perPage, String direction) {
-        return productRepository.findByNameContainingIgnoreCase(name, preparePageable(page, perPage, direction));
+        return productRepository.findByNameContainingIgnoreCase(name,
+                pageableHelper.preparePageable(page, perPage, direction, "price"));
     }
 
     @Override
@@ -82,19 +83,5 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(product);
     }
 
-    private Pageable preparePageable(Integer page, Integer perPage, String direction) {
-        if (page == null) {
-            page = 0;
-        }
-        if (perPage == null) {
-            perPage = 10;
-        }
-        Sort.Direction sortDirection = Sort.Direction.ASC;
-        if (direction != null && direction.equals("DESC")) {
-            sortDirection = Sort.Direction.DESC;
-        }
-        Sort sort = Sort.by(new Sort.Order(sortDirection, "price"));
 
-        return PageRequest.of(page, perPage, sort);
-    }
 }

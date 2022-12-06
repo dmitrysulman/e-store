@@ -53,8 +53,11 @@ public class AdminController {
     }
 
     @GetMapping("/orders")
-    public String orders(Model model) {
-        model.addAttribute("orders", orderService.findAll());
+    public String orders(@RequestParam(value = "page", required = false) Integer page,
+                         @RequestParam(value = "per_page", required = false) Integer perPage,
+                         @RequestParam(value = "direction", required = false) String direction,
+                         Model model) {
+        model.addAttribute("orders", orderService.findAll(page, perPage, direction));
 
         return "admin/orders";
     }

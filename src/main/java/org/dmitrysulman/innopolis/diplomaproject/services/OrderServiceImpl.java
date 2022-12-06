@@ -7,7 +7,10 @@ import org.dmitrysulman.innopolis.diplomaproject.repositories.OrderRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.ProductRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.UserRepository;
 import org.dmitrysulman.innopolis.diplomaproject.util.ElementNotFoundException;
+import org.dmitrysulman.innopolis.diplomaproject.util.PageableHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,17 +25,31 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final PageableHelper pageableHelper;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, ProductRepository productRepository, UserRepository userRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, ProductRepository productRepository, UserRepository userRepository, PageableHelper pageableHelper) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.pageableHelper = pageableHelper;
     }
 
     @Override
     public List<Order> findAll() {
         return orderRepository.findAll();
+    }
+
+    @Override
+    public Page<Order> findAll(Integer page, Integer perPage, String direction) {
+        Pageable pageable = pageableHelper.preparePageable(page, perPage, direction, "id");
+        Page<Integer> ids = orderRepository.findAllOrderIdsWithProductsAndUser(pageable);
+        List<Order> orders = orderRepository.findAllWithProductsAndUser(ids.toList());
+        return ids.map(id -> orders.stream()
+                .filter(o -> o.getId() == id)
+                .findFirst()
+                .get()
+        );
     }
 
     @Override

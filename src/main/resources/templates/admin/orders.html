@@ -10,12 +10,15 @@
     <div style="width: 800px; margin: auto;">
         <div th:replace="fragments/header :: header"></div>
         <div style="margin-bottom: 20px;">
-            <a th:href="@{/admin}">Users</a> | <a th:href="@{/admin/products}">Products</a> | Orders</a>
+            <a th:href="@{/admin}">Users</a> | <a th:href="@{/admin/products}">Products</a> | Orders
             <br />
             <br />
-            <div th:each="order : ${orders}" style="margin-bottom: 20px;">
+            <div th:replace="fragments/order_sort :: order_sort"></div>
+            <div th:replace="fragments/order_pagination :: order_pagination"></div>
+            <div th:each="order : ${orders.getContent()}" style="margin-bottom: 20px;">
                 <div th:text="${order.getId()} + ', ' + ${order.getOrderDate()} + ', ' + ${order.getUser().getFullName()} + ', ' + ${order.getUser().getEmail()} + ', ' + ${order.getProductsAmount()} + ', ' + ${order.getOrderAmount()} + ', ' + ${order.getOrderStatus()}"></div>
             </div>
+            <div th:replace="fragments/order_pagination :: order_pagination"></div>
         </div>
     </div>
 </body>
