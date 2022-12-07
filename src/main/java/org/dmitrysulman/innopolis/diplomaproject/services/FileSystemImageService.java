@@ -5,6 +5,7 @@ import org.dmitrysulman.innopolis.diplomaproject.models.ProductImage;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.FileSystemRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.ProductImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
+@ConditionalOnProperty(name="application.products_images.bean", havingValue = "filesystem")
 public class FileSystemImageService implements ImageService {
     private final FileSystemRepository fileSystemRepository;
     private final ProductImageRepository productImageRepository;
@@ -27,10 +29,13 @@ public class FileSystemImageService implements ImageService {
     @Override
     @Transactional
     public ProductImage save(byte[] content, Product product, String extension) throws IOException {
-        String location = fileSystemRepository.save(content, product.getName().toLowerCase().replace(' ', '-').concat(".").concat(extension));
+        String location = fileSystemRepository.save(content,
+                product.getName().toLowerCase().replace(' ', '-').concat(".").concat(extension));
+        int order = (int) productImageRepository.countByProductId(product.getId());
         ProductImage productImage = new ProductImage();
         productImage.setImageLocation(location);
         productImage.setProduct(product);
+        productImage.setImageOrder(order);
 
         return productImageRepository.save(productImage);
     }

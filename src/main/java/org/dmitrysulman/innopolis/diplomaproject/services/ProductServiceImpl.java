@@ -2,7 +2,6 @@ package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.models.Product;
 import org.dmitrysulman.innopolis.diplomaproject.models.ProductImage;
-import org.dmitrysulman.innopolis.diplomaproject.repositories.ProductImageRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.ProductRepository;
 import org.dmitrysulman.innopolis.diplomaproject.util.PageableHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +17,16 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService {
-    @Value("${application.products_images_url_prefix}")
+    @Value("${application.products_images.url_prefix}")
     private String IMAGE_URL_PREFIX;
 
     private final ProductRepository productRepository;
-    private final ProductImageRepository productImageRepository;
     private final PageableHelper pageableHelper;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ProductImageRepository productImageRepository, PageableHelper pageableHelper) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                              PageableHelper pageableHelper) {
         this.productRepository = productRepository;
-        this.productImageRepository = productImageRepository;
         this.pageableHelper = pageableHelper;
     }
 
@@ -49,17 +47,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Optional<Product> findByIdWithImagesUrls(int id) {
-        Optional<Product> product = productRepository.findById(id);
+        Optional<Product> product = productRepository.findByIdWithProductImages(id);
         product.ifPresent(prd -> {
-//            int productImagesCount = (int) productImageRepository.countByProductId(id);
             List<ProductImage> productImages = prd.getProductImages();
-            int productImagesCount = productImages.size();
             List<String> imagesUrls = new ArrayList<>();
-            for (int i = 0; i < productImagesCount; i++) {
+            for (ProductImage productImage : productImages) {
 //                imagesUrls.add(IMAGE_URL_PREFIX + prd.getId() + "/" + i);
-                imagesUrls.add(IMAGE_URL_PREFIX + productImages.get(i).getImageLocation());
+                imagesUrls.add(IMAGE_URL_PREFIX + productImage.getImageLocation());
             }
-
             prd.setImagesUrls(imagesUrls);
         });
 

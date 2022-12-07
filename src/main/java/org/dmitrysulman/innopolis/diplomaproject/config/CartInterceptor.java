@@ -41,7 +41,7 @@ public class CartInterceptor implements HandlerInterceptor {
                            HttpServletResponse response,
                            Object handler,
                            @Nullable ModelAndView modelAndView) throws Exception {
-        if (request.getHeader("Content-Type") == null || !request.getHeader("Content-Type").contains("application/json")) {
+        if (modelAndView != null) {
             Cart cart;
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication instanceof AnonymousAuthenticationToken) {
@@ -51,9 +51,8 @@ public class CartInterceptor implements HandlerInterceptor {
                 User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
                 cart = cartService.getCartByUser(user.getId());
             }
-            if (modelAndView != null) {
+
                 modelAndView.getModelMap().addAttribute("cart", cart);
-            }
         }
     }
 }

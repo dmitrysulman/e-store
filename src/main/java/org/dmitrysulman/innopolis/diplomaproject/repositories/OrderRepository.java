@@ -18,7 +18,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT DISTINCT o FROM Order o " +
             "LEFT JOIN FETCH o.orderProducts op " +
             "LEFT JOIN FETCH op.product p " +
-            "WHERE o.user.id = :userId ORDER BY o.id DESC")
+            "WHERE o.user.id = :userId " +
+            "ORDER BY o.id DESC")
     @QueryHints(@QueryHint(name = "hibernate.query.passDistinctThrough", value = "false"))
     List<Order> findByUserIdWithProducts(@Param("userId") int userId);
 
@@ -26,9 +27,9 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "LEFT JOIN FETCH o.user " +
             "LEFT JOIN FETCH o.orderProducts op " +
             "LEFT JOIN FETCH op.product p " +
-            "WHERE o.id IN ?1")
+            "WHERE o.id IN :ids")
     @QueryHints(@QueryHint(name = "hibernate.query.passDistinctThrough", value = "false"))
-    List<Order> findAllWithProductsAndUser(Collection<Integer> ids);
+    List<Order> findAllWithProductsAndUser(@Param("ids") Collection<Integer> ids);
 
     @Query("SELECT o.id FROM Order o")
     Page<Integer> findAllOrderIdsWithProductsAndUser(Pageable pageable);

@@ -12,7 +12,7 @@ import java.time.Instant;
 
 @Repository
 public class FileSystemRepository {
-    @Value("${application.products_images_dir}")
+    @Value("${application.products_images.dir}")
     private String PRODUCTS_IMAGES_DIR;
 
     public String save(byte[] content, String imageName) throws IOException {
