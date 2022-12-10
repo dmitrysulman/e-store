@@ -6,6 +6,7 @@ import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.CartRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,5 +62,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Page<User> findByNameOrEmailContaining(String query,
+                                                  Integer page,
+                                                  Integer perPage,
+                                                  String direction) {
+        return null;
     }
 }

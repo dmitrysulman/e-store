@@ -11,11 +11,19 @@
         <div th:replace="fragments/header :: header"></div>
         <div style="margin-bottom: 20px;">
             Users | <a th:href="@{/admin/products}">Products</a> | <a th:href="@{/admin/orders}">Orders</a>
+            <form th:method="GET" th:action="@{/admin/search}">
+                <label for="query">Search query:</label>
+                <input type="text" th:value="${query}" id="query" name="query">
+                <input type="submit" value="Search">
+            </form>
             <br />
             <br />
+<!--            <div th:replace="fragments/user_sort :: user_sort"></div>-->
+<!--            <div th:replace="fragments/user_pagination :: user_pagination"></div>-->
             <div th:each="user : ${users}" style="margin-bottom: 20px;">
                 <div th:text="${user.getId()} + ', ' + ${user.getFullName()} + ', ' + ${user.getEmail()} + ', ' + ${user.getAddress()}  + ', ' + ${user.getAdmin()}"></div>
             </div>
+<!--            <div th:replace="fragments/user_pagination :: user_pagination"></div>-->
         </div>
     </div>
 </body>

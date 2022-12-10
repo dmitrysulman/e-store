@@ -157,4 +157,10 @@ public class User {
     public String getFullName() {
         return firstName + ' ' + secondName;
     }
+
+    public int getTotalAmount() {
+        return orders.stream()
+                .mapToInt(Order::getOrderAmount)
+                .reduce(0, Integer::sum);
+    }
 }

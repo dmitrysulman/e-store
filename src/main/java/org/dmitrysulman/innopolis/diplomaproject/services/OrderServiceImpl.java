@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<Order> findAll(Integer page, Integer perPage, String direction) {
         Pageable pageable = pageableHelper.preparePageable(page, perPage, direction, "id");
-        Page<Integer> ids = orderRepository.findAllOrderIdsWithProductsAndUser(pageable);
+        Page<Integer> ids = orderRepository.findAllOrderIds(pageable);
         List<Order> orders = orderRepository.findAllWithProductsAndUser(ids.toList());
         return ids.map(id -> orders.stream()
                 .filter(o -> o.getId() == id)

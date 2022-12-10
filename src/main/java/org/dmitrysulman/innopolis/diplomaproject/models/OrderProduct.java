@@ -77,6 +77,6 @@ public class OrderProduct {
     }
 
     public int getTotalPrice() {
-        return product.getPrice() * productAmount;
+        return productPrice * productAmount;
     }
 }

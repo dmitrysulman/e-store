@@ -55,6 +55,21 @@ public class AdminController {
         return "admin/main";
     }
 
+    @GetMapping("/search")
+    public String usersSearch(@RequestParam(value = "query", required = false) String query,
+                                 @RequestParam(value = "page", required = false) Integer page,
+                                 @RequestParam(value = "per_page", required = false) Integer perPage,
+                                 @RequestParam(value = "direction", required = false) String direction,
+                                 Model model) {
+        if (query == null || query.equals("")) {
+            return "redirect:/admin";
+        }
+        model.addAttribute("query", query);
+        model.addAttribute("users", userService.findByNameOrEmailContaining(query, page, perPage, direction));
+
+        return "admin/products";
+    }
+
     @GetMapping("/orders")
     public String orders(@RequestParam(value = "page", required = false) Integer page,
                          @RequestParam(value = "per_page", required = false) Integer perPage,
@@ -83,7 +98,7 @@ public class AdminController {
                                  @RequestParam(value = "direction", required = false) String direction,
                                  Model model) {
         if (query == null || query.equals("")) {
-            return "redirect:/";
+            return "redirect:/admin/products";
         }
         model.addAttribute("query", query);
         model.addAttribute("products", productService.findByNameContaining(query, page, perPage, direction));

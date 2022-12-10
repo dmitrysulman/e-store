@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <th:block th:fragment="user_sort">
+        <a th:if="${users.getSort().getOrderFor('id').getDirection().isAscending()}" th:text="'sort by id DESC'" th:href="@{${#httpServletRequest.getRequestURI()}(__${query == '' ? '' : 'query=${query}'}__, page=${users.getNumber()}, per_page=${users.getSize()}, direction='DESC')}"></a>
+        <a th:if="${users.getSort().getOrderFor('id').getDirection().isDescending()}" th:text="'sort by id ASC'" th:href="@{${#httpServletRequest.getRequestURI()}(__${query == '' ? '' : 'query=${query}'}__, page=${users.getNumber()}, per_page=${users.getSize()}, direction='ASC')}"></a>
+    </th:block>
+</body>
+</html>
