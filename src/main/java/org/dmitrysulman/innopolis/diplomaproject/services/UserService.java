@@ -4,7 +4,6 @@ import org.dmitrysulman.innopolis.diplomaproject.dto.UserDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -14,7 +13,7 @@ public interface UserService {
 
     User update(UserDto userDto, int userId);
 
-    List<User> findAll();
+    Page<User> findAll(Integer page, Integer perPage, String direction);
 
     Page<User> findByNameOrEmailContaining(String query, Integer page, Integer perPage, String direction);
 }

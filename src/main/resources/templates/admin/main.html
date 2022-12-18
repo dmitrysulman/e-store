@@ -18,12 +18,12 @@
             </form>
             <br />
             <br />
-<!--            <div th:replace="fragments/user_sort :: user_sort"></div>-->
-<!--            <div th:replace="fragments/user_pagination :: user_pagination"></div>-->
-            <div th:each="user : ${users}" style="margin-bottom: 20px;">
-                <div th:text="${user.getId()} + ', ' + ${user.getFullName()} + ', ' + ${user.getEmail()} + ', ' + ${user.getAddress()}  + ', ' + ${user.getAdmin()}"></div>
+            <div th:replace="fragments/user_sort :: user_sort"></div>
+            <div th:replace="fragments/user_pagination :: user_pagination"></div>
+            <div th:each="user : ${users.getContent()}" style="margin-bottom: 20px;">
+                <div th:text="${user.getId()} + ', ' + ${user.getFullName()} + ', ' + ${user.getEmail()} + ', ' + ${user.getAddress()}  + ', ' + ${user.getAdmin()} + ', ' + ${user.getTotalAmount()}"></div>
             </div>
-<!--            <div th:replace="fragments/user_pagination :: user_pagination"></div>-->
+            <div th:replace="fragments/user_pagination :: user_pagination"></div>
         </div>
     </div>
 </body>

@@ -2,11 +2,15 @@ package org.dmitrysulman.innopolis.diplomaproject.services;
 
 import org.dmitrysulman.innopolis.diplomaproject.dto.UserDto;
 import org.dmitrysulman.innopolis.diplomaproject.models.Cart;
+import org.dmitrysulman.innopolis.diplomaproject.models.Order;
 import org.dmitrysulman.innopolis.diplomaproject.models.User;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.CartRepository;
+import org.dmitrysulman.innopolis.diplomaproject.repositories.OrderRepository;
 import org.dmitrysulman.innopolis.diplomaproject.repositories.UserRepository;
+import org.dmitrysulman.innopolis.diplomaproject.util.PageableHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +23,20 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final CartRepository cartRepository;
+    private final OrderRepository orderRepository;
+    private final PageableHelper pageableHelper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, CartRepository cartRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           CartRepository cartRepository,
+                           OrderRepository orderRepository,
+                           PageableHelper pageableHelper,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.cartRepository = cartRepository;
+        this.orderRepository = orderRepository;
+        this.pageableHelper = pageableHelper;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -60,8 +72,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public Page<User> findAll(Integer page, Integer perPage, String direction) {
+        Pageable pageable = pageableHelper.preparePageable(page, perPage, direction, "id");
+        Page<Integer> ids = userRepository.findAllUserIds(pageable);
+        List<User> users = userRepository.findAllWithOrders(ids.toList());
+        List<Integer> orderIds = users.stream()
+                .flatMap(user -> user.getOrders().stream())
+                .map(Order::getId)
+                .toList();
+        orderRepository.findAllWithProductsAndUser(orderIds);
+        return ids.map(id -> users.stream()
+                .filter(o -> o.getId() == id)
+                .findFirst()
+                .get()
+        );
     }
 
     @Override

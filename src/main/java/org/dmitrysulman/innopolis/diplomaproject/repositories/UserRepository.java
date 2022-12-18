@@ -23,9 +23,18 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 //            "LEFT JOIN FETCH o.orderProducts op " +
             "WHERE u.id IN :ids")
     @QueryHints(@QueryHint(name = "hibernate.query.passDistinctThrough", value = "false"))
-    List<User> findAllWithOrdersAndProducts(@Param("ids") Collection<Integer> ids);
+    List<User> findAllWithOrders(@Param("ids") Collection<Integer> ids);
+
+//    @Query("SELECT DISTINCT o FROM Order o " +
+//            "LEFT JOIN FETCH o.orderProducts op " +
+//            "WHERE o.id IN :ids")
+//    @QueryHints(@QueryHint(name = "hibernate.query.passDistinctThrough", value = "false"))
+//    List<User> findAllWithOrderProducts(@Param("ids") Collection<Integer> ids);
 
     @Query("SELECT u.id FROM User u " +
             "WHERE u.firstName LIKE %:query% OR u.secondName LIKE %:query% OR u.email LIKE %:query%")
     Page<Integer> findAllUserIdsByNameOrEmailContaining(@Param("query") String query, Pageable pageable);
+
+    @Query("SELECT u.id FROM User u")
+    Page<Integer> findAllUserIds(Pageable pageable);
 }

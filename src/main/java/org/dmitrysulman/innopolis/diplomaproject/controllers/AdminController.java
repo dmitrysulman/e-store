@@ -49,8 +49,11 @@ public class AdminController {
     }
 
     @GetMapping("")
-    public String main(Model model) {
-        model.addAttribute("users", userService.findAll());
+    public String main(@RequestParam(value = "page", required = false) Integer page,
+                       @RequestParam(value = "per_page", required = false) Integer perPage,
+                       @RequestParam(value = "direction", required = false) String direction,
+                       Model model) {
+        model.addAttribute("users", userService.findAll(page, perPage, direction));
 
         return "admin/main";
     }

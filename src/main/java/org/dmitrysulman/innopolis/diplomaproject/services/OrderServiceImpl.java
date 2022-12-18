@@ -28,7 +28,10 @@ public class OrderServiceImpl implements OrderService {
     private final PageableHelper pageableHelper;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, ProductRepository productRepository, UserRepository userRepository, PageableHelper pageableHelper) {
+    public OrderServiceImpl(OrderRepository orderRepository,
+                            ProductRepository productRepository,
+                            UserRepository userRepository,
+                            PageableHelper pageableHelper) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
