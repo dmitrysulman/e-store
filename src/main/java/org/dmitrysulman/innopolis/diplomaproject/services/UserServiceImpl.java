@@ -75,6 +75,20 @@ public class UserServiceImpl implements UserService {
     public Page<User> findAll(Integer page, Integer perPage, String direction) {
         Pageable pageable = pageableHelper.preparePageable(page, perPage, direction, "id");
         Page<Integer> ids = userRepository.findAllUserIds(pageable);
+        return getUsersEnrichedWithOrdersByIds(ids);
+    }
+
+    @Override
+    public Page<User> findByNameOrEmailContaining(String query,
+                                                  Integer page,
+                                                  Integer perPage,
+                                                  String direction) {
+        Pageable pageable = pageableHelper.preparePageable(page, perPage, direction, "id");
+        Page<Integer> ids = userRepository.findAllUserIdsByNameOrEmailContaining(query, pageable);
+        return getUsersEnrichedWithOrdersByIds(ids);
+    }
+
+    private Page<User> getUsersEnrichedWithOrdersByIds(Page<Integer> ids) {
         List<User> users = userRepository.findAllWithOrders(ids.toList());
         List<Integer> orderIds = users.stream()
                 .flatMap(user -> user.getOrders().stream())
@@ -86,13 +100,5 @@ public class UserServiceImpl implements UserService {
                 .findFirst()
                 .get()
         );
-    }
-
-    @Override
-    public Page<User> findByNameOrEmailContaining(String query,
-                                                  Integer page,
-                                                  Integer perPage,
-                                                  String direction) {
-        return null;
     }
 }

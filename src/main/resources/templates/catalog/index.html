@@ -7,13 +7,8 @@
     <title>My e-store</title>
 </head>
 <body>
-    <div style="width: 800px; margin: auto;">
-        <div th:replace="fragments/header :: header"></div>
-        <form th:method="GET" th:action="@{/search}">
-            <label for="query">Search query:</label>
-            <input type="text" th:value="${query}" id="query" name="query">
-            <input type="submit" value="Search">
-        </form>
+    <th:block th:replace="fragments/header :: header"></th:block>
+    <div class="container">
         <div th:replace="fragments/product_sort :: product_sort"></div>
         <div th:replace="fragments/product_pagination :: product_pagination"></div>
         <div th:each="product : ${products.getContent()}" style="margin-bottom: 20px;">

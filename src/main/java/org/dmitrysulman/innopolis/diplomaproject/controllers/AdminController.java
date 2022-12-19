@@ -70,7 +70,7 @@ public class AdminController {
         model.addAttribute("query", query);
         model.addAttribute("users", userService.findByNameOrEmailContaining(query, page, perPage, direction));
 
-        return "admin/products";
+        return "admin/main";
     }
 
     @GetMapping("/orders")

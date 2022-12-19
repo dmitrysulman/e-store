@@ -7,27 +7,67 @@
     <title>Title</title>
 </head>
 <body>
-    <div th:fragment="header" style="margin-bottom: 20px;">
-        <a href="/">Home</a><span sec:authorize="hasRole('ROLE_ADMIN')"> | <a href="/admin">Admin Zone</a></span>
-        <div sec:authorize="isAuthenticated()">
-            <span sec:authorize="hasRole('ROLE_ADMIN')" style="color: red"
-                  th:text="'Hello, admin ' + ${#authentication.getPrincipal().getUser().getFullName()}"></span>
-            <span sec:authorize="!hasRole('ROLE_ADMIN')"
-                  th:text="'Hello, user ' + ${#authentication.getPrincipal().getUser().getFullName()}"></span>
-            <br />
-            <a href="/profile">View Profile</a>
-            <form th:method="POST" th:action="@{/logout}">
-                <input type="submit" value="Logout">
+<nav th:fragment="header" class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">E-store</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+                <li sec:authorize="!isAuthenticated()" class="nav-item">
+                    <a class="nav-link" href="/signin">Sign In</a>
+                </li>
+                <li sec:authorize="!isAuthenticated()" class="nav-item">
+                    <a class="nav-link" href="/signup">Sign Up</a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
+                    <a class="nav-link" href="/admin">Admin Zone</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${cart.getTotalItems() > 0}"
+                       th:text="#{cart.totalproducts} + ': ' + ${cart.getTotalItems()} + ', ' + ${cart.getTotalPrice()}"
+                       th:href="@{/cart}"></a>
+                </li>
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <a class="nav-link" href="/profile">View Profile</a>
+                </li>
+                <form sec:authorize="isAuthenticated()" class="d-flex" th:method="POST" th:action="@{/logout}">
+                    <button class="btn btn-link" type="submit">Logout</button>
+                </form>
+                <span sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-text text-danger"
+                      th:text="'Hello, admin ' + ${#authentication.getPrincipal().getUser().getFullName()}"></span>
+                <span sec:authorize="hasRole('ROLE_USER')" class="navbar-text"
+                      th:text="'Hello, user ' + ${#authentication.getPrincipal().getUser().getFullName()}"></span>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled">Disabled</a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search" th:method="GET" th:action="@{/search}">
+                <input class="form-control me-2" type="search" th:value="${query}" name="query" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
         </div>
-        <div sec:authorize="!isAuthenticated()">
-            <span>Hello, Guest</span>
-            <br />
-            <a href="/signin">Sign In</a> or <a href="/signup">Sign Up</a>
-        </div>
-        <div>
-            <a th:if="${cart.getTotalItems() > 0}" th:text="#{cart.totalproducts} + ': ' + ${cart.getTotalItems()} + ', ' + ${cart.getTotalPrice()}" th:href="@{/cart}"></a>
-        </div>
     </div>
+</nav>
+
 </body>
 </html>
