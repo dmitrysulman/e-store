@@ -52,7 +52,7 @@
                tabindex="0"
                data-bs-title="My shopping cart"
                data-bs-trigger="focus"
-               th:data-bs-content="${'<dl class=''row''><dt class=''col-sm-3''>Description lists</dt><dd class=''col-sm-9''>A description list is perfect for defining terms.</dd></dl>'} + #{cart.totalproducts} + ': ' + ${cart.getTotalItems()} + ', ' + ${cart.getTotalPrice()} + ${'<a class=''btn btn-outline-secondary btn-sm'' href=''/cart'' role=''button''>Go to cart</a>'}"></a>
+               th:data-bs-content="#{cart.totalproducts} + ': ' + ${cart.getTotalItems()} + ', ' + ${cart.getTotalPrice()} + ${'<a class=''btn btn-outline-secondary btn-sm'' href=''/cart'' role=''button''>Go to cart</a>'}"></a>
             <form class="d-flex" role="search" th:method="GET" th:action="@{/search}">
                 <input class="form-control me-2" type="search" th:value="${query}" name="query" placeholder="Search"
                        aria-label="Search">
