@@ -19,11 +19,6 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:if="${cart.getTotalItems() > 0}"
-                       th:text="#{cart.totalproducts} + ': ' + ${cart.getTotalItems()} + ', ' + ${cart.getTotalPrice()}"
-                       th:href="@{/cart}"></a>
-                </li>
                 <li sec:authorize="!isAuthenticated()" class="nav-item">
                     <a class="nav-link" href="/signin">Sign In</a>
                 </li>
@@ -36,22 +31,41 @@
                        th:text="${#authentication.getPrincipal().getUser().getFullName()}"></a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/profile">View Profile</a></li>
-                        <li sec:authorize="hasRole('ROLE_ADMIN')"><a class="dropdown-item" href="/admin">Admin Zone</a></li>
+                        <li sec:authorize="hasRole('ROLE_ADMIN')"><a class="dropdown-item" href="/admin">Admin Zone</a>
+                        </li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <form sec:authorize="isAuthenticated()" class="d-flex" th:method="POST" th:action="@{/logout}">
-                            <button class="btn btn-link" type="submit">Logout</button>
-                        </form>
+                        <li>
+                            <form sec:authorize="isAuthenticated()" class="d-flex" th:method="POST"
+                                  th:action="@{/logout}">
+                                <button class="btn btn-link dropdown-item" type="submit">Logout</button>
+                            </form>
+                        </li>
                     </ul>
                 </li>
             </ul>
+            <a th:if="${cart.getTotalItems() > 0}"
+               th:utext="${'<i class=''bi bi-cart-check-fill''></i> Total items: '} + ${cart.getTotalItems()}"
+               role="button" class="btn btn-light mx-3" data-bs-toggle="popover" data-bs-placement="bottom"
+               data-bs-html="true"
+               tabindex="0"
+               data-bs-title="My shopping cart"
+               data-bs-trigger="focus"
+               th:data-bs-content="${'<dl class=''row''><dt class=''col-sm-3''>Description lists</dt><dd class=''col-sm-9''>A description list is perfect for defining terms.</dd></dl>'} + #{cart.totalproducts} + ': ' + ${cart.getTotalItems()} + ', ' + ${cart.getTotalPrice()} + ${'<a class=''btn btn-outline-secondary btn-sm'' href=''/cart'' role=''button''>Go to cart</a>'}"></a>
             <form class="d-flex" role="search" th:method="GET" th:action="@{/search}">
-                <input class="form-control me-2" type="search" th:value="${query}" name="query" placeholder="Search" aria-label="Search">
+                <input class="form-control me-2" type="search" th:value="${query}" name="query" placeholder="Search"
+                       aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
         </div>
     </div>
+    <script>
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl), {
+            trigger: 'focus'
+        })
+    </script>
 </nav>
 
 </body>
