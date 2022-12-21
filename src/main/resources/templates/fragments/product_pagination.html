@@ -6,11 +6,17 @@
     <title>Title</title>
 </head>
 <body>
-    <div th:if="${products.getTotalPages()} > 1" th:fragment="product_pagination">
-        <th:block th:each="page: ${#numbers.sequence(0, products.getTotalPages() - 1)}">
-            <span th:if="${page} == ${products.getNumber()}" th:text="${page} + 1"></span>
-            <a th:if="${page} != ${products.getNumber()}" th:text="${page} + 1" th:href="@{${#httpServletRequest.getRequestURI()}(__${query == '' ? '' : 'query=${query}'}__, page=${page}, per_page=${products.getSize()}, direction=${products.getSort().getOrderFor('price').getDirection()})}"></a>
-        </th:block>
-    </div>
+    <nav th:if="${products.getTotalPages()} > 1" th:fragment="product_pagination" class="my-3">
+        <ul class="pagination">
+            <th:block th:each="page: ${#numbers.sequence(0, products.getTotalPages() - 1)}">
+                <li class="page-item" th:if="${page} != ${products.getNumber()}">
+                    <a th:text="${page} + 1" th:href="@{${#httpServletRequest.getRequestURI()}(__${query == '' ? '' : 'query=${query}'}__, page=${page}, per_page=${products.getSize()}, direction=${products.getSort().getOrderFor('price').getDirection()})}" class="page-link"></a>
+                </li>
+                <li class="page-item active" th:if="${page} == ${products.getNumber()}">
+                    <span th:text="${page} + 1" class="page-link"></span>
+                </li>
+            </th:block>
+        </ul>
+    </nav>
 </body>
 </html>

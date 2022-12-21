@@ -19,46 +19,31 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${cart.getTotalItems() > 0}"
+                       th:text="#{cart.totalproducts} + ': ' + ${cart.getTotalItems()} + ', ' + ${cart.getTotalPrice()}"
+                       th:href="@{/cart}"></a>
+                </li>
                 <li sec:authorize="!isAuthenticated()" class="nav-item">
                     <a class="nav-link" href="/signin">Sign In</a>
                 </li>
                 <li sec:authorize="!isAuthenticated()" class="nav-item">
                     <a class="nav-link" href="/signup">Sign Up</a>
                 </li>
-                <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
-                    <a class="nav-link" href="/admin">Admin Zone</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:if="${cart.getTotalItems() > 0}"
-                       th:text="#{cart.totalproducts} + ': ' + ${cart.getTotalItems()} + ', ' + ${cart.getTotalPrice()}"
-                       th:href="@{/cart}"></a>
-                </li>
-                <li sec:authorize="isAuthenticated()" class="nav-item">
-                    <a class="nav-link" href="/profile">View Profile</a>
-                </li>
-                <form sec:authorize="isAuthenticated()" class="d-flex" th:method="POST" th:action="@{/logout}">
-                    <button class="btn btn-link" type="submit">Logout</button>
-                </form>
-                <span sec:authorize="hasRole('ROLE_ADMIN')" class="navbar-text text-danger"
-                      th:text="'Hello, admin ' + ${#authentication.getPrincipal().getUser().getFullName()}"></span>
-                <span sec:authorize="hasRole('ROLE_USER')" class="navbar-text"
-                      th:text="'Hello, user ' + ${#authentication.getPrincipal().getUser().getFullName()}"></span>
-                <li class="nav-item dropdown">
+                <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        Dropdown
-                    </a>
+                       aria-expanded="false"
+                       th:text="${#authentication.getPrincipal().getUser().getFullName()}"></a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="/profile">View Profile</a></li>
+                        <li sec:authorize="hasRole('ROLE_ADMIN')"><a class="dropdown-item" href="/admin">Admin Zone</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <form sec:authorize="isAuthenticated()" class="d-flex" th:method="POST" th:action="@{/logout}">
+                            <button class="btn btn-link" type="submit">Logout</button>
+                        </form>
                     </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled">Disabled</a>
                 </li>
             </ul>
             <form class="d-flex" role="search" th:method="GET" th:action="@{/search}">
